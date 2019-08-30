@@ -25,15 +25,16 @@
 
 
 #include <JANA/JEventSource.h>
-#include <JANA/JCalibrationGenerator.h>
-#include <JANA/JCalibration.h>
-#include <JANA/JEventSink.h>
+//N.B. #include <JANA/JCalibrationGenerator.h>
+//N.B. #include <JANA/JCalibration.h>
+//N.B. #include <JANA/JEventSink.h>
 #include <JANA/JEventSourceGenerator.h>
-#include <JANA/JFactory_base.h>
+#include <JANA/JEventProcessor.h>
+//N.B. #include <JANA/JFactory_base.h>
 #include <JANA/JFactory.h>
 #include <JANA/JFactoryGenerator.h>
-#include <JANA/JGeometry.h>
-using namespace jana;
+//N.B. #include <JANA/JGeometry.h>
+//N.B. using namespace jana;
 
 
 class JEventSourceDummy:public JEventSource

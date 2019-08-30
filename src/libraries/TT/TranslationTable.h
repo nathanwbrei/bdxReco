@@ -10,8 +10,6 @@
 
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
-#include <JANA/JEventLoop.h>
-#include <JANA/JCalibration.h>
 #include <JANA/JException.h>
 #include <JANA/JEventSource.h>
 

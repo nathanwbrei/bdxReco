@@ -65,6 +65,7 @@ jerror_t epicsData_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 		m_data.runNumber = tData->runN;
 		m_data.time = tData->time+m_deltaTime;
 		for (int ii = 0; ii < m_rawdata.size(); ii++) {
+			jout << eventnumber << ": Extracting EPICS data: " << m_rawdata[ii]->rawData << std::endl;
 			m_data.decode(m_rawdata[ii]->rawData,m_deltaTime);
 		}
 	}

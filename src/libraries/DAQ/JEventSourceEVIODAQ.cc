@@ -1,27 +1,24 @@
-
-
-#include "JEventSourceEVIODAQ.h"
-
 // JANA headers
 #include <JANA/JEvent.h>
 #include <JANA/JApplication.h>
 
 // bdx headers
 #include <system/JEventSourceEVIOGenerator.h>
+#include "JEventSourceEVIODAQ.h"
 
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
+
+// C++ headers
+#include <iostream>
+#include <time.h>
+#include <unistd.h>
 
 //DAQ
 #include <DAQ/fa250Mode1Hit.h>
 #include <DAQ/fa250Mode7Hit.h>
 #include <DAQ/eventData.h>
 #include <DAQ/epicsRawData.h>
-
-// C++ headers
-#include <iostream>
-#include <time.h>
-#include <unistd.h>
 
 
 // Constructor

@@ -11,9 +11,11 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 
-class epicsData: public jana::JObject {
-private:
+#include <map>
+using namespace std;
 
+class epicsData: public JObject {
+private:
 
 	map<string, double> values;
 	map<string, int> times;

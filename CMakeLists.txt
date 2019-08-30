@@ -11,8 +11,6 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 include_directories(src/external)
-#include_directories(src/external/jana_0.7.7p1/src/)
-include_directories(src/external/jana2/src/lib)
 include_directories(src/libraries)
 include_directories(.)
 
@@ -152,6 +150,7 @@ add_library(jana2 STATIC
         src/external/jana2/src/lib/JANA/JLogger.h
         src/external/jana2/src/lib/JANA/Utils/JBacktrace.h
         )
+target_include_directories(jana2 PUBLIC "src/external/jana2/src/lib")
 
 
 add_library(jana1 STATIC
@@ -211,6 +210,7 @@ add_library(jana1 STATIC
         src/external/jana_0.7.7p1/src/JANA/md5.c
         src/external/jana_0.7.7p1/src/JANA/md5.h
         )
+target_include_directories(jana1 PUBLIC src/external/jana_0.7.7p1/src/)
 
 target_link_libraries(jana1 ${CMAKE_DL_LIBS})
 target_link_libraries(jana1 Threads::Threads)
