@@ -1,16 +1,7 @@
 #ifndef _JEVENT_SOURCEEVIODAQ_H_
 #define _JEVENT_SOURCEEVIODAQ_H_
 
-// #include <vector>
-// #include <string>
-// #include <fstream>
-// using namespace std;
-
-// JANA headers
 #include <JANA/JEventSource.h>
-#include <JANA/jerror.h>
-
-using namespace jana;
 
 #define PHYSICS_EVENT_TYPE 1
 #define EPICS_EVENT_TYPE 31
