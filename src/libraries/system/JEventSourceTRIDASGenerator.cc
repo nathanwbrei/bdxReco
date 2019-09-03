@@ -42,12 +42,12 @@ JEventSource* JEventSourceTRIDASGenerator::MakeJEventSource(string source) {
 	int m_isMC, m_verbose;
 	m_isMC = 0;
 	m_verbose = 0;
-	gPARMS->GetParameter("MC", m_isMC);
-	gPARMS->GetParameter("SYSTEM:VERBOSE", m_verbose);
+	m_isMC = mApplication->GetParameterValue<int>("MC");
+	m_verbose = mApplication->GetParameterValue<int>("SYSTEM:VERBOSE");
 
 	if (m_isMC == 0) {
 		if (m_verbose > 2) jout << "JEventSourceTRIDASGenerator::MakeJEventSource for DATA " << endl;
-		return new JEventSourceTRIDASDAQ(source.c_str());
+		return new JEventSourceTRIDASDAQ(source.c_str(), mApplication);
 	} else if (m_isMC >= 1) {
 		jerr << "MC - TRIDAS format not yet supported!!" << endl;
 		throw JException("Failed to open MC TRIDAS file - no MC support yet");

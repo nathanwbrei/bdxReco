@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-#include <JANA/JParameterManager.h>
+#include <JANA/JApplication.h>
 
 // bdx headers
 #include <system/JEventSourceEVIOGenerator.h>
@@ -49,19 +49,17 @@ JEventSource* JEventSourceEvioGenerator::MakeJEventSource(string source) {
 	 * but both are evio, let's look at the option MC, and see if it is 0 or 1
 	 */
 	int m_isMC, m_verbose;
-	m_isMC = 0;
-	m_verbose = 0;
-	gPARMS->GetParameter("MC", m_isMC);
-	gPARMS->GetParameter("SYSTEM:VERBOSE", m_verbose);
+	m_isMC = mApplication->GetParameterValue<int>("MC");
+	m_verbose = mApplication->GetParameterValue<int>("SYSTEM:VERBOSE");
 
 	if (m_isMC == 0) {
 		if (m_verbose > 2) jout << "JEventSourceEvioGenerator::MakeJEventSource for DAQ " << endl;
-		return new JEventSourceEvioDAQ(source.c_str());
+		return new JEventSourceEvioDAQ(source.c_str(), mApplication);
 	} else if (m_isMC >= 1) {
 
 #ifdef  MC_SUPPORT_ENABLE
 		if (m_verbose>2) jout<<" JEventSourceEvioGenerator::MakeJEventSource for MC "<<endl;
-		return new JEventSourceEvioMC(source.c_str());
+		return new JEventSourceEvioMC(source.c_str(), mApplication);
 #else
 		cerr << "=== ERROR: MC source specified and this was compiled without    ===" << endl;
 		cerr << "===        MC support. You need to recompile setting MC=1 ,i.e. ===" << endl;
