@@ -30,7 +30,7 @@ using namespace std;
 JEventSourceEvioMC::JEventSourceEvioMC(const char* source_name, JApplication* app) :
 		JEventSource(source_name, app), chan(0), EDT(0), curRunNumber(0), curEventNumber(0) {
 	overwriteRunNumber = -1;
-	gPARMS->SetDefaultParameter("MC:RUN_NUMBER", overwriteRunNumber);
+	app->SetDefaultParameter("MC:RUN_NUMBER", overwriteRunNumber);
 
 	// open EVIO file - buffer is hardcoded at 3M... that right?
 	jout << " Opening MC input file " << source_name << "." << endl;
@@ -50,7 +50,7 @@ JEventSourceEvioMC::JEventSourceEvioMC(const char* source_name, JApplication* ap
 	goptions bdxOpt;
 	banksMap = read_banks(bdxOpt, allSystems);
 
-	gPARMS->GetParameter("MC", MC);
+	app->GetParameter("MC", MC);
 }
 
 // Destructor

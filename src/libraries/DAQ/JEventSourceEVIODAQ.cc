@@ -56,27 +56,27 @@ JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name, JApplication* 
 	quit_on_next_ET_timeout = false;
 	et_connected = false;
 
-	gPARMS->SetDefaultParameter("DAQ:VME_MOTHER_TAG", vme_mother_tag);
-	gPARMS->SetDefaultParameter("DAQ:EPICS_MOTHER_TAG", epics_mother_tag);
-	gPARMS->SetDefaultParameter("DAQ:CHILD_MODE1_TAG", child_mode1_tag);
-	gPARMS->SetDefaultParameter("DAQ:CHILD_MODE7_TAG", child_mode7_tag);
-	gPARMS->SetDefaultParameter("DAQ:CHILD_TRIGGER_TAG", child_trigger_tag);
-	gPARMS->SetDefaultParameter("DAQ:CHILD_EPICS_TAG", child_epics_tag);
-	gPARMS->SetDefaultParameter("DAQ:EVENTHEADER_TAG", eventHeader_tag);
-	gPARMS->SetDefaultParameter("DAQ:PRESTART_TAG", prestart_tag);
+	app->SetDefaultParameter("DAQ:VME_MOTHER_TAG", vme_mother_tag);
+	app->SetDefaultParameter("DAQ:EPICS_MOTHER_TAG", epics_mother_tag);
+	app->SetDefaultParameter("DAQ:CHILD_MODE1_TAG", child_mode1_tag);
+	app->SetDefaultParameter("DAQ:CHILD_MODE7_TAG", child_mode7_tag);
+	app->SetDefaultParameter("DAQ:CHILD_TRIGGER_TAG", child_trigger_tag);
+	app->SetDefaultParameter("DAQ:CHILD_EPICS_TAG", child_epics_tag);
+	app->SetDefaultParameter("DAQ:EVENTHEADER_TAG", eventHeader_tag);
+	app->SetDefaultParameter("DAQ:PRESTART_TAG", prestart_tag);
 
-	gPARMS->SetDefaultParameter("DAQ:RUN_NUMBER", overwriteRunNumber);
+	app->SetDefaultParameter("DAQ:RUN_NUMBER", overwriteRunNumber);
 
-	gPARMS->SetDefaultParameter("DAQ:BUFFER_SIZE", BUFFER_SIZE, "Size in bytes to allocate for holding a single EVIO event.");
+	app->SetDefaultParameter("DAQ:BUFFER_SIZE", BUFFER_SIZE, "Size in bytes to allocate for holding a single EVIO event.");
 
-	gPARMS->SetDefaultParameter("ET:ET_STATION_NEVENTS", ET_STATION_NEVENTS, "Number of events to use if we have to create the ET station. Ignored if station already exists.");
-	gPARMS->SetDefaultParameter("ET:ET_STATION_CREATE_BLOCKING", ET_STATION_CREATE_BLOCKING, "Set this to create station in blocking mode (default is to create it in non-blocking mode). Ignored if station already exists.");
-	gPARMS->SetDefaultParameter("ET:TIMEOUT", TIMEOUT, "Set the timeout in seconds for each attempt at reading from ET system (repeated attempts will still be made indefinitely until program quits or the quit_on_et_timeout flag is set.");
+	app->SetDefaultParameter("ET:ET_STATION_NEVENTS", ET_STATION_NEVENTS, "Number of events to use if we have to create the ET station. Ignored if station already exists.");
+	app->SetDefaultParameter("ET:ET_STATION_CREATE_BLOCKING", ET_STATION_CREATE_BLOCKING, "Set this to create station in blocking mode (default is to create it in non-blocking mode). Ignored if station already exists.");
+	app->SetDefaultParameter("ET:TIMEOUT", TIMEOUT, "Set the timeout in seconds for each attempt at reading from ET system (repeated attempts will still be made indefinitely until program quits or the quit_on_et_timeout flag is set.");
 
-	gPARMS->SetDefaultParameter("DAQ:EVENT_TYPE_DAQ", eventTypeDAQ);
-	gPARMS->SetDefaultParameter("DAQ:EVENT_TYPE_EPICS", eventTypeEPICS);
+	app->SetDefaultParameter("DAQ:EVENT_TYPE_DAQ", eventTypeDAQ);
+	app->SetDefaultParameter("DAQ:EVENT_TYPE_EPICS", eventTypeEPICS);
 
-	gPARMS->SetDefaultParameter("DAQ:VERBOSE", m_VERBOSE, "Set verbosity level for processing and debugging statements while parsing. 0=no debugging messages. 10=all messages");
+	app->SetDefaultParameter("DAQ:VERBOSE", m_VERBOSE, "Set verbosity level for processing and debugging statements while parsing. 0=no debugging messages. 10=all messages");
 
 	// open EVIO file - buffer is hardcoded at 3M... that right?
 	jout << " Opening input source: " << source_name << endl;
