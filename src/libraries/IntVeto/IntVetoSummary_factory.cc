@@ -13,7 +13,6 @@ using namespace std;
 #include "IntVetoHit.h"
 #include "IntVetoSummary_factory.h"
 #include <TT/TranslationTable.h>
-using namespace jana;
 
 //------------------
 // init
@@ -26,7 +25,7 @@ jerror_t IntVetoSummary_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t IntVetoSummary_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t IntVetoSummary_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	return NOERROR;
 }

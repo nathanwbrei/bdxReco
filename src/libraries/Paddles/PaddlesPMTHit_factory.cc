@@ -21,7 +21,6 @@ using namespace std;
 #include "PaddlesPMTHit_factory.h"
 //#include <Paddles/PaddlesPMTHit_factory.h>
 
-using namespace jana;
 
 //------------------
 // init
@@ -37,7 +36,7 @@ jerror_t PaddlesPMTHit_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t PaddlesPMTHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t PaddlesPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	jout<<"PaddlesPMTHit_factory::brun new run number: "<<runnumber<<endl;
 	m_tt=0;

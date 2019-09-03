@@ -36,7 +36,6 @@
 
 #include "TEvent_factory_FullMC.h"
 using namespace std;
-using namespace jana;
 
 //------------------
 // init
@@ -83,7 +82,7 @@ jerror_t TEvent_factory_FullMC::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory_FullMC::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t TEvent_factory_FullMC::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

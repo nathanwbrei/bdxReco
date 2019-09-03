@@ -15,7 +15,6 @@ using namespace std;
 #include "ExtVetoHit_factory.h"
 #include <TT/TranslationTable.h>
 
-using namespace jana;
 
 ExtVetoHit_factory::ExtVetoHit_factory() :
 		m_tt(0), m_ENE_gain(0) {
@@ -42,7 +41,7 @@ jerror_t ExtVetoHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t ExtVetoHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 
 	this->updateCalibrationHandler(m_ENE_gain, eventLoop);
 

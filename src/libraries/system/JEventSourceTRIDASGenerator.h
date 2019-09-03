@@ -3,7 +3,6 @@
 
 // JANA headers
 #include "JANA/JEventSourceGenerator.h"
-using namespace jana;
 
 class JEventSourceTRIDASGenerator: public JEventSourceGenerator{
 	public:
@@ -17,7 +16,7 @@ class JEventSourceTRIDASGenerator: public JEventSourceGenerator{
 		const char* Description(void);
 		double CheckOpenable(string source);
 
-		jana::JEventSource* MakeJEventSource(string source);
+		JEventSource* MakeJEventSource(string source);
 };
 
 #endif // _JEventSourceGenerator_TRIDAS_

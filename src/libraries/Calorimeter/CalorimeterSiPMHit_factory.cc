@@ -19,7 +19,6 @@ using namespace std;
 #include <Calorimeter/Calorimeterfa250Converter.h>
 
 #include "CalorimeterSiPMHit_factory.h"
-using namespace jana;
 
 //------------------
 // init
@@ -37,7 +36,7 @@ jerror_t CalorimeterSiPMHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterSiPMHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t CalorimeterSiPMHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 
 	jout << "CalorimeterSiPMHit_factory::brun new run number: " << runnumber << endl;
 	m_tt = 0;

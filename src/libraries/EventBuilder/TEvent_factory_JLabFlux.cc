@@ -27,7 +27,6 @@ using namespace std;
 #include "TEvent_factory_JLabFlux.h"
 
 #include <JANA/JApplication.h>
-using namespace jana;
 
 //------------------
 // init
@@ -62,7 +61,7 @@ jerror_t TEvent_factory_JLabFlux::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory_JLabFlux::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t TEvent_factory_JLabFlux::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

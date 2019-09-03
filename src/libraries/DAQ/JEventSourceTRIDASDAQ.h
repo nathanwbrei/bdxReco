@@ -11,10 +11,8 @@
 // JANA headers
 #include <JANA/JEventSource.h>
 #include <JANA/jerror.h>
-using namespace jana;
+
 //TRIDAS headers
-
-
 #include <TRIDAS/ptfile_reader.hpp>
 using namespace tridas::post_trigger;
 

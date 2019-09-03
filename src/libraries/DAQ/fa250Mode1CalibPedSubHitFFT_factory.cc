@@ -11,7 +11,6 @@ using namespace std;
 #include "fa250Mode1CalibPedSubHit.h"
 #include "fa250Mode1CalibPedSubHitFFT_factory.h"
 #include "TVirtualFFT.h"
-using namespace jana;
 
 //------------------
 // init
@@ -23,7 +22,7 @@ jerror_t fa250Mode1CalibPedSubHitFFT_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t fa250Mode1CalibPedSubHitFFT_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t fa250Mode1CalibPedSubHitFFT_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

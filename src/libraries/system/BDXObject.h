@@ -13,12 +13,11 @@
 
 #include "TObject.h"
 
-using namespace jana;
 using namespace std;
 
 class TCanvas;
 
-class BDXObject: public jana::JObject {
+class BDXObject: public JObject {
 public:
 	BDXObject();
 	virtual ~BDXObject();

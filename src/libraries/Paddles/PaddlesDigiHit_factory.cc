@@ -15,8 +15,6 @@ using namespace std;
 
 #include <TT/TranslationTable.h>
 
-using namespace jana;
-
 //------------------
 // init
 //------------------
@@ -28,7 +26,7 @@ jerror_t PaddlesDigiHit_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t PaddlesDigiHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t PaddlesDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	jout<<"PaddlesDigiHit_factory::brun new run number: "<<runnumber<<endl;
 	m_tt=0;

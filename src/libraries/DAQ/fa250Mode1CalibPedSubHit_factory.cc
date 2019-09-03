@@ -11,7 +11,6 @@ using namespace std;
 
 #include "fa250Mode1CalibPedSubHit_factory.h"
 #include <TT/TranslationTable.h>
-using namespace jana;
 
 //------------------
 // init
@@ -29,7 +28,7 @@ jerror_t fa250Mode1CalibPedSubHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t fa250Mode1CalibPedSubHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t fa250Mode1CalibPedSubHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	// Here, we would normally get this from the CalibPedSubration DB.
 	LSB = 0.4884; //this is in any case the default
 

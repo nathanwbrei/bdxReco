@@ -13,7 +13,6 @@
 using namespace std;
 
 #include "Calorimeterfa250Converter_factory.h"
-using namespace jana;
 
 
 int PThreadIDUniqueInt(pthread_t tid){
@@ -52,7 +51,7 @@ jerror_t Calorimeterfa250Converter_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t Calorimeterfa250Converter_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t Calorimeterfa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 
 	this->updateCalibrationHandler(m_thr,eventLoop);

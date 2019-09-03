@@ -11,7 +11,6 @@ using namespace std;
 
 #include "triggerDataBDXmini_factory.h"
 #include <DAQ/eventData.h>
-using namespace jana;
 
 //------------------
 // init
@@ -33,7 +32,7 @@ jerror_t triggerDataBDXmini_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t triggerDataBDXmini_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t triggerDataBDXmini_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

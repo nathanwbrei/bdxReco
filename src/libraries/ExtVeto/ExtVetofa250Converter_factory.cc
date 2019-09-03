@@ -11,7 +11,6 @@
 using namespace std;
 
 #include "ExtVetofa250Converter_factory.h"
-using namespace jana;
 
 //------------------
 // init
@@ -31,7 +30,7 @@ jerror_t ExtVetofa250Converter_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t ExtVetofa250Converter_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t ExtVetofa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	if (m_isFirstCallToBrun){
 		m_isFirstCallToBrun=0;

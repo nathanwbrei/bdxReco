@@ -17,7 +17,6 @@ using namespace std;
 
 #include <TT/TranslationTable.h>
 
-using namespace jana;
 
 //------------------
 // init
@@ -30,7 +29,7 @@ jerror_t CalorimeterDigiHit_factory_MC::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterDigiHit_factory_MC::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t CalorimeterDigiHit_factory_MC::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

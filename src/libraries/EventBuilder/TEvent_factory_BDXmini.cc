@@ -26,7 +26,6 @@ using namespace std;
 #include "TEvent_factory_BDXmini.h"
 
 #include <JANA/JApplication.h>
-using namespace jana;
 
 TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
 	m_isMC = 0;
@@ -88,7 +87,7 @@ jerror_t TEvent_factory_BDXmini::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory_BDXmini::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t TEvent_factory_BDXmini::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

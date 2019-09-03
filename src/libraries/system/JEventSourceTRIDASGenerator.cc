@@ -7,7 +7,6 @@ using namespace std;
 #include <DAQ/JEventSourceTRIDASDAQ.h>
 
 #include <JANA/JParameterManager.h>
-using namespace jana;
 
 //---------------------------------
 // Description

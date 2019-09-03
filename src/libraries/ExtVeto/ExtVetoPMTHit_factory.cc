@@ -19,7 +19,6 @@ using namespace std;
 #include <ExtVeto/ExtVetofa250Converter.h>
 
 #include "ExtVetoPMTHit_factory.h"
-using namespace jana;
 
 //------------------
 // init
@@ -34,7 +33,7 @@ jerror_t ExtVetoPMTHit_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoPMTHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t ExtVetoPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	jout<<"ExtVetoDigiHit_factory::brun new run number: "<<runnumber<<endl;
 	m_tt=0;

@@ -18,7 +18,6 @@ using namespace std;
 #include <Calorimeter/CalorimeterDigiHit.h>
 
 #include "CalorimeterDigiHit_factory.h"
-using namespace jana;
 
 //------------------
 // init
@@ -31,7 +30,7 @@ jerror_t CalorimeterDigiHit_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterDigiHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t CalorimeterDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 
 

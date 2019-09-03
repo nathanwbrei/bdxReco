@@ -9,7 +9,6 @@
 // JANA headers
 #include <JANA/JEventSource.h>
 #include <JANA/jerror.h>
-using namespace jana;
 
 // bdx headers
 

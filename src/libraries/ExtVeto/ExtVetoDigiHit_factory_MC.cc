@@ -14,7 +14,6 @@ using namespace std;
 #include <ExtVeto/ExtVetoDigiHit.h>
 
 #include "ExtVetoDigiHit_factory_MC.h"
-using namespace jana;
 
 //------------------
 // init
@@ -27,7 +26,7 @@ jerror_t ExtVetoDigiHit_factory_MC::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoDigiHit_factory_MC::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t ExtVetoDigiHit_factory_MC::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

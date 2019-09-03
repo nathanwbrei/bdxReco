@@ -12,7 +12,6 @@ using namespace std;
 #include "IntVetoDigiHit.h"
 #include "IntVetoHit.h"
 #include "IntVetoHit_factory.h"
-using namespace jana;
 
 IntVetoHit_factory::IntVetoHit_factory() :
 		isMC(0) {
@@ -42,7 +41,7 @@ jerror_t IntVetoHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t IntVetoHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t IntVetoHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 
 	return NOERROR;
 }

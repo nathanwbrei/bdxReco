@@ -12,7 +12,6 @@ using namespace std;
 #include "epicsData_factory.h"
 #include <DAQ/epicsRawData.h>
 #include <DAQ/eventData.h>
-using namespace jana;
 
 /*This is the global memory to keep track of epics data*/
 epicsData m_data;
@@ -32,7 +31,7 @@ jerror_t epicsData_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t epicsData_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t epicsData_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

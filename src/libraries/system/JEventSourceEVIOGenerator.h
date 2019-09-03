@@ -3,7 +3,6 @@
 
 // JANA headers
 #include "JANA/JEventSourceGenerator.h"
-using namespace jana;
 
 class JEventSourceEvioGenerator:public JEventSourceGenerator
 {

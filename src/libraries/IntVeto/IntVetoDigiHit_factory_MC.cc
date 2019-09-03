@@ -15,7 +15,6 @@ using namespace std;
 #include <MC/MCType.h>
 #include <IntVeto/IntVetoDigiHit.h>
 
-using namespace jana;
 
 //------------------
 // init
@@ -28,7 +27,7 @@ jerror_t IntVetoDigiHit_factory_MC::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t IntVetoDigiHit_factory_MC::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t IntVetoDigiHit_factory_MC::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

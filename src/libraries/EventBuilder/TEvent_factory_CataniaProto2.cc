@@ -32,7 +32,6 @@
 
 #include "TEvent_factory_CataniaProto2.h"
 using namespace std;
-using namespace jana;
 
 //------------------
 // init
@@ -73,7 +72,7 @@ jerror_t TEvent_factory_CataniaProto2::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory_CataniaProto2::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t TEvent_factory_CataniaProto2::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	return NOERROR;
 }
 

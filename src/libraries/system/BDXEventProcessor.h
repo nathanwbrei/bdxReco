@@ -6,7 +6,6 @@
 #include <JANA/JApplication.h>
 #include <system/CalibrationHandler.h>
 #include <JANA/JEventLoop.h>
-using namespace jana;
 
 #include <vector>
 #include <utility>

@@ -13,7 +13,6 @@ using namespace std;
 #include "CalorimeterMCRealHit_factory.h"
 #include "MC/CalorimeterMCHit.h"
 
-using namespace jana;
 
 //------------------
 // init
@@ -25,7 +24,7 @@ jerror_t CalorimeterMCRealHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterMCRealHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t CalorimeterMCRealHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	gPARMS->GetParameter("MC", isMC);
 	return NOERROR;
 }

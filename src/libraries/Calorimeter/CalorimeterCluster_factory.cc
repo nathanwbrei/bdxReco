@@ -21,7 +21,6 @@ using namespace std;
 
 #include "CalorimeterHit.h"
 
-using namespace jana;
 
 
 CalorimeterCluster_factory::CalorimeterCluster_factory(){
@@ -45,7 +44,7 @@ jerror_t CalorimeterCluster_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterCluster_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t CalorimeterCluster_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	return NOERROR;
 }

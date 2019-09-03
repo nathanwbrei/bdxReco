@@ -18,7 +18,6 @@ using namespace std;
 #include <IntVeto/IntVetofa250Converter.h>
 
 #include "IntVetoSiPMHit_factory.h"
-using namespace jana;
 
 IntVetoSiPMHit_factory::IntVetoSiPMHit_factory() :
 		m_tt(0) {
@@ -47,7 +46,7 @@ jerror_t IntVetoSiPMHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t IntVetoSiPMHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t IntVetoSiPMHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	jout << "IntVetoSiPMHit_factory::brun new run number: " << runnumber << endl;
 	m_tt = 0;
 	eventLoop->GetSingle(m_tt);

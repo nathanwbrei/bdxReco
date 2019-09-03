@@ -16,7 +16,6 @@ using namespace std;
 #include <IntVeto/IntVetoSiPMHit.h>
 #include <TT/TranslationTable.h>
 
-using namespace jana;
 
 //------------------
 // init
@@ -29,7 +28,7 @@ jerror_t IntVetoDigiHit_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t IntVetoDigiHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t IntVetoDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 
 	jout<<"IntVetoDigiHit_factory::brun new run number: "<<runnumber<<endl;

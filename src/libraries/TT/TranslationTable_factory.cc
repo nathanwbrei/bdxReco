@@ -10,7 +10,6 @@
 using namespace std;
 
 #include "TranslationTable_factory.h"
-using namespace jana;
 
 TranslationTable_factory::TranslationTable_factory() :
 		tt(0), isMC(0), VERBOSE(0) {
@@ -51,7 +50,7 @@ jerror_t TranslationTable_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t TranslationTable_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t TranslationTable_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 
 	if (isMC == 0) {
 		// Grab run-dependent translation table from CCDB

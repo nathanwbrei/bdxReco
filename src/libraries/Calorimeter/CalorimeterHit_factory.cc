@@ -17,7 +17,6 @@ using namespace std;
 //objects we put in the framework
 #include <Calorimeter/CalorimeterHit.h>
 
-using namespace jana;
 
 CalorimeterHit_factory::CalorimeterHit_factory() :
 		m_ene(0), m_tt(0) {
@@ -49,7 +48,7 @@ jerror_t CalorimeterHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t CalorimeterHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 
 	this->updateCalibrationHandler(m_ene, eventLoop);
 

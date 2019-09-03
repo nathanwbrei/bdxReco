@@ -16,11 +16,9 @@
 #include <TObject.h>
 #include <TString.h>
 
-using namespace jana;
 
 
-
-class TranslationTable: public jana::JObject{
+class TranslationTable: public JObject{
 
 public:
 	JOBJECT_PUBLIC(TranslationTable);

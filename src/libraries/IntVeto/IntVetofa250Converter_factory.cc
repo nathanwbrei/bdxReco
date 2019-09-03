@@ -11,7 +11,6 @@
 using namespace std;
 
 #include "IntVetofa250Converter_factory.h"
-using namespace jana;
 
 IntVetofa250Converter_factory::IntVetofa250Converter_factory():
 				m_isFirstCallToBrun(1),m_intVetofa250Converter(0){
@@ -49,7 +48,7 @@ jerror_t IntVetofa250Converter_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t IntVetofa250Converter_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t IntVetofa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	jout<<"IntVetofa250Converter_factory::brun"<<endl;
 	this->updateCalibrationHandler(	m_intVetofa250Converter->m_thrCalib,eventLoop);

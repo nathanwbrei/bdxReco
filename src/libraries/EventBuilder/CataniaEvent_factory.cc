@@ -18,7 +18,6 @@ using namespace std;
 #include <Paddles/PaddlesHit.h>
 #include <DAQ/eventData.h>
 
-using namespace jana;
 
 //------------------
 // init
@@ -38,7 +37,7 @@ jerror_t CataniaEvent_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t CataniaEvent_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t CataniaEvent_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	gPARMS->GetParameter("MC", m_isMC);
 	return NOERROR;
 }

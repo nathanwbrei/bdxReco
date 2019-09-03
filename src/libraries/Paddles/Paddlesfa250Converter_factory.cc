@@ -12,7 +12,6 @@ using namespace std;
 
 #include <Paddles/Paddlesfa250Converter_factory.h>
 #include <system/CalibrationHandler.h>
-using namespace jana;
 
 //------------------
 // init
@@ -33,7 +32,7 @@ jerror_t Paddlesfa250Converter_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t Paddlesfa250Converter_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber)
+jerror_t Paddlesfa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 
 

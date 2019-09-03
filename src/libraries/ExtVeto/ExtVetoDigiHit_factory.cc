@@ -14,7 +14,6 @@ using namespace std;
 
 #include <TT/TranslationTable.h>
 
-using namespace jana;
 
 //------------------
 // init
@@ -26,7 +25,7 @@ jerror_t ExtVetoDigiHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoDigiHit_factory::brun(jana::JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t ExtVetoDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	jout << "ExtVetoDigiHit_factory::brun new run number: " << runnumber << endl;
 	m_tt = 0;
 	eventLoop->GetSingle(m_tt);
