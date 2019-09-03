@@ -33,8 +33,8 @@ public:
 		kNoSource, kFileSource, kETSource
 	};
 
-	JEventSourceEvioDAQ(const char* source_name);
-	virtual ~JEventSourceEvioDAQ();
+	JEventSourceEvioDAQ(const char* source_name, JApplication* app);
+	~JEventSourceEvioDAQ() override;
 
 	virtual const char* className(void) {
 		return static_className();

@@ -22,8 +22,8 @@ using namespace CLHEP;
 
 
 // Constructor
-JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name) :
-		JEventSource(source_name), chan(0), EDT(0), vme_mother_tag(0), child_mode1_tag(0), child_mode7_tag(0), eventHeader_tag(0), curRunNumber(0), curEventNumber(0) {
+JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name, JApplication* app) :
+		JEventSource(source_name, app), chan(0), EDT(0), vme_mother_tag(0), child_mode1_tag(0), child_mode7_tag(0), eventHeader_tag(0), curRunNumber(0), curEventNumber(0) {
 
 	jout << "JEventSourceEvioDAQ creator: " << this << endl;
 

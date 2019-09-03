@@ -36,8 +36,8 @@ public:
 		kNoSource, kFileSource
 	};
 
-	JEventSourceTRIDASDAQ(const char* source_name);
-	virtual ~JEventSourceTRIDASDAQ();
+	JEventSourceTRIDASDAQ(const char* source_name, JApplication* app);
+	~JEventSourceTRIDASDAQ() override;
 
 	virtual const char* className(void) {
 		return static_className();

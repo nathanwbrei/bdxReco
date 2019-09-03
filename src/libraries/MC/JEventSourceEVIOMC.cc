@@ -27,8 +27,8 @@ using namespace std;
 #include <gbank.h>
 #include <outputFactory.h>
 // Constructor
-JEventSourceEvioMC::JEventSourceEvioMC(const char* source_name) :
-		JEventSource(source_name), chan(0), EDT(0), curRunNumber(0), curEventNumber(0) {
+JEventSourceEvioMC::JEventSourceEvioMC(const char* source_name, JApplication* app) :
+		JEventSource(source_name, app), chan(0), EDT(0), curRunNumber(0), curEventNumber(0) {
 	overwriteRunNumber = -1;
 	gPARMS->SetDefaultParameter("MC:RUN_NUMBER", overwriteRunNumber);
 

@@ -17,8 +17,8 @@ using namespace std;
 #include <DAQ/epicsRawData.h>
 
 // Constructor
-JEventSourceTRIDASDAQ::JEventSourceTRIDASDAQ(const char* source_name) :
-		JEventSource(source_name), curRunNumber(0), curEventNumber(0), ptReader(0), ptTimeSlice(0), ptEvent(0) {
+JEventSourceTRIDASDAQ::JEventSourceTRIDASDAQ(const char* source_name, JApplication* app) :
+		JEventSource(source_name, app), curRunNumber(0), curEventNumber(0), ptReader(0), ptTimeSlice(0), ptEvent(0) {
 
 	jout << "JEventSourceTRIDASDAQ creator: " << this << endl;
 

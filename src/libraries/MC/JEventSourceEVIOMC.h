@@ -29,8 +29,8 @@ using namespace evio;
 class JEventSourceEvioMC:public JEventSource
 {
 	public:
-		JEventSourceEvioMC(const char* source_name);
-		virtual ~JEventSourceEvioMC();
+		JEventSourceEvioMC(const char* source_name, JApplication* app);
+		~JEventSourceEvioMC() override;
 
 		virtual const char* className(void)      {return static_className();}
 		static const char* static_className(void){return "JEventSourceEvioMC";}
