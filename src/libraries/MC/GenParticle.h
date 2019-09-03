@@ -13,7 +13,7 @@
 
 #include "TObject.h"
 
-class GenParticle:public jana::JObject{
+class GenParticle : public JObject, public TObject {
 	public:
 
 		GenParticle(){

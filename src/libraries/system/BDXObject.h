@@ -17,7 +17,7 @@ using namespace std;
 
 class TCanvas;
 
-class BDXObject: public JObject {
+class BDXObject: public JObject, public TObject {
 public:
 	BDXObject();
 	virtual ~BDXObject();

@@ -13,7 +13,7 @@
 #include "TObject.h"
 
 /*A common class for fad250 converted hits. Can be useful*/
-class fa250ConvertedHit :public jana::JObject {
+class fa250ConvertedHit : public JObject, public TObject {
 public:
 	JOBJECT_PUBLIC(fa250ConvertedHit);
 	fa250ConvertedHit(){};

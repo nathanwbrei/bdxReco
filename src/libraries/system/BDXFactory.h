@@ -21,7 +21,7 @@ using namespace std;
 
 
 
-template<class T> class BDXFactory : public jana::JFactory<T> {
+template<class T> class BDXFactory : public JFactoryT<T> {
 public:
 	BDXFactory();
 	virtual ~BDXFactory();

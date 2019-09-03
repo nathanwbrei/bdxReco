@@ -20,7 +20,7 @@ class TH1D;
 class TCanvas;
 
 
-class CalorimeterHit:public BDXObject{
+class CalorimeterHit : public BDXObject{
 
 public:
 

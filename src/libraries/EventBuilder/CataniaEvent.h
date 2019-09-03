@@ -10,11 +10,12 @@
 
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
-#include "TObject.h"
 
 #include <TT/TranslationTable.h>
+
 #include "TObject.h"
-class CataniaEvent: public jana::JObject {
+
+class CataniaEvent : public JObject, public TObject {
 public:
 	JOBJECT_PUBLIC(CataniaEvent);
 

@@ -11,8 +11,9 @@
 
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
+#include "TObject.h"
 
-class VetoMCHit : public jana::JObject{
+class VetoMCHit : public JObject, public TObject {
 
 
 public:

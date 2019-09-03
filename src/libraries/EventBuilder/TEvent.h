@@ -21,7 +21,7 @@ class TClass;
 
 using namespace std;
 
-class TEvent: public jana::JObject {
+class TEvent : public JObject, public TObject {
 
 public:
 	JOBJECT_PUBLIC(TEvent)

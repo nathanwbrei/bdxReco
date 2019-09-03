@@ -4,11 +4,12 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 
+#include "TObject.h"
 #include "TString.h"
-//#include <vector>
 
 /*This is basically a light-weight container for EPICS data from EVIO*/
-class epicsRawData:public jana::JObject{
+class epicsRawData : public JObject, public TObject {
+
 	public:
 		JOBJECT_PUBLIC(epicsRawData);
 

@@ -11,7 +11,11 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 
-class triggerDataBDXmini: public jana::JObject {
+#include "TObject.h"
+
+using namespace std;
+
+class triggerDataBDXmini: public JObject, public TObject {
 public:
 	JOBJECT_PUBLIC(triggerDataBDXmini)
 	;

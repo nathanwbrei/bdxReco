@@ -11,7 +11,9 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 #include <TT/TranslationTable.h>
-class ExtVetoSummary:public jana::JObject{
+#include "TObject.h"
+
+class ExtVetoSummary : public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(ExtVetoSummary);
 		

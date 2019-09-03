@@ -11,6 +11,9 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 #include <TT/TranslationTable.h>
+
+#include "TObject.h"
+
 /*
  * A.C.
  * This object represents a not-yet calibrated it in the Paddles.
@@ -18,7 +21,7 @@
  * - Be as similar as possible to what is obtained from GEMC, while we wait GEMC producing composite, fadc-like, banks.
  */
 
-class PaddlesDigiHit:public jana::JObject{
+class PaddlesDigiHit : public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(PaddlesDigiHit);
 		

@@ -4,11 +4,12 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 #include <MC/VetoMCHit.h>
+#include "TObject.h"
 
 /*This class is basically a place-holder for the data coming from EVIO file,
  * for the raw and digitized banks
  */
-class UserMCData: public jana::JObject {
+class UserMCData: public JObject, public TObject {
 public:
 	JOBJECT_PUBLIC(UserMCData);
 

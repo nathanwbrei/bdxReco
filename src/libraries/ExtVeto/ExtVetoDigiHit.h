@@ -20,7 +20,7 @@
  * - Be as similar as possible to what is obtained from GEMC, while we wait GEMC producing composite, fadc-like, banks.
  */
 
-class ExtVetoDigiHit:public jana::JObject{
+class ExtVetoDigiHit : public JObject, public TObject {
 public:
 
 	JOBJECT_PUBLIC(ExtVetoDigiHit);

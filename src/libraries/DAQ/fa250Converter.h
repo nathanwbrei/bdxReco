@@ -8,15 +8,16 @@
 #ifndef _FadcConverter_
 #define _FadcConverter_
 
-#include <cmath>
-
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 
 #include <DAQ/fa250Hit.h>
 #include <TT/TranslationTable.h>
+#include "TObject.h"
 
-template<class T> class fa250Converter:public jana::JObject{
+#include <cmath>
+
+template<class T> class fa250Converter : public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(fa250Converter);
 		

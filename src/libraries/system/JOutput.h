@@ -10,10 +10,11 @@
 
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
+#include "TObject.h"
 
 #include <string>
 
-class JOutput: public jana::JObject {
+class JOutput: public JObject, public TObject {
 protected:
 	int m_isOpen;
 public:

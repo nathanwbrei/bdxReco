@@ -13,8 +13,10 @@
 
 #include <TT/TranslationTable.h>
 
+#include "TObject.h"
 
-class PaddlesHit:public jana::JObject{
+
+class PaddlesHit : public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(PaddlesHit);
 		

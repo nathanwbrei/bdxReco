@@ -11,14 +11,14 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 
+#include "TObject.h"
 #include "TString.h"
-//#include <vector>
 
 typedef enum {
 	DAQ=1,EPICS=2,CONF=3
 } eventSource;
 
-class eventData:public jana::JObject{
+class eventData:public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(eventData);
 		

@@ -10,11 +10,12 @@
 
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
+#include "TObject.h"
 
 /*This class is basically a place-holder for the data coming from EVIO file,
  * for the calorimeter raw and digitized banks
  */
-class CalorimeterMCHit: public jana::JObject {
+class CalorimeterMCHit: public JObject, public TObject {
 public:
 	JOBJECT_PUBLIC(CalorimeterMCHit);
 
