@@ -20,14 +20,11 @@ class fa250Mode1CalibPedSubHit:public fa250Mode1Hit{
 		virtual ~fa250Mode1CalibPedSubHit();
 
 		
-
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			 AddString(items, "crate", "%4d", m_channel.rocid);
-			 AddString(items, "slot", "%4d", m_channel.slot);
-			 AddString(items, "channel", "%4d", m_channel.channel);
-			 AddString(items, "nsamples", "%4d", samples.size());
+		void Summarize(JObjectSummary& summary) const final {
+			 summary.add(m_channel.rocid, "crate", "%4d");
+			 summary.add(m_channel.slot, "slot", "%4d");
+			 summary.add(m_channel.channel, "channel", "%4d");
+			 summary.add(samples.size(), "nsamples", "%4d");
 		}
 		
 		double m_ped,m_RMS; //from DB

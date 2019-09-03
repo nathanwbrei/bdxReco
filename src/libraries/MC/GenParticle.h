@@ -19,25 +19,18 @@ class GenParticle : public JObject, public TObject {
 		GenParticle(){
 		}
 		JOBJECT_PUBLIC(GenParticle);
-		
-		// Add data members here. For example:
-		// int id;
-		// double E;
-		
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			 AddString(items, "id", "%4d", id);
-			 AddString(items, "pid", "%4d", pid);
-			 AddString(items, "px", "%4f", px);
-			 AddString(items, "py", "%4f", py);
-			 AddString(items, "pz", "%4f", pz);
-			 AddString(items, "vx", "%4f", vx);
-			 AddString(items, "vy", "%4f", vy);
-			 AddString(items, "vz", "%4f", vz);
+
+
+		void Summarize(JObjectSummary& summary) {
+			 summary.add(id, "id", "%4d");
+			 summary.add(pid, "pid", "%4d");
+			 summary.add(px, "px", "%4f");
+			 summary.add(py, "py", "%4f");
+			 summary.add(pz, "pz", "%4f");
+			 summary.add(vx, "vx", "%4f");
+			 summary.add(vy, "vy", "%4f");
+			 summary.add(vz, "vz", "%4f");
 		}
-
-
 
 		double px;
 		double py;

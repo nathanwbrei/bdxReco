@@ -27,23 +27,14 @@ public:
 	JOBJECT_PUBLIC(TEvent)
 	;
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		//AddString(items, "id", "%4d", id);
-		// AddString(items, "E", "%f", E);
+	void Summarize(JObjectSummary& summary) const final {
 		if (m_eventHeader != 0) {
-			AddString(items, "runN", "%4d", m_eventHeader->getRunNumber());
-			AddString(items, "eventN", "%4d", m_eventHeader->getEventNumber());
-			AddString(items, "eventW", "%e", m_eventHeader->getWeight());
+		    summary.add(m_eventHeader->getRunNumber(), "runN", "%4d");
+			summary.add(m_eventHeader->getEventNumber(), "eventN", "%4d");
+			summary.add(m_eventHeader->getWeight(), "eventW", "%e");
 		}
-		if (m_collections.size() >= 1) AddString(items, "collection0 entries: ", "%4d", m_collections[0]->GetEntries());
-		if (m_collections.size() >= 2) AddString(items, "collection1 entries: ", "%4d", m_collections[1]->GetEntries());
-
+		if (m_collections.size() >= 1) summary.add(m_collections[0]->GetEntries(), "collection0 entries", "%4d");
+		if (m_collections.size() >= 2) summary.add(m_collections[1]->GetEntries(), "collection1 entries", "%4d");
 	}
 
 private:

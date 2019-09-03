@@ -29,24 +29,19 @@ public:
 
 	JOBJECT_PUBLIC(IntVetoDigiHit);
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string,string> > &items)const{
-		AddString(items, "sector", "%4d", m_channel.sector);
-		AddString(items, "layer", "%4d", m_channel.layer);
-		AddString(items, "component", "%4d", m_channel.component);
-		AddString(items, "readout", "%4d", m_channel.readout);
-		AddString(items, "Qphe","%4f",Qphe);
-		AddString(items, "Qraw","%4f",Qraw);
-		AddString(items, "T","%4f",T);
-		AddString(items, "A","%4f",A);
-		AddString(items, "pedMean","%4f",pedMean);
-		AddString(items, "pedRMS","%4f",pedRMS);
-		AddString(items, "RMSflag","%4d",1*RMSflag);
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.sector, "sector", "%4d");
+		summary.add(m_channel.layer, "layer", "%4d");
+		summary.add(m_channel.component, "component", "%4d");
+		summary.add(m_channel.readout, "readout", "%4d");
+		summary.add(Qphe, "Qphe", "%4f");
+		summary.add(Qraw, "Qraw", "%4f");
+		summary.add(T, "T", "%4f");
+		summary.add(A, "A", "%4f");
+		summary.add(pedMean, "pedMean", "%4f");
+		summary.add(pedRMS, "pedRMS", "%4f");
+		summary.add(1*RMSflag, "RMSflag", "%4d");
 
 	}
 	//A.C. do not touch these

@@ -9,7 +9,6 @@
 #define _CalorimeterDigiHit_
 
 #include <JANA/JObject.h>
-#include <JANA/JFactory.h>
 #include <TT/TranslationTable.h>
 #include <Calorimeter/CalorimeterSiPMHit.h>
 
@@ -20,18 +19,16 @@ public:
 
 	JOBJECT_PUBLIC(CalorimeterDigiHit);
 
-
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string,string> > &items)const{
-		AddString(items, "sector", "%i", m_channel.sector);
-		AddString(items, "x", "%i", m_channel.x);
-		AddString(items, "y", "%i", m_channel.y);
-		AddString(items, "readout","%i",m_channel.readout);
-		AddString(items, "Q", "%f", Q);
-		AddString(items, "T", "%f", T);
-		AddString(items, "A", "%f", A);
-		AddString(items, "type","%i",type);
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.sector, "sector", "%i");
+		summary.add(m_channel.x, "x", "%i");
+		summary.add(m_channel.y, "y", "%i");
+		summary.add(m_channel.readout, "readout", "%i");
+		summary.add(Q, "Q", "%f");
+		summary.add(T, "T", "%f");
+		summary.add(A, "A", "%f");
+		summary.add(type, "type", "%i");
 	}
 
 	double Q,T,A; //Charge (u.a.), time (ns), Amplitude (mV)

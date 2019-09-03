@@ -17,23 +17,14 @@
  */
 class ExtVetoMCHit: public VetoMCHit {
 public:
-	JOBJECT_PUBLIC(ExtVetoMCHit)
-	;
+	JOBJECT_PUBLIC(ExtVetoMCHit);
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-
-		AddString(items, "sector", "%i", sector);
-		AddString(items, "channel", "%i", channel);
-		AddString(items, "system", "%i", system);
-
-		AddString(items, "totEdep", "%f", totEdep);
-		AddString(items, "id", "%4d", id);
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(sector, "sector", "%i");
+		summary.add(channel, "channel", "%i");
+		summary.add(system, "system", "%i");
+		summary.add(totEdep, "totEdep", "%f");
+		summary.add(id, "id", "%4d");
 	}
 
 	//dgtz banks

@@ -15,34 +15,33 @@
 
 class TH1D;
 class TCanvas;
-class fa250WaveboardV1Hit:public fa250Hit{
-	public:
-		JOBJECT_PUBLIC(fa250WaveboardV1Hit);
-		
-		
-		fa250WaveboardV1Hit();
-		virtual ~fa250WaveboardV1Hit();
 
-		vector <double> samples;
-		int chargeFirstDBnopedsub;
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			 AddString(items, "crate", "%4d",  m_channel.rocid);
-			 AddString(items, "slot", "%4d",  m_channel.slot);
-			 AddString(items, "channel", "%4d",  m_channel.channel);
-			 AddString(items, "timestamp","%lld",(long long)timestamp);
-			 AddString(items,"nsamples","%4d",samples.size());
-			 AddString(items,"charge(firstDF,noPedSub)","%4d",chargeFirstDBnopedsub);
+class fa250WaveboardV1Hit : public fa250Hit {
+public:
+    JOBJECT_PUBLIC(fa250WaveboardV1Hit);
 
-			// AddString(items, "E", "%f", E);
-		}
-		void toHisto(TH1D *h) const;
-		
-		virtual TCanvas* Draw(int id=0) const;
+    fa250WaveboardV1Hit();
 
-	protected:
-		mutable TH1D *hWave;
+    virtual ~fa250WaveboardV1Hit();
+
+    vector<double> samples;
+    int chargeFirstDBnopedsub;
+
+    void Summarize(JObjectSummary& summary) const final {
+        summary.add(m_channel.rocid, "crate", "%4d");
+        summary.add(m_channel.slot, "slot", "%4d");
+        summary.add(m_channel.channel, "channel", "%4d");
+        summary.add((long long) timestamp, "timestamp", "%lld");
+        summary.add(samples.size(), "nsamples", "%4d");
+        summary.add(chargeFirstDBnopedsub, "charge(firstDF,noPedSub)", "%4d");
+    }
+
+    void toHisto(TH1D* h) const;
+
+    virtual TCanvas* Draw(int id = 0) const;
+
+protected:
+    mutable TH1D* hWave;
 };
 
 #endif // _fa250Mode1Hit_

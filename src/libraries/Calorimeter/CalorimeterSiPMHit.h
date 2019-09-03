@@ -38,22 +38,23 @@ public:
 	// double E;
 
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string,string> > &items)const{
-		AddString(items, "sector","%i",m_channel.calorimeter->sector);
-		AddString(items, "x","%i",m_channel.calorimeter->x);
-		AddString(items, "y","%i",m_channel.calorimeter->y);
-		AddString(items, "readout","%i",m_channel.calorimeter->readout);
-		AddString(items, "Qraw", "%f",Qraw);
-		AddString(items, "Qphe","%f",Qphe);
-		AddString(items, "A","%f",A);
-		AddString(items, "T","%f",T);
-		AddString(items, "pedMean","%f",pedMean);
-		AddString(items, "pedRMS","%f",pedRMS);
-		AddString(items, "rms_flag","%i",1*RMSflag);
-		AddString(items, "type","%i",1*type);
-		AddString(items, "n_singles","%i",1*m_nSingles);
-		AddString(items, "n_signals","%i",1*m_nSignals);
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.calorimeter->sector, "sector", "%i");
+
+		summary.add(m_channel.calorimeter->sector, "sector", "%i");
+		summary.add(m_channel.calorimeter->x, "x", "%i");
+		summary.add(m_channel.calorimeter->y, "y", "%i");
+		summary.add(m_channel.calorimeter->readout, "readout", "%i");
+		summary.add(Qraw, "Qraw", "%f");
+		summary.add(Qphe, "Qphe", "%f");
+		summary.add(A, "A", "%f");
+		summary.add(T, "T", "%f");
+		summary.add(pedMean, "pedMean", "%f");
+		summary.add(pedRMS, "pedRMS", "%f");
+		summary.add(1*RMSflag, "rms_flag", "%i");
+		summary.add(1*type, "type", "%i");
+		summary.add(1*m_nSingles, "n_singles", "%i");
+		summary.add(1*m_nSignals, "n_signals", "%i");
 	}
 
 	//A.C. do not touch these

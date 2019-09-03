@@ -24,32 +24,27 @@ class IntVetoSiPMHit:public fa250ConvertedHit{
 public:
 	JOBJECT_PUBLIC(IntVetoSiPMHit);
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string,string> > &items)const{
-		AddString(items, "sector", "%4d", m_channel.int_veto->sector);
-		AddString(items, "layer", "%4d", m_channel.int_veto->layer);
-		AddString(items, "component", "%4d", m_channel.int_veto->component);
-		AddString(items, "readout", "%4d", m_channel.int_veto->readout);
-		AddString(items,"Qraw","%4f",Qraw);
-		AddString(items,"Qphe","%4f",Qphe);
-		AddString(items,"T","%4f",T);
-		AddString(items,"Araw","%4f",Araw);
-		AddString(items,"Aphe","%4f",Aphe);
-		AddString(items,"pedMean","%4f",pedMean);
-		AddString(items,"pedRMS","%4f",pedRMS);
-		AddString(items,"rmsFlag","%i",1*RMSflag);
-		AddString(items,"type","%i",m_type);
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.int_veto->sector, "sector", "%4d");
+		summary.add(m_channel.int_veto->layer, "layer", "%4d");
+		summary.add(m_channel.int_veto->component, "component", "%4d");
+		summary.add(m_channel.int_veto->readout, "readout", "%4d");
+		summary.add(Qraw, "Qraw", "%4f");
+		summary.add(Qphe, "Qphe", "%4f");
+		summary.add(T, "T", "%4f");
+		summary.add(Araw, "Araw", "%4f");
+		summary.add(Aphe, "Aphe", "%4f");
+		summary.add(pedMean, "pedMean", "%4f");
+		summary.add(pedRMS, "pedRMS", "%4f");
+		summary.add(1*RMSflag, "rmsFlag", "%i");
+		summary.add(m_type, "type", "%i");
 	}
-	typedef enum{
+
+	typedef enum {
 		noise=0,
 		real_signal=1, //not much more to distinguish!
 		num_hit_type
-	}hit_type;
+	} hit_type;
 
 
 

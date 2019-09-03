@@ -31,15 +31,13 @@ class eventData:public JObject, public TObject {
 		int eventType;
 
 
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			AddString(items,"runN","%i",runN);
-			AddString(items,"eventN","%lu",eventN);
-			AddString(items,"eventTS","%lu",eventTS);
-			AddString(items,"time","%lu",time);
+		void Summarize(JObjectSummary& summary) const final {
+			summary.add(runN, "runN", "%i");
+			summary.add(eventN, "eventN", "%lu");
+			summary.add(eventTS, "eventTS", "%lu");
+			summary.add(time, "time", "%lu");
 			for (int iword=0;iword<triggerWords.size();iword++){
-			 AddString(items, Form("word_%i",iword), "%x", triggerWords[iword]);
+			    summary.add(triggerWords[iword], Form("word_%i", iword), "%x");
 			}
 		}
 		

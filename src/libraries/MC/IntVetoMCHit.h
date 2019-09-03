@@ -27,30 +27,29 @@ public:
 	//raw banks
 	double totEdep;
 	int sector,channel,system;
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		AddString(items,"sector","%i",sector);
-		AddString(items,"system","%i",system);
-		AddString(items,"channel","%i",channel);
-		AddString(items, "totEdep", "%f", totEdep);
-		AddString(items, "adc1", "%d", adc1);
-		AddString(items, "adc2", "%d", adc2);
-		AddString(items, "adc3", "%d", adc3);
-		AddString(items, "adc4", "%d", adc4);
-		AddString(items, "adc5", "%d", adc5);
-		AddString(items, "adc6", "%d", adc6);
-		AddString(items, "adc7", "%d", adc7);
-		AddString(items, "adc8", "%d", adc8);
-		AddString(items, "tdc1", "%d", tdc1);
-		AddString(items, "tdc2", "%d", tdc2);
-		AddString(items, "tdc3", "%d", tdc3);
-		AddString(items, "tdc4", "%d", tdc4);
-		AddString(items, "tdc5", "%d", tdc5);
-		AddString(items, "tdc6", "%d", tdc6);
-		AddString(items, "tdc7", "%d", tdc7);
-		AddString(items, "tdc8", "%d", tdc8);
 
+	// This method is used primarily for pretty printing
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(sector, "sector", "%i");
+		summary.add(system, "system", "%i");
+		summary.add(channel, "channel", "%i");
+		summary.add(totEdep, "totEdep", "%f");
+		summary.add(adc1, "adc1", "%d");
+		summary.add(adc2, "adc2", "%d");
+		summary.add(adc3, "adc3", "%d");
+		summary.add(adc4, "adc4", "%d");
+		summary.add(adc5, "adc5", "%d");
+		summary.add(adc6, "adc6", "%d");
+		summary.add(adc7, "adc7", "%d");
+		summary.add(adc8, "adc8", "%d");
+		summary.add(tdc1, "tdc1", "%d");
+		summary.add(tdc2, "tdc2", "%d");
+		summary.add(tdc3, "tdc3", "%d");
+		summary.add(tdc4, "tdc4", "%d");
+		summary.add(tdc5, "tdc5", "%d");
+		summary.add(tdc6, "tdc6", "%d");
+		summary.add(tdc7, "tdc7", "%d");
+		summary.add(tdc8, "tdc8", "%d");
 	}
 };
 

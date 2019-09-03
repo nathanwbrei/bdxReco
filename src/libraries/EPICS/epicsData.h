@@ -10,11 +10,12 @@
 
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
+#include "TObject.h"
 
 #include <map>
 using namespace std;
 
-class epicsData: public JObject {
+class epicsData: public JObject, public TObject {
 private:
 
 	map<string, double> values;
@@ -22,14 +23,7 @@ private:
 public:
 	JOBJECT_PUBLIC(epicsData);
 
-
-
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		// AddString(items, "id", "%4d", id);
-		// AddString(items, "E", "%f", E);
-	}
+	void Summarize(JObjectSummary& summary) const final {}
 
 	int runNumber, eventNumber, time;
 	bool hasData(string key) const;

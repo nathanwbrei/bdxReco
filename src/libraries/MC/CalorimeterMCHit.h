@@ -32,17 +32,16 @@ public:
 	int pid;
 
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		AddString(items, "sector(MC)", "%i", sector);
-		AddString(items, "x(MC)", "%i", x);
-		AddString(items, "y(MC)", "%i", y);
-		AddString(items, "E", "%f", totEdep);
-		AddString(items, "pid", "%i", pid);
-		AddString(items, "adcl", "%d", adcl);
-		AddString(items, "adcr", "%d", adcr);
-		AddString(items, "tdcl", "%d", tdcl);
-		AddString(items, "tdcr", "%d", tdcr);
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(sector, "sector(MC)", "%i");
+		summary.add(x, "x(MC)", "%i");
+		summary.add(y, "y(MC)", "%i");
+		summary.add(totEdep, "E", "%f");
+		summary.add(pid, "pid", "%i");
+		summary.add(adcl, "adcl", "%d");
+		summary.add(adcr, "adcr", "%d");
+		summary.add(tdcl, "tdcl", "%d");
+		summary.add(tdcr, "tdcr", "%d");
 	}
 };
 

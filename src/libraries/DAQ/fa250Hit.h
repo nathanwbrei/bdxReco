@@ -8,10 +8,9 @@
 #ifndef FA250HIT_H_
 #define FA250HIT_H_
 
-#include <JANA/JObject.h>
-#include <JANA/JFactory.h>
 #include <TT/TranslationTable.h>
 #include <system/BDXObject.h>
+
 class fa250Hit : public BDXObject{
 public:
 

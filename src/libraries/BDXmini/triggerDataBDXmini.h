@@ -56,10 +56,9 @@ public:
 	unsigned long int getLongWordChannelsTRG() const;
 
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		AddString(items, "chan", "0x%lx", getLongWordChannels());
-		AddString(items, "chanTRG", "0x%lx", getLongWordChannelsTRG());
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(getLongWordChannels(), "chan", "0x%lx");
+		summary.add(getLongWordChannelsTRG(), "chanTRG", "0x%lx");
 	}
 
 	ClassDef(triggerDataBDXmini,1)

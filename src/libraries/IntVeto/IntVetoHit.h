@@ -23,21 +23,15 @@ private:
 public:
 	JOBJECT_PUBLIC(IntVetoHit);
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
 
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string,string> > &items)const{
-		AddString(items, "sector", "%4d", m_channel.sector);
-		AddString(items, "layer", "%4d", m_channel.layer);
-		AddString(items, "component", "%4d", m_channel.component);
-		AddString(items, "Q","%4f",Q);
-		AddString(items, "T","%4f",T);
-
-
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.sector, "sector", "%4d");
+		summary.add(m_channel.layer, "layer", "%4d");
+		summary.add(m_channel.component, "component", "%4d");
+		summary.add(Q, "Q", "%4f");
+		summary.add(T, "T", "%4f");
 	}
+
 	TranslationTable::INT_VETO_Index_t m_channel; //Detector-specific ID. Since this is a detector-based object, the readout field will be ==0
 
 	double Q,T; //Q is in phe

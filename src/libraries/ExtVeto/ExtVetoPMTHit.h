@@ -14,34 +14,25 @@
 #include <TT/TranslationTable.h>
 
 
-class ExtVetoPMTHit:public fa250ConvertedHit{
+class ExtVetoPMTHit : public fa250ConvertedHit{
 public:
 	JOBJECT_PUBLIC(ExtVetoPMTHit);
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
 
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-
-	void toStrings(vector<pair<string,string> > &items)const{
-		/* AddString(items, "id", "%4d", id);*/
-		AddString(items, "sector", "%i", m_channel.ext_veto->sector);
-		AddString(items, "layer", "%i", m_channel.ext_veto->layer);
-		AddString(items, "component", "%i", m_channel.ext_veto->component);
-		AddString(items, "readout", "%i", m_channel.ext_veto->readout);
-		AddString(items, "Q", "%f", Q);
-		AddString(items, "T", "%f", T);
-		AddString(items, "pedMean", "%f", pedMean);
-
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.ext_veto->sector, "sector", "%i");
+		summary.add(m_channel.ext_veto->layer, "layer", "%i");
+		summary.add(m_channel.ext_veto->component, "component", "%i");
+		summary.add(m_channel.ext_veto->readout, "readout", "%i");
+		summary.add(Q, "Q", "%f");
+		summary.add(T, "T", "%f");
+		summary.add(pedMean, "pedMean", "%f");
 	}
 
 public: //yes, these are public to keep this simple.
 
-		//A.C. do not touch these
-		TranslationTable::ChannelInfo m_channel; //both crate-slot channel and detector-specific ID. Since this is a sensor-based object, the readout field will be !=0
-
+	//A.C. do not touch these
+	TranslationTable::ChannelInfo m_channel; //both crate-slot channel and detector-specific ID. Since this is a sensor-based object, the readout field will be !=0
 
 	double Q,T;
 	double pedMean;

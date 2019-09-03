@@ -14,27 +14,20 @@
 #include "TObject.h"
 
 class ExtVetoSummary : public JObject, public TObject {
-	public:
-		JOBJECT_PUBLIC(ExtVetoSummary);
-		
-		// Add data members here. For example:
-		// int id;
-		// double E;
-		int sector;
-		int nHits;
-	    int component;
-		vector<TranslationTable::EXT_VETO_Index_t> hits;
-      double E;
-      double T;
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			// AddString(items, "id", "%4d", id);
-			// AddString(items, "E", "%f", E);
-		}
+public:
+    JOBJECT_PUBLIC(ExtVetoSummary);
 
-      TranslationTable::EXT_VETO_Index_t m_channel;
-      oid_t ExtVetoHit_id;
+    int sector;
+    int nHits;
+    int component;
+    std::vector <TranslationTable::EXT_VETO_Index_t> hits;
+    double E;
+    double T;
+
+    void Summarize(JObjectSummary& summary) const final {};
+
+    TranslationTable::EXT_VETO_Index_t m_channel;
+    oid_t ExtVetoHit_id;
 
 };
 

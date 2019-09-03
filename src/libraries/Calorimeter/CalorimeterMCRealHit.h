@@ -18,15 +18,11 @@ class CalorimeterMCRealHit: public JObject, public TObject {
 public:
 	JOBJECT_PUBLIC(CalorimeterMCRealHit);
 
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		// AddString(items, "id", "%4d", id);
-		AddString(items, "sector", "%i", m_channel.sector);
-		AddString(items, "x", "%i", m_channel.x);
-		AddString(items, "y", "%i", m_channel.y);
-		AddString(items, "E", "%f", E);
-
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.sector, "sector", "%i");
+		summary.add(m_channel.x, "x", "%i");
+		summary.add(m_channel.y, "y", "%i");
+		summary.add(E, "E", "%f");
 	}
 
 	double E;

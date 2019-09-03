@@ -13,16 +13,9 @@ class epicsRawData : public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(epicsRawData);
 
-
 		string rawData;
 
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-
-
-		}
-
+		void Summarize(JObjectSummary& summary) const final {}
 };
 
 #endif

@@ -15,11 +15,10 @@ public:
 
 	double data;
 	int N;
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		AddString(items, "N", "%d", N);
-		AddString(items, "data", "%.6e", data);
+
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(N, "N", "%d");
+		summary.add(data, "data", "%.6e");
 	}
 };
 

@@ -17,19 +17,16 @@ class ExtVetoHit : public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(ExtVetoHit);
 		
-		// Add data members here. For example:
-		// int id;
-		// double E;
 		double E,T;
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			 AddString(items, "sector", "%i",m_channel.sector);
-			 AddString(items, "layer", "%i",m_channel.layer);
-			 AddString(items, "component", "%i",m_channel.component);
-			 AddString(items, "E", "%f", E);
-			 AddString(items, "T", "%f", T);
+
+		void Summarize(JObjectSummary& summary) const final {
+			summary.add(m_channel.sector, "sector", "%i");
+			summary.add(m_channel.layer, "layer", "%i");
+			summary.add(m_channel.component, "component", "%i");
+			summary.add(E, "E", "%f");
+			summary.add(T, "T", "%f");
 		}
+
 		TranslationTable::EXT_VETO_Index_t m_channel; //Detector-specific ID. Since this is a detector-based object, the readout field will be ==0
 
 		ClassDef(ExtVetoHit,1);

@@ -15,24 +15,19 @@
 /*This class is basically a place-holder for the data coming from EVIO file,
  * for the raw and digitized banks
  */
-class PaddlesMCHit:public VetoMCHit{
-	public:
-		JOBJECT_PUBLIC(PaddlesMCHit);
-		
-		// Add data members here. For example:
-		// int id;
-		// double E;
-		
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			 AddString(items, "id", "%4d", id);
-		}
+class PaddlesMCHit : public VetoMCHit {
+public:
+    JOBJECT_PUBLIC(PaddlesMCHit);
 
-		//dgtz banks
-		int adc,tdc;
-		//raw banks
-		double totEdep;
+    void Summarize(JObjectSummary& summary) const final {
+        summary.add(id, "id", "%4d");
+    }
+
+    //dgtz banks
+    int adc, tdc;
+
+    //raw banks
+    double totEdep;
 };
 
 #endif // _genParticle_

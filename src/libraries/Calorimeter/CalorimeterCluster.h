@@ -8,9 +8,6 @@
 #ifndef _CalorimeterCluster_
 #define _CalorimeterCluster_
 
-#include <JANA/JObject.h>
-#include <JANA/JFactory.h>
-
 #include <system/BDXObject.h>
 #include "TObject.h"
 
@@ -25,25 +22,16 @@ public:
 	JOBJECT_PUBLIC(CalorimeterCluster)
 	;
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		// AddString(items, "id", "%4d", id);
-
-		AddString(items, "sector", "%i", m_sector);
-		AddString(items, "x", "%f", x);
-		AddString(items, "y", "%f", y);
-
-		AddString(items, "E", "%f", E);
-		AddString(items, "Eseed", "%f", Eseed);
-		AddString(items, "T", "%f", T);
-		AddString(items,"Nhits","%i",Nhits);
-		AddString(items,"NhitsNearSeed","%i",Nhits_near_seed);
-
+	void Summarize(JObjectSummary& summary) const final {
+	    summary.add(m_sector, "sector", "%i");
+		summary.add(x, "x", "%f");
+		summary.add(y, "y", "%f");
+		summary.add(E, "E", "%f");
+		summary.add(Eseed, "Eseed", "%f");
+		summary.add(T, "T", "%f");
+		summary.add(Nhits, "Nhits", "%i");
+		summary.add(Nhits_near_seed, "NhitsNearSeed", "%i");
 	}
 
 	double Eseed;

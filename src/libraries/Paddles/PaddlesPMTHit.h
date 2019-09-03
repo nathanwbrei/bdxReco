@@ -18,16 +18,8 @@ class PaddlesPMTHit:public fa250ConvertedHit{
 public:
 	JOBJECT_PUBLIC(PaddlesPMTHit);
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string,string> > &items)const{
-		// AddString(items, "id", "%4d", id);
-		// AddString(items, "E", "%f", E);
-	}
+	void Summarize(JObjectSummary& summary) const final {}
 
 public: //yes, these are public to keep this simple.
 

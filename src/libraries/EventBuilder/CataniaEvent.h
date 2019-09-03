@@ -19,25 +19,20 @@ class CataniaEvent : public JObject, public TObject {
 public:
 	JOBJECT_PUBLIC(CataniaEvent);
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
 	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		AddString(items, "runN", "%i", runN);
-		AddString(items, "eventN", "%i", eventN);
-		AddString(items, "time", "%i", time);
-		AddString(items, "timestamp", "%lld", (long long) timestamp);
-		AddString(items, "tWord", "%i", tWord);
-		AddString(items, "RMSflag", "%d", 1 * flag_RMS);
-		AddString(items, "RMSflag1", "%d", 1 * flag_RMS1);
-		AddString(items, "RMSflag2", "%d", 1 * flag_RMS2);
-		AddString(items, "E1", "%f", E1);
-		AddString(items, "E2", "%f", E2);
-		AddString(items, "T1", "%f", T1);
-		AddString(items, "T2", "%f", T2);
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(runN, "runN", "%i");
+		summary.add(eventN, "eventN", "%i");
+		summary.add(time, "time", "%i");
+		summary.add((long long) timestamp, "timestamp", "%lld");
+		summary.add(tWord, "tWord", "%i");
+		summary.add(1*flag_RMS, "RMSflag", "%d");
+		summary.add(1*flag_RMS1, "RMSflag1", "%d");
+		summary.add(1*flag_RMS2, "RMSflag2", "%d");
+		summary.add(E1, "E1", "%f");
+		summary.add(E2, "E2", "%f");
+		summary.add(T1, "T1", "%f");
+		summary.add(T2, "T2", "%f");
 	}
 
 	double Qc1, Qc2, Qc3, Qcs1, Qcs2, Qcs3;

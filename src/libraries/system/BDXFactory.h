@@ -10,8 +10,7 @@
 
 #include <JANA/JFactory.h>
 #include <JANA/JApplication.h>
-#include <JANA/JEventProcessor.h>
-#include <JANA/JEventLoop.h>
+#include <JANA/JEvent.h>
 #include "BDXEventProcessor.h"
 #include "CalibrationHandler.h"
 #include <string>

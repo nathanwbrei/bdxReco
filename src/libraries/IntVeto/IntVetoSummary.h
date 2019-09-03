@@ -20,19 +20,13 @@ class TH1D;
 class IntVetoSummary:public BDXObject{
 	public:
 		JOBJECT_PUBLIC(IntVetoSummary);
-		
-		// Add data members here. For example:
-		// int id;
-		// double E;
-		
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			 AddString(items, "sector", "%4d",sector);
-			 AddString(items, "Nhits\n","%4d",hits.size());
+
+		void Summarize(JObjectSummary& summary) const final {
+			 summary.add(sector, "sector", "%4d");
+			 summary.add(hits.size(), "Nhits", "%4d");
 			 for (int ii=0;ii<hits.size();ii++){
-				 AddString(items, "component hit layer", "%4d", hits[ii].layer);
-				 AddString(items, "component hit component\n", "%4d", hits[ii].component);
+				 summary.add(hits[ii].layer, "component hit layer", "%4d");
+				 summary.add(hits[ii].component, "component hit component", "%4d");
 			 }
 		}
 		int sector;

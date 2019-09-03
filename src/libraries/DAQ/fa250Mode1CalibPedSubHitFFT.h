@@ -20,17 +20,11 @@ public:
 	fa250Mode1CalibPedSubHitFFT();
 	virtual ~fa250Mode1CalibPedSubHitFFT();
 
-	// Add data members here. For example:
-	// int id;
-	// double E;
-
-	// This method is used primarily for pretty printing
-	// the second argument to AddString is printf style format
-	void toStrings(vector<pair<string, string> > &items) const {
-		AddString(items, "crate", "%4d", m_channel.rocid);
-		AddString(items, "slot", "%4d", m_channel.slot);
-		AddString(items, "channel", "%4d", m_channel.channel);
-		AddString(items, "nsamples", "%4d", samples.size());
+	void Summarize(JObjectSummary& summary) const final {
+		summary.add(m_channel.rocid, "crate", "%4d");
+		summary.add(m_channel.slot, "slot", "%4d");
+		summary.add(m_channel.channel, "channel", "%4d");
+		summary.add(samples.size(), "nsamples", "%4d");
 	}
 
 	virtual TCanvas* Draw(int id = 0) const;

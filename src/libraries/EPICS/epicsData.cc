@@ -1,6 +1,9 @@
+
 #include "epicsData.h"
+
+#include <JANA/JLogger.h>
+
 #include <string>       // std::string
-#include <iostream>     // std::cout
 #include <sstream>      // std::istringstream
 
 /*raw Data is in the format: value description \n */

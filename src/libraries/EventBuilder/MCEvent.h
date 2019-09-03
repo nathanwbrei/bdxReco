@@ -13,13 +13,8 @@ class MCEvent : public JObject, public TObject {
 	public:
 		JOBJECT_PUBLIC(MCEvent);
 		
-		
-		// This method is used primarily for pretty printing
-		// the second argument to AddString is printf style format
-		void toStrings(vector<pair<string,string> > &items)const{
-			// AddString(items, "id", "%4d", id);
-			// AddString(items, "E", "%f", E);
-		}
+		void Summarize(JObjectSummary& summary) const final {};
+
 	//	double Ec1,Ec2;
 		double E,T, E1, E2, phe1, phe2,E_single_crys;
 		int nCalorimeterHits;   //mr
