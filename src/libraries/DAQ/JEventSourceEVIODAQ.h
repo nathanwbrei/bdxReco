@@ -43,10 +43,14 @@ public:
 		return "JEventSourceEvioDAQ";
 	}
 
-	jerror_t GetEvent(JEvent &event);
-	void FreeEvent(JEvent &event);
-	jerror_t GetObjects(JEvent &event, JFactory_base *factory);
-	DAQSourceType GetDAQSourceType(void) {
+	void GetEvent(std::shared_ptr<JEvent> event);
+
+	// TODO: Delete me -- N.B.
+	//void FreeEvent(JEvent &event);
+
+	virtual bool GetObjects(const std::shared_ptr<const JEvent>& aEvent, JFactory* aFactory);
+
+	DAQSourceType GetDAQSourceType() {
 		return source_type;
 	}
 

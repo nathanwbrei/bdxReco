@@ -9,7 +9,6 @@
 #define _CalibrationHandler_
 
 #include <JANA/JObject.h>
-#include <JANA/jerror.h>
 #include <TT/TranslationTable.h>
 #include <vector>
 #include <map>
@@ -18,8 +17,15 @@
 
 using namespace std;
 
+enum jerror_t {
+	NOERROR = 0, UNKNOWN_ERROR = -1000, MAX_EVENT_PROCESSORS_EXCEEDED, ERROR_OPENING_EVENT_SOURCE,
+	ERROR_CLOSING_EVENT_SOURCE, NO_MORE_EVENTS_IN_SOURCE, NO_MORE_EVENT_SOURCES, EVENT_NOT_IN_MEMORY,
+	EVENT_SOURCE_NOT_OPEN, OBJECT_NOT_AVAILABLE, DEVENT_OBJECT_DOES_NOT_EXIST, MEMORY_ALLOCATION_ERROR,
+	RESOURCE_UNAVAILABLE, VALUE_OUT_OF_RANGE, INFINITE_RECURSION, UNRECOVERABLE_ERROR, FILTER_EVENT_OUT };
+
 class CalibrationHandlerBase{
 public:
+
 	CalibrationHandlerBase(string table):m_hasLoadedCurrentRun(false){m_table=table;};
 	virtual ~CalibrationHandlerBase(){};
 	virtual jerror_t fillCalib(const std::vector<std::vector<double> > &calib_data)=0;

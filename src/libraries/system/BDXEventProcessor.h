@@ -5,7 +5,6 @@
 #include <JANA/JEventProcessor.h>
 #include <JANA/JApplication.h>
 #include <system/CalibrationHandler.h>
-#include <JANA/JEventLoop.h>
 
 #include <vector>
 #include <utility>
@@ -31,6 +30,9 @@ class TEvent;
  *
  * Here I want to handle the output in a proper way.
  */
+
+class JEventLoop; // TODO: Temporary so that everything compiles again -- N.B.
+
 class BDXEventProcessor:public JEventProcessor
 {
 public:
@@ -41,7 +43,7 @@ public:
 	JOutput* getOutput(){return m_output;}
 
 	void addCalibration(CalibrationHandlerBase* cal);
-	void updateCalibration(CalibrationHandlerBase* cal,JEventLoop* eventLoop);
+	void updateCalibration(CalibrationHandlerBase* cal, JEventLoop* eventLoop);
 	void clearCalibration(CalibrationHandlerBase* cal);
 private:
 	jerror_t init();                                 // Called once at program start.

@@ -16,7 +16,10 @@
 #include <TObject.h>
 #include <TString.h>
 
-
+// TODO: This is temporary! -- N.B.
+class JEventLoop;
+struct JStreamLog {};
+class JCalibration;
 
 class TranslationTable: public JObject{
 

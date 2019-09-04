@@ -9,7 +9,6 @@
 #define _epicsData_
 
 #include <JANA/JObject.h>
-#include <JANA/JFactory.h>
 #include "TObject.h"
 
 #include <map>
@@ -20,6 +19,7 @@ private:
 
 	map<string, double> values;
 	map<string, int> times;
+
 public:
 	JOBJECT_PUBLIC(epicsData);
 

@@ -19,7 +19,7 @@ epicsData m_data;
 epicsData_factory::epicsData_factory(){
 
 	m_deltaTime=0;
-	gPARMS->SetDefaultParameter("EPICS:DELTA_TIME",m_deltaTime,"Time (in s) to add to all EPICS times - can be >0, =0(default), <0");
+	japp->SetDefaultParameter("EPICS:DELTA_TIME",m_deltaTime,"Time (in s) to add to all EPICS times - can be >0, =0(default), <0");
 }
 //------------------
 // init
@@ -72,7 +72,7 @@ jerror_t epicsData_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 	epicsData *data = new epicsData();
 	*data = m_data;
 
-	_data.push_back(data);
+	Insert(data);
 	return NOERROR;
 }
 

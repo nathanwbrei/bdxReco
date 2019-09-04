@@ -154,7 +154,7 @@ target_include_directories(jana2 PUBLIC "src/external/jana2/src/lib")
 
 
 add_library(jana1 STATIC
-        src/external/jana_0.7.7p1/src/JANA/force_link.cc
+        #src/external/jana_0.7.7p1/src/JANA/force_link.cc
         src/external/jana_0.7.7p1/src/JANA/jana_config.h
         src/external/jana_0.7.7p1/src/JANA/JApplication.cc
         src/external/jana_0.7.7p1/src/JANA/JApplication.h
@@ -414,7 +414,7 @@ add_library(bdxreco STATIC
 #        src/libraries/system/JROOTOutput.h
 #        src/libraries/system/string_utilities.h
 
-        )
+        src/libraries/system/CalibrationService.cc src/libraries/system/CalibrationService.h)
 
 find_package(ROOT)
 include_directories(${ROOT_INCLUDE_DIRS})

@@ -95,12 +95,12 @@ JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name, JApplication* 
 		if (!et_connected) throw JException("Failed to open ET system: " + this->source_name);
 #else
 		// No ET and the file didn't work so re-throw the exception
-		if (this->source_name.substr(0, 3) == "ET:") {
+		if (this->GetResourceName().substr(0, 3) == "ET:") {
 			cerr << endl;
 			cerr << "=== ERROR: ET source specified and this was compiled without    ===" << endl;
 			cerr << "===        ET support. You need recompile with ET support, i.e. ===" << endl;
 			cerr << "===        scons ET=1                                           ===" << endl;
-			throw JException("Failed to open ET system - no ET support enabled: " + this->source_name);
+			throw JException("Failed to open ET system - no ET support enabled: " + this->GetResourceName());
 		} else {
 			jerr << " Here" << endl;
 			jerr << e.toString() << endl;
@@ -113,7 +113,7 @@ JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name, JApplication* 
 
 // Destructor
 JEventSourceEvioDAQ::~JEventSourceEvioDAQ() {
-	cout << " Closing input file " << source_name << "." << endl;
+	cout << " Closing input file " << GetResourceName() << "." << endl;
 	if (chan) {
 		chan->close();
 		delete chan;
@@ -129,27 +129,26 @@ JEventSourceEvioDAQ::~JEventSourceEvioDAQ() {
 }
 
 // GetEvent
-jerror_t JEventSourceEvioDAQ::GetEvent(JEvent &event) {
-
-	event.SetRef(NULL);
+void JEventSourceEvioDAQ::GetEvent(std::shared_ptr<JEvent> event) {
 
 	if (this->source_type == kFileSource) {
 
 		if (chan->read()) {
 			EDT = new evioDOMTree(chan);
-			event.SetRef(EDT);
-			event.SetJEventSource(this);
+			event->Insert(EDT);
+			event->SetJEventSource(this);
 
 			evio::evioDOMNodeListP fullList = EDT->getNodeList();
 			evio::evioDOMNodeList::const_iterator iter;
 
+			// TODO: Get rid of this. -- N.B.
 			/*Check if this is an EPICS event, if so call the  SetSequential() method on it*/
 			/*To do so, read the first tag in the nodeList, that is the one defining the event.*/
-			iter = fullList->begin();
-			curEventType = (*iter)->tag;
-			if (curEventType == eventTypeEPICS) {
-				event.SetSequential();
-			}
+			//iter = fullList->begin();
+			//curEventType = (*iter)->tag;
+			//if (curEventType == eventTypeEPICS) {
+			//	event.SetSequential();
+			//}
 
 			for (iter = fullList->begin(); iter != fullList->end(); iter++) {
 
@@ -161,18 +160,19 @@ jerror_t JEventSourceEvioDAQ::GetEvent(JEvent &event) {
 				if ((*iter)->tag == eventHeader_tag) {
 					const evio::evioCompositeDOMLeafNode *leaf = static_cast<const evio::evioCompositeDOMLeafNode*>(*iter);
 					vector<uint32_t> *pData = const_cast<vector<uint32_t> *>(&(leaf->data));
-					event.SetEventNumber((*pData)[2]);
+					event->SetEventNumber((*pData)[2]);
 					curRunNumber = (*pData)[1];
 					curEventType = (*pData)[4];
 				}
 			}
 
 			if (overwriteRunNumber != -1) {
-				event.SetRunNumber(overwriteRunNumber);
+				event->SetRunNumber(overwriteRunNumber);
 			} else {
-				event.SetRunNumber(curRunNumber);
+				event->SetRunNumber(curRunNumber);
 			}
-			return NOERROR;
+			return;
+
 		} else {
 			jout << "Source done" << endl;
 			chan->close();
@@ -180,7 +180,7 @@ jerror_t JEventSourceEvioDAQ::GetEvent(JEvent &event) {
 				delete chan;
 				chan = 0;
 			}
-			return NO_MORE_EVENTS_IN_SOURCE;
+			throw RETURN_STATUS::kNO_MORE_EVENTS;
 		}
 	} else if (this->source_type == kETSource) {
 #ifdef ET_SUPPORT_ENABLE
@@ -368,20 +368,13 @@ jerror_t JEventSourceEvioDAQ::GetEvent(JEvent &event) {
 		jout << "does not have ET support built in! Try recompiling" << endl;
 		jout << "programs/Utilities/plugins/DAQ with ETROOT defined" << endl;
 		jout << "and pointing to an ET installation." << endl;
-		return OBJECT_NOT_AVAILABLE;
+		throw RETURN_STATUS::kERROR;
 #endif
 	}
 }
 
-// FreeEvent
-void JEventSourceEvioDAQ::FreeEvent(JEvent &event) {
-	if (event.GetRef() != NULL) {
-		delete (evioDOMTree*) event.GetRef();
-	}
-}
-
 // GetObjects
-jerror_t JEventSourceEvioDAQ::GetObjects(JEvent &event, JFactory_base *factory) {
+bool JEventSourceEvioDAQ::GetObjects(const std::shared_ptr<const JEvent>& event, JFactory* factory) {
 /// This gets called through the virtual method of the
 /// JEventSource base class. It creates the objects of the type
 /// which factory is based.
@@ -390,21 +383,19 @@ jerror_t JEventSourceEvioDAQ::GetObjects(JEvent &event, JFactory_base *factory) 
 /// it will be read here.
 
 	// We must have a factory to hold the data
-	if (!factory) throw RESOURCE_UNAVAILABLE;
-
-	// Get name of data class we're trying to extract
-	string dataClassName = factory->GetDataClassName();
+	if (!factory) return false;
 
 	//As suggested by David, do a check on the factory type to decide what to do
-	JFactory<fa250Mode1Hit> *fac_fa250Mode1hit = dynamic_cast<JFactory<fa250Mode1Hit>*>(factory);
-	JFactory<fa250Mode7Hit> *fac_fa250Mode7hit = dynamic_cast<JFactory<fa250Mode7Hit>*>(factory);
-	JFactory<eventData> *fac_eventData = dynamic_cast<JFactory<eventData>*>(factory);
-	JFactory<epicsRawData> *fac_epicsData = dynamic_cast<JFactory<epicsRawData>*>(factory);
+	auto* fac_fa250Mode1hit = dynamic_cast<JFactoryT<fa250Mode1Hit>*>(factory);
+	auto* fac_fa250Mode7hit = dynamic_cast<JFactoryT<fa250Mode7Hit>*>(factory);
+	auto* fac_eventData = dynamic_cast<JFactoryT<eventData>*>(factory);
+	auto* fac_epicsData = dynamic_cast<JFactoryT<epicsRawData>*>(factory);
 
 	if (fac_fa250Mode1hit != NULL) {
 
 		vector<fa250Mode1Hit*> data;
-		evioDOMTree* local_EDT = (evioDOMTree*) event.GetRef();
+		// TODO: Get rid of const cast -- N.B.
+		evioDOMTree* local_EDT = const_cast<evioDOMTree*>(event->GetSingle<evioDOMTree>());
 		//	jout<<local_EDT->toString()<<endl;
 
 		evio::evioDOMNodeListP fullList = local_EDT->getNodeList();
@@ -452,12 +443,13 @@ jerror_t JEventSourceEvioDAQ::GetObjects(JEvent &event, JFactory_base *factory) 
 			}
 		}
 		fac_fa250Mode1hit->CopyTo(data);
-		return NOERROR;
+		return true;
 	}
 
 	else if (fac_fa250Mode7hit != NULL) {
 		vector<fa250Mode7Hit*> data;
-		evioDOMTree* local_EDT = (evioDOMTree*) event.GetRef();
+		// TODO: Get rid of const cast -- N.B.
+		evioDOMTree* local_EDT = const_cast<evioDOMTree*>(event->GetSingle<evioDOMTree>());
 
 		evio::evioDOMNodeListP fullList = local_EDT->getNodeList();
 		evio::evioDOMNodeList::const_iterator iter;
@@ -509,10 +501,11 @@ jerror_t JEventSourceEvioDAQ::GetObjects(JEvent &event, JFactory_base *factory) 
 			}
 		}
 		fac_fa250Mode7hit->CopyTo(data);
-		return NOERROR;
+		return true;
 	} else if (fac_eventData != NULL) {
 		vector<eventData*> data;
-		evioDOMTree* local_EDT = (evioDOMTree*) event.GetRef();
+		// TODO: Get rid of const cast -- N.B.
+		evioDOMTree* local_EDT = const_cast<evioDOMTree*>(event->GetSingle<evioDOMTree>());
 
 		evio::evioDOMNodeListP fullList = local_EDT->getNodeList();
 		evio::evioDOMNodeList::const_iterator iter;
@@ -562,13 +555,14 @@ jerror_t JEventSourceEvioDAQ::GetObjects(JEvent &event, JFactory_base *factory) 
 			data.push_back(this_eventData);
 			fac_eventData->CopyTo(data);
 		}
-		return NOERROR;
+		return true;
 	}
 
 	/*Simply get all strings from the raw epics bank and save them as a vector of epicsRawData, for further processing*/
 	else if (fac_epicsData != NULL) {
 		vector<epicsRawData*> epicsData;
-		evioDOMTree* local_EDT = (evioDOMTree*) event.GetRef();
+		// TODO: Get rid of const cast -- N.B.
+		evioDOMTree* local_EDT = const_cast<evioDOMTree*>(event->GetSingle<evioDOMTree>());
 		evio::evioDOMNodeListP fullList = local_EDT->getNodeList();
 		evio::evioDOMNodeList::const_iterator iter;
 		evio::evioDOMNodeList::const_iterator branch;
@@ -593,11 +587,11 @@ jerror_t JEventSourceEvioDAQ::GetObjects(JEvent &event, JFactory_base *factory) 
 
 		}
 		fac_epicsData->CopyTo(epicsData);
-		return NOERROR;
+		return true;
 	}
 
 // Just return. The _data vector should already be reset to have zero objects
-	return OBJECT_NOT_AVAILABLE;
+	return false;
 }
 
 //----------------
