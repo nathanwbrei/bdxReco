@@ -149,7 +149,7 @@ add_library(jana2 STATIC
         src/external/jana2/src/lib/JANA/Engine/JArrowTopology.h
         src/external/jana2/src/lib/JANA/JLogger.h
         src/external/jana2/src/lib/JANA/Utils/JBacktrace.h
-        )
+        src/external/jana2/src/lib/JANA/Services/JGlobalRootLock.h)
 target_include_directories(jana2 PUBLIC "src/external/jana2/src/lib")
 
 
