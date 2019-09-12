@@ -12,17 +12,13 @@ using namespace std;
 #ifdef MC_SUPPORT_ENABLE
 #include <MC/JEventSourceEVIOMC.h>
 #endif
-JEventSourceEvioGenerator::JEventSourceEvioGenerator() :
+JEventSourceEvioGenerator::JEventSourceEvioGenerator(JApplication* app) :
 		isMC(0) {
 #ifdef MC_SUPPORT_ENABLE
 	gPARMS->SetDefaultParameter("MC", isMC, "Flag to select if analysis is runned on a MC file. 0 Means real data (default). >=1 means MC, according to: \n 1 CataniaProtoV1,\n 2 -> CataniaProtoV2,\n 4-> JLabFlux, \n 10->FullMC");
 #endif
 }
 
-// Describes the file format
-const char* JEventSourceEvioGenerator::Description(void) {
-	return "Evio";
-}
 
 // Check if it's a valid file
 double JEventSourceEvioGenerator::CheckOpenable(string source) {

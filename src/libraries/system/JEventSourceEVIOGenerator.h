@@ -4,24 +4,22 @@
 // JANA headers
 #include "JANA/JEventSourceGenerator.h"
 
-class JEventSourceEvioGenerator:public JEventSourceGenerator
-{
+class JEventSourceEvioGenerator : public JEventSourceGenerator {
 private:
-	int isMC;
-	public:
-		 JEventSourceEvioGenerator();
-		~JEventSourceEvioGenerator(){}
+    int isMC;
 
+public:
+    explicit JEventSourceEvioGenerator(JApplication* app);
 
-		const char* className(void)               {return static_className();}
-		static const char* static_className(void) {return "JEventSourceEvioGenerator";}
-		
-		const char* Description(void);
-		
-		double CheckOpenable(string source);
-		
-		JEventSource* MakeJEventSource(string source);
-		
+    ~JEventSourceEvioGenerator() override = default;
+
+    std::string GetType() const override { return "JEventSourceEvioGenerator"; }
+
+    std::string GetDescription() const override { return "Evio"; }
+
+    double CheckOpenable(string source) override;
+
+    JEventSource* MakeJEventSource(string source) override;
 
 };
 

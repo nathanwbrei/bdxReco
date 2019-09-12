@@ -5,18 +5,20 @@
 #include "JANA/JEventSourceGenerator.h"
 
 class JEventSourceTRIDASGenerator: public JEventSourceGenerator{
+
 	public:
-		JEventSourceTRIDASGenerator(){}
-		virtual ~JEventSourceTRIDASGenerator(){}
 
+		explicit JEventSourceTRIDASGenerator(JApplication* app) {}
 
-		virtual const char* className(void){return static_className();}
-		static const char* static_className(void){return "JEventSourceTRIDASGenerator";}
+		~JEventSourceTRIDASGenerator() override = default;
+
+		std::string GetType() const override { return "JEventSourceTRIDASGenerator"; }
 		
-		const char* Description(void);
-		double CheckOpenable(string source);
+		std::string GetDescription() const override;
 
-		JEventSource* MakeJEventSource(string source);
+		double CheckOpenable(std::string source);
+
+		JEventSource* MakeJEventSource(std::string source);
 };
 
 #endif // _JEventSourceGenerator_TRIDAS_

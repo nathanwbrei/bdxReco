@@ -11,7 +11,7 @@ using namespace std;
 //---------------------------------
 // Description
 //---------------------------------
-const char* JEventSourceTRIDASGenerator::Description(void) {
+std::string JEventSourceTRIDASGenerator::GetDescription() {
 	return "TRIDAS";
 }
 
