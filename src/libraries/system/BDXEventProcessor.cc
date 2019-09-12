@@ -39,6 +39,8 @@ BDXEventProcessor::BDXEventProcessor() :
 	bout.SetTag("BDXEventProcessor >>");
 	berr.SetTag("BDXEventProcessorError >>");
 
+	m_root_lock = japp->GetService<JGlobalRootLock>();
+
 	bout << "BDXEventProcessor creator end" << endl;
 }
 
@@ -93,7 +95,8 @@ jerror_t BDXEventProcessor::init(void) {
 	}
 
 	// lock all root operations
-	japp->RootWriteLock();
+	m_root_lock->acquire_write_lock();
+
 	/*Event header and runInfo are always created - as memory resident TTrees (these are quite small)*/
 	gDirectory->cd();
 
@@ -106,8 +109,8 @@ jerror_t BDXEventProcessor::init(void) {
 	m_runInfo = new TTree("RunInfo", "RunInfo");
 	m_runInfo->Branch("runN", &runN);
 	m_runInfo->Branch("dT", &deltaTime);
-	japp->RootUnLock();
 
+	m_root_lock->release_lock();
 	return NOERROR;
 }
 
@@ -117,7 +120,8 @@ jerror_t BDXEventProcessor::brun(JEventLoop *eventLoop, int32_t runnumber) {
 	bout << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << endl;
 
 	// lock all root operations
-	japp->RootWriteLock();
+	m_root_lock->acquire_write_lock();
+
 	if (isFirstCallToBrun) {
 		if (m_output != 0) {
 			bout << "got m_output, className is: " << m_output->className() << endl;
@@ -148,7 +152,7 @@ jerror_t BDXEventProcessor::brun(JEventLoop *eventLoop, int32_t runnumber) {
 		eventLoop->GetSingle(m_tt);
 	}
 	// lock all root operations
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 	return NOERROR;
 }
 
@@ -191,16 +195,17 @@ jerror_t BDXEventProcessor::evnt(JEventLoop *loop, uint64_t eventnumber) {
 		if (m_output != 0) {
 
 			if (m_isMC == 0) events[0]->getEventHeader()->copyEpicsData(eData);
-			japp->RootWriteLock();
+
+			m_root_lock->acquire_write_lock();
 			m_event = events[0];
 			m_eventDST->Fill();
-			japp->RootUnLock();
+			m_root_lock->release_lock();
 		}
 	}
 
 	if (m_isMC == 0) {
 		if (m_output != 0) {
-			japp->RootWriteLock();
+		    m_root_lock->acquire_write_lock();
 			eventT = tData->time;
 			eventN = eventnumber;
 
@@ -209,7 +214,7 @@ jerror_t BDXEventProcessor::evnt(JEventLoop *loop, uint64_t eventnumber) {
 			//Time
 			if (eventT < startTime) startTime = eventT;
 			if (eventT > stopTime) stopTime = eventT;
-			japp->RootUnLock();
+			m_root_lock->release_lock();
 		}
 	}
 	return NOERROR;
@@ -217,7 +222,8 @@ jerror_t BDXEventProcessor::evnt(JEventLoop *loop, uint64_t eventnumber) {
 
 // erun
 jerror_t BDXEventProcessor::erun(void) {
-	japp->RootWriteLock();
+
+    m_root_lock->acquire_write_lock();
 	deltaTime = stopTime - startTime;
 	bout << "BDXEventProcessor::erun " << endl;
 	bout << "Run start: " << startTime << " stop: " << stopTime << " diff: " << deltaTime << endl;
@@ -226,7 +232,7 @@ jerror_t BDXEventProcessor::erun(void) {
 	if (m_output && (isET == 1)) {
 		m_output->CloseOutput();
 	}
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 	return NOERROR;
 }
 
@@ -237,11 +243,11 @@ jerror_t BDXEventProcessor::fini(void) {
 	// ROOT file!
 	bout << "BDXEventProcessor fini called" << endl;
 	fflush(stdout);
-	japp->RootWriteLock();
+	m_root_lock->acquire_write_lock();
 	if (m_output) {
 		m_output->CloseOutput(); /*This is ok, CloseOutput takes care of m_output already closed*/
 	}
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 	bout << "BDXEventProcessor fini ends" << endl;
 	fflush(stdout);
 	return NOERROR;

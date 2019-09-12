@@ -9,6 +9,7 @@
 #define _TEvent_factory_CataniaProto2_
 
 #include <JANA/JFactory.h>
+#include <JANA/Services/JGlobalRootLock.h>
 #include "TEvent.h"
 #include <string.h>
 
@@ -42,6 +43,7 @@ class TEvent_factory_CataniaProto2:public jana::JFactory<TEvent>{
 
 		int m_isMC,m_MCRunNumber;
 		std::string m_tag;
+		std::shared_ptr<JGlobalRootLock> m_root_lock;
 
 };
 

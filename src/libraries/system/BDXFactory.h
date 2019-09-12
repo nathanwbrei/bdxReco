@@ -35,10 +35,12 @@ private:
 	vector<JEventProcessor*> m_processors;
 	vector<JEventProcessor*>::iterator m_processors_it;
 	BDXEventProcessor* 	m_BDXEventProcessor;
+	std::shared_ptr<JGlobalRootLock> m_root_lock;
 };
 
 template<class T> BDXFactory<T>::BDXFactory():BDXEventProcessor_name("BDXEventProcessor"){
 	m_BDXEventProcessor=0;
+	m_root_lock = japp->GetService<JGlobalRootLock>();
 }
 
 template<class T> BDXFactory<T>::~BDXFactory(){
@@ -57,9 +59,9 @@ template<class T> void BDXFactory<T>::mapCalibrationHandler(CalibrationHandlerBa
 		}
 	}
 	if (m_BDXEventProcessor){
-		japp->RootWriteLock();
+		m_root_lock->acquire_write_lock();
 		m_BDXEventProcessor->addCalibration(calib);
-		japp->RootUnLock();
+		m_root_lock->release_lock();
 	}
 	else{
 		cout<<"Error, BDXEventProcessor not found"<<endl;
@@ -78,9 +80,9 @@ template<class T> void BDXFactory<T>::updateCalibrationHandler(CalibrationHandle
 			}
 		}
 		if (m_BDXEventProcessor){
-			japp->RootWriteLock();
+			m_root_lock->acquire_write_lock();
 			m_BDXEventProcessor->updateCalibration(calib,loop);
-			japp->RootUnLock();
+			m_root_lock->release_lock();
 		}
 		else{
 			cout<<"Error, BDXEventProcessor not found"<<endl;
@@ -100,9 +102,9 @@ template<class T> void BDXFactory<T>::clearCalibrationHandler(CalibrationHandler
 			}
 		}
 		if (m_BDXEventProcessor){
-			japp->RootWriteLock();
+			m_root_lock->acquire_write_lock();
 			m_BDXEventProcessor->clearCalibration(calib);
-			japp->RootUnLock();
+			m_root_lock->release_lock();
 		}
 		else{
 			cout<<"Error, BDXEventProcessor not found"<<endl;

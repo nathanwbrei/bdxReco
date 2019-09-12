@@ -4,12 +4,14 @@
 // JANA headers
 #include <JANA/JEventProcessor.h>
 #include <JANA/JApplication.h>
+#include <JANA/Services/JGlobalRootLock.h>
 #include <system/CalibrationHandler.h>
 
 #include <vector>
 #include <utility>
 #include <map>
 #include <algorithm>
+
 using namespace std;
 // EVIO headers
 //#include "evioUtil.hxx"
@@ -95,6 +97,7 @@ private:
 
 	JStreamLog bout;
 	JStreamLog berr;
+	std::shared_ptr<JGlobalRootLock> m_root_lock;
 };
 
 #endif

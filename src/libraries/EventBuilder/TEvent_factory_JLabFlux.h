@@ -9,6 +9,7 @@
 #define _TEvent_factory_JLabFlux_
 
 #include <JANA/JFactory.h>
+#include <JANA/Services/JGlobalRootLock.h>
 #include "TEvent.h"
 
 class TEvent_factory_JLabFlux: public jana::JFactory<TEvent> {
@@ -40,6 +41,7 @@ private:
 
 	int m_isMC, m_MCRunNumber;
 	std::string m_tag;
+	std::shared_ptr<JGlobalRootLock> m_root_lock;
 };
 
 #endif // _TEvent_factory_JLabFlux_

@@ -42,6 +42,7 @@ private:
 
 	int m_isMC,m_MCRunNumber;
 	std::string m_tag;
+	std::shared_ptr<JGlobalRootLock> m_root_lock;
 
 };
 

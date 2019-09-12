@@ -9,6 +9,7 @@
 #define _TEvent_factory_BDXmini_
 
 #include <JANA/JFactory.h>
+#include <JANA/Services/JGlobalRootLock.h>
 #include "TEvent.h"
 
 class TEvent_factory_BDXmini: public jana::JFactory<TEvent> {
@@ -43,6 +44,7 @@ private:
 	int m_ADD_TRIGGER_WORDS;
 	int m_thrNpheVeto;
 	double m_thrEneTot;
+	std::shared_ptr<JGlobalRootLock> m_root_lock;
 };
 
 #endif // _TEvent_factory_BDXmini_

@@ -50,6 +50,7 @@ TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
 
 	gPARMS->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:thrEneTot", m_thrEneTot, "Threshold energy for calorimeter clusters to decide whenever to save all waveforms of an egent");
 	gPARMS->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:thrNpheVeto", m_thrNpheVeto, "Threshold number of photo-electrons per each Veto SiPM to decide whenever to save all waveforms of an egent");
+	m_root_lock = japp->GetService<JGlobalRootLock>();
 }
 //------------------
 // init
@@ -69,7 +70,7 @@ jerror_t TEvent_factory_BDXmini::init(void) {
 		return VALUE_OUT_OF_RANGE;
 	}
 
-	japp->RootWriteLock();
+	m_root_lock->acquire_write_lock();
 
 	m_CaloHits = new TClonesArray("CalorimeterHit");
 	m_IntVetoHits = new TClonesArray("IntVetoHit");
@@ -79,7 +80,7 @@ jerror_t TEvent_factory_BDXmini::init(void) {
 	m_GenParticles = new TClonesArray("GenParticle");
 	m_CaloMCRealHits = new TClonesArray("CalorimeterMCRealHit");
 #endif
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 
 	return NOERROR;
 }
@@ -256,11 +257,11 @@ jerror_t TEvent_factory_BDXmini::erun(void) {
 // fini
 //------------------
 jerror_t TEvent_factory_BDXmini::fini(void) {
-	japp->RootWriteLock();
+    m_root_lock->acquire_write_lock();
 //	if (m_CaloHits!=0) delete (m_CaloHits);
 //	if (m_IntVetoHits!=0) delete (m_IntVetoHits);
 //	if (m_ExtVetoHits!=0) delete (m_ExtVetoHits);
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 
 	return NOERROR;
 }

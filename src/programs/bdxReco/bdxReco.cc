@@ -2,6 +2,7 @@
 
 // JANA headers
 #include <JANA/JApplication.h>
+#include <JANA/Services/JGlobalRootLock.h>
 
 // bdx headers
 
@@ -44,6 +45,7 @@ int main(int narg, char *argv[])
 	//	app.Usage();
 	//	return 0;
 	//}
+	app.ProvideService(std::make_shared<JGlobalRootLock>());
 
 	app.Add(new JEventSourceEvioGenerator());
 	jout << "JEventSourceEvioGenerator DONE" << std::endl;

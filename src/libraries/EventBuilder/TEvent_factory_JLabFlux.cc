@@ -45,7 +45,8 @@ jerror_t TEvent_factory_JLabFlux::init(void) {
 		return VALUE_OUT_OF_RANGE;
 	}
 
-	japp->RootWriteLock();
+	m_root_lock = japp->GetService<JGlobalRootLock>();
+	m_root_lock->acquire_write_lock();
 
 	m_CaloHits = new TClonesArray("CalorimeterHit");
 	m_IntVetoHits = new TClonesArray("IntVetoHit");
@@ -53,7 +54,7 @@ jerror_t TEvent_factory_JLabFlux::init(void) {
 	m_GenParticles = new TClonesArray("GenParticle");
 	m_CaloMCRealHits = new TClonesArray("CalorimeterMCRealHit");
 #endif
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 
 	return NOERROR;
 }
@@ -176,11 +177,11 @@ jerror_t TEvent_factory_JLabFlux::erun(void) {
 // fini
 //------------------
 jerror_t TEvent_factory_JLabFlux::fini(void) {
-	japp->RootWriteLock();
+    m_root_lock->acquire_write_lock();
 //	if (m_CaloHits!=0) delete (m_CaloHits);
 //	if (m_IntVetoHits!=0) delete (m_IntVetoHits);
 //	if (m_ExtVetoHits!=0) delete (m_ExtVetoHits);
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 
 	return NOERROR;
 }

@@ -57,7 +57,8 @@ jerror_t TEvent_factory_FullMC::init(void) {
 		return VALUE_OUT_OF_RANGE;
 	}
 
-	japp->RootWriteLock();
+	m_root_lock = japp->GetService<JGlobalRootLock>();
+	m_root_lock->acquire_write_lock();
 	/*	m_CaloDigiHits = new TClonesArray("CalorimeterDigiHit");
 	 m_IntVetoDigiHits = new TClonesArray("IntVetoDigiHit");
 	 m_ExtVetoDigiHits = new TClonesArray("ExtVetoDigiHit");
@@ -74,7 +75,7 @@ jerror_t TEvent_factory_FullMC::init(void) {
 	 }
 	 */
 
-	japp->RootUnLock();
+	m_root_lock->release_lock();
 
 	return NOERROR;
 }
@@ -218,11 +219,11 @@ jerror_t TEvent_factory_FullMC::erun(void) {
 // fini
 //------------------
 jerror_t TEvent_factory_FullMC::fini(void) {
-	japp->RootWriteLock();
+    m_root_lock->acquire_write_lock();
 //	if (m_CaloHits!=0) delete (m_CaloHits);
 //	if (m_IntVetoHits!=0) delete (m_IntVetoHits);
 //	if (m_ExtVetoHits!=0) delete (m_ExtVetoHits);
-	japp->RootUnLock();
+    m_root_lock->unlock();
 	return NOERROR;
 }
 
