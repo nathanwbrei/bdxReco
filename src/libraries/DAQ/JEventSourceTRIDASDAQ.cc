@@ -149,7 +149,7 @@ jerror_t JEventSourceTRIDASDAQ::GetObjects(JEvent & event, JFactory_base * facto
 		}
 
 		data.push_back(this_eventData);
-		fac_eventData->CopyTo(data);
+		fac_eventData->Set(data);
 		return NOERROR;
 	}
 	if (fac_fa250WaveboardV1Hit != NULL) {
@@ -199,7 +199,7 @@ jerror_t JEventSourceTRIDASDAQ::GetObjects(JEvent & event, JFactory_base * facto
 			data.push_back(fahit);
 		}
 
-		fac_fa250WaveboardV1Hit->CopyTo(data);
+		fac_fa250WaveboardV1Hit->Set(data);
 		return NOERROR;
 
 	}

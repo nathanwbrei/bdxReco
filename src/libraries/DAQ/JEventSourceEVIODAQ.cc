@@ -442,7 +442,7 @@ bool JEventSourceEvioDAQ::GetObjects(const std::shared_ptr<const JEvent>& event,
 				}
 			}
 		}
-		fac_fa250Mode1hit->CopyTo(data);
+		fac_fa250Mode1hit->Set(data);
 		return true;
 	}
 
@@ -500,7 +500,7 @@ bool JEventSourceEvioDAQ::GetObjects(const std::shared_ptr<const JEvent>& event,
 				}
 			}
 		}
-		fac_fa250Mode7hit->CopyTo(data);
+		fac_fa250Mode7hit->Set(data);
 		return true;
 	} else if (fac_eventData != NULL) {
 		vector<eventData*> data;
@@ -553,7 +553,7 @@ bool JEventSourceEvioDAQ::GetObjects(const std::shared_ptr<const JEvent>& event,
 		/*Only copy this further for VME or EPICS*/
 		if ((this_eventData->eventType == eventSource::DAQ) || (this_eventData->eventType == eventSource::EPICS)) {
 			data.push_back(this_eventData);
-			fac_eventData->CopyTo(data);
+			fac_eventData->Set(data);
 		}
 		return true;
 	}
@@ -586,7 +586,7 @@ bool JEventSourceEvioDAQ::GetObjects(const std::shared_ptr<const JEvent>& event,
 			}
 
 		}
-		fac_epicsData->CopyTo(epicsData);
+		fac_epicsData->Set(epicsData);
 		return true;
 	}
 

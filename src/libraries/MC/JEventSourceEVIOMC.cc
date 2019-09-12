@@ -133,7 +133,7 @@ jerror_t JEventSourceEvioMC::GetObjects(JEvent &event, JFactory_base *factory) {
 	Mevent *this_event = the_reference->event;
 
 	if (dataClassName == "GenParticle") {
-		vector<generatedParticle> particles; //has to be here since CopyTo requires 1 vector
+		vector<generatedParticle> particles; //has to be here since JFactory::Set requires 1 vector
 		map<string, gBank>::iterator it;
 		it = banksMap.find("generated");
 		if (it == banksMap.end()) {
@@ -161,7 +161,7 @@ jerror_t JEventSourceEvioMC::GetObjects(JEvent &event, JFactory_base *factory) {
 		}
 
 		JFactory<GenParticle> *fac = dynamic_cast<JFactory<GenParticle>*>(factory);
-		fac->CopyTo(jparticles);
+		fac->Set(jparticles);
 		return NOERROR;
 
 	} else if (dataClassName == "UserMCData") {
@@ -197,7 +197,7 @@ jerror_t JEventSourceEvioMC::GetObjects(JEvent &event, JFactory_base *factory) {
 		}
 
 		JFactory<UserMCData> *fac = dynamic_cast<JFactory<UserMCData>*>(factory);
-		fac->CopyTo(userMCdata);
+		fac->Set(userMCdata);
 		return NOERROR;
 
 	} else if (dataClassName == "CalorimeterMCHit") {
@@ -254,7 +254,7 @@ jerror_t JEventSourceEvioMC::GetObjects(JEvent &event, JFactory_base *factory) {
 
 		// publish the hit
 		JFactory<CalorimeterMCHit> *fac = dynamic_cast<JFactory<CalorimeterMCHit>*>(factory);
-		fac->CopyTo(caloMChits);
+		fac->Set(caloMChits);
 		return NOERROR;
 	}
 
@@ -322,7 +322,7 @@ jerror_t JEventSourceEvioMC::GetObjects(JEvent &event, JFactory_base *factory) {
 		// publish the hit
 
 		JFactory<IntVetoMCHit> *fac = dynamic_cast<JFactory<IntVetoMCHit>*>(factory);
-		fac->CopyTo(intVetoMChits);
+		fac->Set(intVetoMChits);
 		return NOERROR;
 
 	}
@@ -387,7 +387,7 @@ jerror_t JEventSourceEvioMC::GetObjects(JEvent &event, JFactory_base *factory) {
 		}
 		// publish the hit
 		JFactory<ExtVetoMCHit> *fac = dynamic_cast<JFactory<ExtVetoMCHit>*>(factory);
-		fac->CopyTo(extVetoMChits);
+		fac->Set(extVetoMChits);
 		return NOERROR;
 
 	}
@@ -428,7 +428,7 @@ jerror_t JEventSourceEvioMC::GetObjects(JEvent &event, JFactory_base *factory) {
 		}
 		// publish the hit
 		JFactory<PaddlesMCHit> *fac = dynamic_cast<JFactory<PaddlesMCHit>*>(factory);
-		fac->CopyTo(paddlesMChits);
+		fac->Set(paddlesMChits);
 		return NOERROR;
 
 	}
