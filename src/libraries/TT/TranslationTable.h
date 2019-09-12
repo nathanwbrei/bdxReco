@@ -16,9 +16,9 @@
 #include <TObject.h>
 #include <TString.h>
 
-// TODO: This is temporary! -- N.B.
-struct JStreamLog {};
-class JCalibration;
+#include <set>
+#include <map>
+
 
 class TranslationTable: public JObject{
 
@@ -340,12 +340,12 @@ public:
 protected:
 	string XML_FILENAME;
 	bool NO_CCDB;
-	set<string> supplied_data_types;
+	std::set<string> supplied_data_types;
 	int VERBOSE;
 	string SYSTEMS_TO_PARSE;
 	string ROCID_MAP_FILENAME;
 
-	mutable JStreamLog ttout;
+	mutable JLogger ttout;
 
 private:
 
@@ -370,7 +370,7 @@ private:
 	//They are shared amongst threads, so locks are necessary, but since they are private this class can handle it internally
 	pthread_mutex_t& Get_TT_Mutex(void) const;
 	bool& Get_TT_Initialized(void) const;
-	map<TranslationTable::csc_t, TranslationTable::ChannelInfo>& Get_TT(
+	std::map<TranslationTable::csc_t, TranslationTable::ChannelInfo>& Get_TT(
 			void) const;
 
 	ClassDef(TranslationTable,1);

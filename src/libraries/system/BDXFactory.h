@@ -27,7 +27,7 @@ public:
 
 protected:
 	void mapCalibrationHandler(CalibrationHandlerBase*);
-	void updateCalibrationHandler(CalibrationHandlerBase*,JEventLoop *loop);
+	void updateCalibrationHandler(CalibrationHandlerBase*,JApplication *loop);
 	void clearCalibrationHandler(CalibrationHandlerBase*);
 
 private:
@@ -52,7 +52,7 @@ template<class T> void BDXFactory<T>::mapCalibrationHandler(CalibrationHandlerBa
 		m_processors=this->app->GetProcessors();
 		string processor_name;
 		for (m_processors_it=m_processors.begin();m_processors_it!=m_processors.end();m_processors_it++){
-			processor_name=string((*m_processors_it)->className());
+			processor_name=string((*m_processors_it)->GetTypeName());
 			if ((processor_name)==BDXEventProcessor_name){
 				m_BDXEventProcessor=(BDXEventProcessor*)(*m_processors_it);
 			}
@@ -68,12 +68,12 @@ template<class T> void BDXFactory<T>::mapCalibrationHandler(CalibrationHandlerBa
 	}
 }
 
-template<class T> void BDXFactory<T>::updateCalibrationHandler(CalibrationHandlerBase* calib,JEventLoop *loop){
+template<class T> void BDXFactory<T>::updateCalibrationHandler(CalibrationHandlerBase* calib,JApplication *loop){
 	if (m_BDXEventProcessor==0){
 			m_processors=this->app->GetProcessors();
 			string processor_name;
 			for (m_processors_it=m_processors.begin();m_processors_it!=m_processors.end();m_processors_it++){
-				processor_name=string((*m_processors_it)->className());
+				processor_name=string((*m_processors_it)->GetTypeName());
 				if ((processor_name)==BDXEventProcessor_name){
 					m_BDXEventProcessor=(BDXEventProcessor*)(*m_processors_it);
 				}
@@ -95,7 +95,7 @@ template<class T> void BDXFactory<T>::clearCalibrationHandler(CalibrationHandler
 			m_processors=this->app->GetProcessors();
 			string processor_name;
 			for (m_processors_it=m_processors.begin();m_processors_it!=m_processors.end();m_processors_it++){
-				processor_name=string((*m_processors_it)->className());
+				processor_name=string((*m_processors_it)->GetTypeName());
 				if ((processor_name)==BDXEventProcessor_name){
 					m_BDXEventProcessor=(BDXEventProcessor*)(*m_processors_it);
 				}

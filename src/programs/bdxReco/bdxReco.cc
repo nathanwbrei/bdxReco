@@ -47,7 +47,7 @@ int main(int narg, char *argv[])
 	//}
 	app.ProvideService(std::make_shared<JGlobalRootLock>());
 
-	app.Add(new JEventSourceEvioGenerator());
+	app.Add(new JEventSourceEvioGenerator(&app));
 	jout << "JEventSourceEvioGenerator DONE" << std::endl;
 
 	//app.AddEventSourceGenerator(new JEventSourceTRIDASGenerator());

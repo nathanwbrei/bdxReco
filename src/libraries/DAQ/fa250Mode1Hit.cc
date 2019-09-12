@@ -2,6 +2,8 @@
 #include "TH1D.h"
 #include "TCanvas.h"
 
+#include <JANA/JLogger.h>
+
 fa250Mode1Hit::fa250Mode1Hit() :
 		hWave(0) {
 	m_ped = 0;

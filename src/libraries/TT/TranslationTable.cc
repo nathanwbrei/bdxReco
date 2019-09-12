@@ -22,7 +22,7 @@ bool& TranslationTable::Get_TT_Initialized(void) const
 	return tt_initialized;
 }
 
-map<TranslationTable::csc_t, TranslationTable::ChannelInfo>& TranslationTable::Get_TT(void) const
+std::map<TranslationTable::csc_t, TranslationTable::ChannelInfo>& TranslationTable::Get_TT(void) const
 {
 	static map<TranslationTable::csc_t, TranslationTable::ChannelInfo> TT;
 	return TT;
@@ -46,7 +46,7 @@ TranslationTable::TranslationTable(JApplication* app) {
 	SYSTEMS_TO_PARSE = "";
 	app->GetParameter("TT:NO_CCDB", NO_CCDB);
 	JParameter *p = app->GetParameter("TT:XML_FILENAME", XML_FILENAME);
-	if (p->GetDefault() != p->GetValue()){
+	if (p->GetDefault<std::string>() != p->GetValue<std::string>()){
 		NO_CCDB = true;
 	}
 	//app->GetParameterValue("TT:VERBOSE"); // TODO: Do something with the parameter

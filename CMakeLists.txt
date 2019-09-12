@@ -151,6 +151,7 @@ add_library(jana2 STATIC
         src/external/jana2/src/lib/JANA/Utils/JBacktrace.h
         src/external/jana2/src/lib/JANA/Services/JGlobalRootLock.h)
 target_include_directories(jana2 PUBLIC "src/external/jana2/src/lib")
+target_link_libraries(jana2 ${CMAKE_DL_LIBS})
 
 
 add_library(jana1 STATIC
@@ -276,7 +277,7 @@ add_library(bdxreco STATIC
 #        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.h
 #        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.cc
 #        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.h
-#        src/libraries/DAQ/fa250Mode1Hit.cc
+        src/libraries/DAQ/fa250Mode1Hit.cc
 #        src/libraries/DAQ/fa250Mode1Hit_Dict.cc
 #        src/libraries/DAQ/fa250Mode7Hit.h
 #        src/libraries/DAQ/fa250WaveboardV1Hit.cc
@@ -389,9 +390,9 @@ add_library(bdxreco STATIC
 #        src/libraries/IntVeto/JFactoryGenerator_IntVeto.h
 #
 #        src/libraries/TT/JFactoryGenerator_TT.h
-#        src/libraries/TT/TranslationTable.cc
-#        src/libraries/TT/TranslationTable.h
-#        src/libraries/TT/TranslationTable_Dict.cc
+        src/libraries/TT/TranslationTable.cc
+        src/libraries/TT/TranslationTable.h
+        src/libraries/TT/TranslationTable_Dict.cc
 #        src/libraries/TT/TranslationTable_factory.cc
 #        src/libraries/TT/TranslationTable_factory.h
 #        src/libraries/TT/TranslationTable_LinkDef.h

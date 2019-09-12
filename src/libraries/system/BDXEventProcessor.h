@@ -2,8 +2,8 @@
 #define _EventProcessor_
 
 // JANA headers
-#include <JANA/JEventProcessor.h>
 #include <JANA/JApplication.h>
+#include <JANA/JEventProcessor.h>
 #include <JANA/Services/JGlobalRootLock.h>
 #include <system/CalibrationHandler.h>
 
@@ -33,8 +33,6 @@ class TEvent;
  * Here I want to handle the output in a proper way.
  */
 
-class JEventLoop; // TODO: Temporary so that everything compiles again -- N.B.
-
 class BDXEventProcessor:public JEventProcessor
 {
 public:
@@ -45,12 +43,12 @@ public:
 	JOutput* getOutput(){return m_output;}
 
 	void addCalibration(CalibrationHandlerBase* cal);
-	void updateCalibration(CalibrationHandlerBase* cal, JEventLoop* eventLoop);
+	void updateCalibration(CalibrationHandlerBase* cal, JApplication* app);
 	void clearCalibration(CalibrationHandlerBase* cal);
 private:
 	jerror_t init();                                 // Called once at program start.
-	jerror_t brun(JEventLoop*, int32_t runnumber);       // Called everytime a new run number is detected.
-	jerror_t evnt(JEventLoop*, uint64_t eventnumber);     // Called every event.
+	jerror_t brun(JApplication*, int32_t runnumber);       // Called everytime a new run number is detected.
+	jerror_t evnt(JApplication*, uint64_t eventnumber);     // Called every event.
 	jerror_t erun();                                 // Called everytime run number changes, provided brun has been called.
 	jerror_t fini();                                 // Called after last event of last event source has been processed.
 
@@ -95,8 +93,8 @@ private:
 
 	int isFirstCallToBrun;
 
-	JStreamLog bout;
-	JStreamLog berr;
+	JLogger bout;
+	JLogger berr;
 	std::shared_ptr<JGlobalRootLock> m_root_lock;
 };
 

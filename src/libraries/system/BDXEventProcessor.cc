@@ -115,7 +115,7 @@ jerror_t BDXEventProcessor::init(void) {
 }
 
 // brun
-jerror_t BDXEventProcessor::brun(JEventLoop *eventLoop, int32_t runnumber) {
+jerror_t BDXEventProcessor::brun(JApplication *eventLoop, int32_t runnumber) {
 
 	bout << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << endl;
 
@@ -157,7 +157,7 @@ jerror_t BDXEventProcessor::brun(JEventLoop *eventLoop, int32_t runnumber) {
 }
 
 // evnt
-jerror_t BDXEventProcessor::evnt(JEventLoop *loop, uint64_t eventnumber) {
+jerror_t BDXEventProcessor::evnt(JApplication *loop, uint64_t eventnumber) {
 
 	const eventData* tData;
 	vector<const TEvent*> events;
@@ -253,7 +253,7 @@ jerror_t BDXEventProcessor::fini(void) {
 	return NOERROR;
 }
 
-void BDXEventProcessor::updateCalibration(CalibrationHandlerBase* cal, JEventLoop* eventLoop) {
+void BDXEventProcessor::updateCalibration(CalibrationHandlerBase* cal, JApplication* eventLoop) {
 	/*First, check the table name for cal*/
 	string name = cal->getTable();
 	/*Verify the key is in the map*/
