@@ -19,7 +19,7 @@ using namespace std;
 // init
 //------------------
 jerror_t ExtVetoDigiHit_factory_MC::init(void) {
-	gPARMS->GetParameter("MC", m_isMC);
+	japp->GetParameter("MC", m_isMC);
 	return NOERROR;
 }
 

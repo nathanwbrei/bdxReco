@@ -39,10 +39,10 @@ using namespace std;
 jerror_t TEvent_factory_CataniaProto2::init(void) {
 
 	m_tag = "";
-	gPARMS->GetParameter("MC", m_isMC);
+	japp->GetParameter("MC", m_isMC);
 	if (m_isMC) {
 		jout << "CataniaProto2 event build - MC mode" << endl;
-		gPARMS->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
+		japp->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
 		m_tag = "MC";
 	}
 	if ((m_isMC) && (m_isMC != MCType::CATANIA_V2)) {

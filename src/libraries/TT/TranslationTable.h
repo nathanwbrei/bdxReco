@@ -11,13 +11,12 @@
 #include <JANA/JObject.h>
 #include <JANA/JFactory.h>
 #include <JANA/JException.h>
-#include <JANA/JEventSource.h>
+#include <JANA/JApplication.h>
 
 #include <TObject.h>
 #include <TString.h>
 
 // TODO: This is temporary! -- N.B.
-class JEventLoop;
 struct JStreamLog {};
 class JCalibration;
 
@@ -26,7 +25,7 @@ class TranslationTable: public JObject{
 public:
 	JOBJECT_PUBLIC(TranslationTable);
 
-	TranslationTable(JEventLoop *loop);
+	TranslationTable(JApplication* app);
 	~TranslationTable();
 
 	// Each detector system has its own native indexing scheme.

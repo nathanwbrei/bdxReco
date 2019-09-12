@@ -24,7 +24,7 @@ class JFactoryGenerator_Calorimeter: public jana::JFactoryGenerator{
 	public:
 		JFactoryGenerator_Calorimeter(){
 			VERBOSE=0;
-			gPARMS->SetDefaultParameter("CALORIMETER:VERBOSE", VERBOSE,
+			japp->SetDefaultParameter("CALORIMETER:VERBOSE", VERBOSE,
 						"Verbosity level for applying messages from CALORIMETER library."
 						" 0=no messages, 10=all messages.");
 

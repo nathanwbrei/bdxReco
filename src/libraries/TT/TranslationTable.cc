@@ -1,9 +1,6 @@
 #include "TranslationTable.h"
 
-#include <JANA/JEventLoop.h>
-#include <JANA/JParameterManager.h>
-#include <JANA/JParameter.h>
-
+#include <JANA/JApplication.h>
 
 #include <expat.h>
 #include <sstream>
@@ -33,7 +30,7 @@ map<TranslationTable::csc_t, TranslationTable::ChannelInfo>& TranslationTable::G
 
 
 
-TranslationTable::TranslationTable(JEventLoop *loop){
+TranslationTable::TranslationTable(JApplication* app) {
 
 
 	// Default is to just read translation table from CCDB. If this fails,
@@ -47,15 +44,15 @@ TranslationTable::TranslationTable(JEventLoop *loop){
 	XML_FILENAME = "tt.xml";
 	VERBOSE = 0;
 	SYSTEMS_TO_PARSE = "";
-	gPARMS->GetParameter("TT:NO_CCDB", NO_CCDB);
-	JParameter *p = gPARMS->GetParameter("TT:XML_FILENAME", XML_FILENAME);
+	app->GetParameter("TT:NO_CCDB", NO_CCDB);
+	JParameter *p = app->GetParameter("TT:XML_FILENAME", XML_FILENAME);
 	if (p->GetDefault() != p->GetValue()){
 		NO_CCDB = true;
 	}
-	gPARMS->GetParameter("TT:VERBOSE");
-	gPARMS->GetParameter("TT:ROCID_MAP_FILENAME", ROCID_MAP_FILENAME);
+	//app->GetParameterValue("TT:VERBOSE"); // TODO: Do something with the parameter
+	app->GetParameter("TT:ROCID_MAP_FILENAME", ROCID_MAP_FILENAME);
 
-	gPARMS->GetParameter("TT:SYSTEMS_TO_PARSE", SYSTEMS_TO_PARSE);
+	app->GetParameter("TT:SYSTEMS_TO_PARSE", SYSTEMS_TO_PARSE);
 
 	// Initialize dedicated JStreamLog used for debugging messages
 	ttout.SetTag("--- TT ---: ");

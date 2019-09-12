@@ -17,7 +17,7 @@ class JFactoryGenerator_system: public jana::JFactoryGenerator{
 	public:
 		JFactoryGenerator_system(){
 			VERBOSE=0;
-			gPARMS->SetDefaultParameter("SYSTEM:VERBOSE", VERBOSE,
+			japp->SetDefaultParameter("SYSTEM:VERBOSE", VERBOSE,
 					"Verbosity level for applying messages from system library."
 					" 0=no messages, 10=all messages.");
 		}

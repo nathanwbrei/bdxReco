@@ -21,7 +21,7 @@ class JFactoryGenerator_Paddles: public jana::JFactoryGenerator{
 	public:
 		JFactoryGenerator_Paddles(){
 			VERBOSE=0;
-						gPARMS->SetDefaultParameter("PADDLES:VERBOSE", VERBOSE,
+						japp->SetDefaultParameter("PADDLES:VERBOSE", VERBOSE,
 									"Verbosity level for applying messages from PADDLES library."
 									" 0=no messages, 10=all messages.");
 		}

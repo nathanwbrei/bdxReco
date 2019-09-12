@@ -34,7 +34,7 @@ TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
 	m_CaloHits = 0;
 	m_fa250Mode1CalibPedSubHits = 0;
 	m_ADD_TRIGGER_WORDS = 1;
-	gPARMS->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:ADD_TRIGGER_WORDS", m_ADD_TRIGGER_WORDS, "Add trigger words to event header");
+	japp->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:ADD_TRIGGER_WORDS", m_ADD_TRIGGER_WORDS, "Add trigger words to event header");
 
 	/*Following is to decide whenever to save waveforms or not in the collections of object for the event
 	 * We save ALL waveforms in an event if
@@ -48,8 +48,8 @@ TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
 	m_thrNpheVeto = 5;
 	m_thrEneTot = 100;
 
-	gPARMS->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:thrEneTot", m_thrEneTot, "Threshold energy for calorimeter clusters to decide whenever to save all waveforms of an egent");
-	gPARMS->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:thrNpheVeto", m_thrNpheVeto, "Threshold number of photo-electrons per each Veto SiPM to decide whenever to save all waveforms of an egent");
+	japp->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:thrEneTot", m_thrEneTot, "Threshold energy for calorimeter clusters to decide whenever to save all waveforms of an egent");
+	japp->SetDefaultParameter("TEVENT_FACTORY_BDXMINI:thrNpheVeto", m_thrNpheVeto, "Threshold number of photo-electrons per each Veto SiPM to decide whenever to save all waveforms of an egent");
 	m_root_lock = japp->GetService<JGlobalRootLock>();
 }
 //------------------
@@ -59,10 +59,10 @@ jerror_t TEvent_factory_BDXmini::init(void) {
 
 	jout << "TEvent_factory_BDXmini::init was called" << endl;
 	m_tag = "";
-	gPARMS->GetParameter("MC", m_isMC);
+	japp->GetParameter("MC", m_isMC);
 	if (m_isMC) {
 		jout << "BDXmini event build - MC mode" << endl;
-		gPARMS->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
+		japp->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
 		m_tag = "MC";
 	}
 	if ((m_isMC) && (m_isMC != MCType::BDXmini_V1)) {

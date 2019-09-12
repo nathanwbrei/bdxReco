@@ -24,12 +24,12 @@ IntVetofa250Converter_factory::IntVetofa250Converter_factory():
 	m_NPED=10;
 	m_RMSTHRscale=5;
 
-	gPARMS->SetDefaultParameter("INTVETO:MIN_TOT",m_minTot,"Min ToT (in ns) for a pulse to be considered");
-	gPARMS->SetDefaultParameter("INTVETO:THR",m_thr,"Min amplitude (in number of phe) for a pulse to be considered");
-	gPARMS->SetDefaultParameter("INTVETO:NSB",m_NSB,"Samples before the maximum (in ns) to include in integration");
-	gPARMS->SetDefaultParameter("INTVETO:NSA",m_NSA,"Samples after the maximum  (in ns) to include in integration");
-	gPARMS->SetDefaultParameter("INTVETO:NPED",m_NPED,"Number of samples (in ns) in pedestal evaluation");
-	gPARMS->SetDefaultParameter("INTVETO:RMSSCALE",m_RMSTHRscale,"Scale factor for RMS in ped. subtraction");
+	japp->SetDefaultParameter("INTVETO:MIN_TOT",m_minTot,"Min ToT (in ns) for a pulse to be considered");
+	japp->SetDefaultParameter("INTVETO:THR",m_thr,"Min amplitude (in number of phe) for a pulse to be considered");
+	japp->SetDefaultParameter("INTVETO:NSB",m_NSB,"Samples before the maximum (in ns) to include in integration");
+	japp->SetDefaultParameter("INTVETO:NSA",m_NSA,"Samples after the maximum  (in ns) to include in integration");
+	japp->SetDefaultParameter("INTVETO:NPED",m_NPED,"Number of samples (in ns) in pedestal evaluation");
+	japp->SetDefaultParameter("INTVETO:RMSSCALE",m_RMSTHRscale,"Scale factor for RMS in ped. subtraction");
 }
 
 //------------------
@@ -53,7 +53,7 @@ jerror_t IntVetofa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runn
 	jout<<"IntVetofa250Converter_factory::brun"<<endl;
 	this->updateCalibrationHandler(	m_intVetofa250Converter->m_thrCalib,eventLoop);
 
-	gPARMS->GetParameter("INTVETO:VERBOSE",m_intVetofa250Converter->verbose());
+	japp->GetParameter("INTVETO:VERBOSE",m_intVetofa250Converter->verbose());
 
 	m_intVetofa250Converter->m_minTot=m_minTot;
 	m_intVetofa250Converter->m_thr=m_thr;

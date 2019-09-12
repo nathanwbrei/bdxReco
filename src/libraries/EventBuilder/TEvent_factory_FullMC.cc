@@ -43,10 +43,10 @@ using namespace std;
 jerror_t TEvent_factory_FullMC::init(void) {
 
 	m_tag = "";
-	gPARMS->GetParameter("MC", m_isMC);
+	japp->GetParameter("MC", m_isMC);
 	if (m_isMC) {
 		jout << "FullMC event build - MC mode" << endl;
-		gPARMS->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
+		japp->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
 		m_tag = "MC";
 	} else {
 		jerr << "FullMC must be run in MC mode!" << endl;

@@ -26,10 +26,10 @@ CalorimeterHit_factory::CalorimeterHit_factory() :
 	m_THR_multipleReadout = 3;
 	m_N_multipleReadout = 2;
 
-	gPARMS->SetDefaultParameter("CALORIMETER:HIT_THR_SINGLE", m_THR_singleReadout, "Threshold in phe (charge) for a detector with single readout");
-	gPARMS->SetDefaultParameter("CALORIMETER:HIT_THR_MULTI", m_THR_multipleReadout, "Threshold in phe (charge) for a detector with multi readout");
-	gPARMS->SetDefaultParameter("CALORIMETER:HIT_N_MULTI", m_N_multipleReadout, "Multiplicity for a detector with multi readout");
-	gPARMS->GetParameter("CALORIMETER:VERBOSE", VERBOSE);
+	japp->SetDefaultParameter("CALORIMETER:HIT_THR_SINGLE", m_THR_singleReadout, "Threshold in phe (charge) for a detector with single readout");
+	japp->SetDefaultParameter("CALORIMETER:HIT_THR_MULTI", m_THR_multipleReadout, "Threshold in phe (charge) for a detector with multi readout");
+	japp->SetDefaultParameter("CALORIMETER:HIT_N_MULTI", m_N_multipleReadout, "Multiplicity for a detector with multi readout");
+	japp->GetParameter("CALORIMETER:VERBOSE", VERBOSE);
 
 }
 
@@ -41,7 +41,7 @@ jerror_t CalorimeterHit_factory::init(void) {
 	m_ene = new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/Ene");
 	this->mapCalibrationHandler(m_ene);
 
-	gPARMS->GetParameter("MC", isMC);
+	japp->GetParameter("MC", isMC);
 	return NOERROR;
 }
 

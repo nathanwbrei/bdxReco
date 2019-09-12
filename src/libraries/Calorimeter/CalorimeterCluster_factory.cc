@@ -27,9 +27,9 @@ CalorimeterCluster_factory::CalorimeterCluster_factory(){
 	m_CLUSTER_HIT_THR=20;
 	m_CLUSTER_SEED_THR=20;
 	m_CLUSTER_POS_W0=3.1;
-	gPARMS->SetDefaultParameter("CALORIMETER:CLUSTER_HIT_THR",m_CLUSTER_HIT_THR,"Hit threshold in MeV for clustering");
-	gPARMS->SetDefaultParameter("CALORIMETER:CLUSTER_SEED_THR",m_CLUSTER_SEED_THR,"Seed threshold in MeV for clustering");
-	gPARMS->SetDefaultParameter("CALORIMETER:CLUSTER_POS_W0",m_CLUSTER_POS_W0,"Cluster position algorithm w0 factor");
+	japp->SetDefaultParameter("CALORIMETER:CLUSTER_HIT_THR",m_CLUSTER_HIT_THR,"Hit threshold in MeV for clustering");
+	japp->SetDefaultParameter("CALORIMETER:CLUSTER_SEED_THR",m_CLUSTER_SEED_THR,"Seed threshold in MeV for clustering");
+	japp->SetDefaultParameter("CALORIMETER:CLUSTER_POS_W0",m_CLUSTER_POS_W0,"Cluster position algorithm w0 factor");
 }
 
 

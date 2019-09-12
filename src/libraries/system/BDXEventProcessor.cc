@@ -53,8 +53,8 @@ BDXEventProcessor::~BDXEventProcessor() {
 jerror_t BDXEventProcessor::init(void) {
 
 	bout << "BDXEventProcessor::init" << endl;
-	gPARMS->GetParameter("MC", m_isMC);
-	gPARMS->SetDefaultParameter("SYSTEM:BUILD_DST", m_buildDST, "Enable DST, using the form \"TYPE\". TYPE is the name of an existing event builder. Example: -PSYSTEM:BUILD_DST=\"CataniaProto2\" (also: FullMC, JLabFlux)");
+	japp->GetParameter("MC", m_isMC);
+	japp->SetDefaultParameter("SYSTEM:BUILD_DST", m_buildDST, "Enable DST, using the form \"TYPE\". TYPE is the name of an existing event builder. Example: -PSYSTEM:BUILD_DST=\"CataniaProto2\" (also: FullMC, JLabFlux)");
 	bout << "Building DST is: " << m_buildDST << endl;
 
 	if (m_buildDST.size() == 0) {
@@ -64,7 +64,7 @@ jerror_t BDXEventProcessor::init(void) {
 		m_DObuildDST = 1;
 	}
 
-	gPARMS->SetDefaultParameter("SYSTEM:OUTPUT", optf, "Set OUTPUT file type and name, using the form \"TYPE,FILENAME\". Type can be ROOT, EVIO, TXT. Example: -PSYSTEM:OUTPUT=\"ROOT,out.root\" ");
+	japp->SetDefaultParameter("SYSTEM:OUTPUT", optf, "Set OUTPUT file type and name, using the form \"TYPE,FILENAME\". Type can be ROOT, EVIO, TXT. Example: -PSYSTEM:OUTPUT=\"ROOT,out.root\" ");
 	bout << "Out string is: " << optf << endl;
 	outType.assign(optf, 0, optf.find(","));
 	outFile.assign(optf, optf.find(",") + 1, optf.size());

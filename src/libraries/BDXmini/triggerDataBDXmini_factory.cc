@@ -17,14 +17,14 @@ using namespace std;
 //------------------
 jerror_t triggerDataBDXmini_factory::init(void) {
 	m_isMC = 0;
-	gPARMS->GetParameter("MC", m_isMC);
+	japp->GetParameter("MC", m_isMC);
 
 	/*Min and max time to assume that a channel fired when trigger fired*/
 	m_chanTimeMin = -4 * 4;
 	m_chanTimeMax = 4 * 4;
 
-	gPARMS->SetDefaultParameter("BDXMINI:TRG_MIN_TIME", m_chanTimeMin, "Trigger time - min ");
-	gPARMS->SetDefaultParameter("BDXMINI:TRG_MAX_TIME", m_chanTimeMax, "Trigger time - max");
+	japp->SetDefaultParameter("BDXMINI:TRG_MIN_TIME", m_chanTimeMin, "Trigger time - min ");
+	japp->SetDefaultParameter("BDXMINI:TRG_MAX_TIME", m_chanTimeMax, "Trigger time - max");
 
 	return NOERROR;
 }

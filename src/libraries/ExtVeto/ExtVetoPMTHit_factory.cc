@@ -52,7 +52,7 @@ jerror_t ExtVetoPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 
 	this->updateCalibrationHandler(m_PMT_gain,eventLoop);
 
-	gPARMS->GetParameter("EXTVETO:VERBOSE",VERBOSE);
+	japp->GetParameter("EXTVETO:VERBOSE",VERBOSE);
 
 	if (VERBOSE>3){
 		std::map  < TranslationTable::EXT_VETO_Index_t, std::vector < double > > gainCalibMap;

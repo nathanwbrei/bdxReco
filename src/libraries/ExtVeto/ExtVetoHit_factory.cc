@@ -22,7 +22,7 @@ ExtVetoHit_factory::ExtVetoHit_factory() :
 
 	m_THR = 10;
 
-	gPARMS->SetDefaultParameter("EXTVETO:HIT_THR", m_THR, "Threshold in energy for a detector with single readout");
+	japp->SetDefaultParameter("EXTVETO:HIT_THR", m_THR, "Threshold in energy for a detector with single readout");
 
 }
 
@@ -30,7 +30,7 @@ ExtVetoHit_factory::ExtVetoHit_factory() :
 // init
 //------------------
 jerror_t ExtVetoHit_factory::init(void) {
-	gPARMS->GetParameter("MC", isMC);
+	japp->GetParameter("MC", isMC);
 
 	m_ENE_gain = new CalibrationHandler<TranslationTable::EXT_VETO_Index_t>("/ExtVeto/Ene");
 	this->mapCalibrationHandler(m_ENE_gain);

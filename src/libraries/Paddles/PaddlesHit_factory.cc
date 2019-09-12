@@ -20,7 +20,7 @@ using namespace std;
 //------------------
 jerror_t PaddlesHit_factory::init(void)
 {
-	gPARMS->GetParameter("MC",isMC);
+	japp->GetParameter("MC",isMC);
 	m_ENE_gain=new	CalibrationHandler<TranslationTable::PADDLES_Index_t>("Paddles/Ene");
 	this->mapCalibrationHandler(m_ENE_gain);
 

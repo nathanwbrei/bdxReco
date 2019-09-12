@@ -25,7 +25,7 @@ jerror_t CalorimeterMCRealHit_factory::init(void) {
 // brun
 //------------------
 jerror_t CalorimeterMCRealHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	gPARMS->GetParameter("MC", isMC);
+	japp->GetParameter("MC", isMC);
 	return NOERROR;
 }
 

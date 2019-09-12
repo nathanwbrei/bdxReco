@@ -14,22 +14,22 @@ using namespace std;
 TranslationTable_factory::TranslationTable_factory() :
 		tt(0), isMC(0), VERBOSE(0) {
 
-	gPARMS->SetDefaultParameter("TT:VERBOSE", VERBOSE, "Verbosity level for Applying Translation Table."
+	japp->SetDefaultParameter("TT:VERBOSE", VERBOSE, "Verbosity level for Applying Translation Table."
 			" 0=no messages, 10=all messages.");
 	ROCID_MAP_FILENAME = "rocid.map";
-	gPARMS->SetDefaultParameter("TT:ROCID_MAP_FILENAME", ROCID_MAP_FILENAME, "Optional rocid to rocid conversion map for use with files"
+	japp->SetDefaultParameter("TT:ROCID_MAP_FILENAME", ROCID_MAP_FILENAME, "Optional rocid to rocid conversion map for use with files"
 			" generated with the non-standard rocid's");
 
 	NO_CCDB = false;
-	gPARMS->SetDefaultParameter("TT:NO_CCDB", NO_CCDB, "Don't try getting translation table from CCDB and just look"
+	japp->SetDefaultParameter("TT:NO_CCDB", NO_CCDB, "Don't try getting translation table from CCDB and just look"
 			" for file. Only useful if you want to force reading tt.xml."
 			" This is automatically set if you specify a different"
 			" filename via the TT:XML_FILENAME parameter.");
 	XML_FILENAME = "tt.xml";
-	gPARMS->SetDefaultParameter("TT:XML_FILENAME", XML_FILENAME, "Fallback filename of translation table XML file."
+	japp->SetDefaultParameter("TT:XML_FILENAME", XML_FILENAME, "Fallback filename of translation table XML file."
 			" If set to non-default, CCDB will not be checked.");
 
-	gPARMS->SetDefaultParameter("TT:SYSTEMS_TO_PARSE", SYSTEMS_TO_PARSE, "Comma separated list of systems to parse EVIO data for. "
+	japp->SetDefaultParameter("TT:SYSTEMS_TO_PARSE", SYSTEMS_TO_PARSE, "Comma separated list of systems to parse EVIO data for. "
 			"Default is empty string which means to parse all. System "
 			"names should be what is returned by DTranslationTable::DetectorName() .");
 	if (VERBOSE > 2) {
@@ -42,8 +42,8 @@ TranslationTable_factory::TranslationTable_factory() :
 //------------------
 jerror_t TranslationTable_factory::init(void) {
 	jout << "TranslationTable_factory::init is called" << endl;
-	gPARMS->GetParameter("MC", isMC);
-	gPARMS->GetParameter("TT:VERBOSE", VERBOSE);
+	japp->GetParameter("MC", isMC);
+	japp->GetParameter("TT:VERBOSE", VERBOSE);
 	return NOERROR;
 }
 

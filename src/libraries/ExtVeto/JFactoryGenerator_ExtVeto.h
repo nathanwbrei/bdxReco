@@ -22,7 +22,7 @@ class JFactoryGenerator_ExtVeto: public jana::JFactoryGenerator{
 		JFactoryGenerator_ExtVeto(){
 
 			VERBOSE=0;
-					gPARMS->SetDefaultParameter("EXTVETO:VERBOSE", VERBOSE,
+					japp->SetDefaultParameter("EXTVETO:VERBOSE", VERBOSE,
 								"Verbosity level for applying messages from INTVETO library."
 								" 0=no messages, 10=all messages.");
 

@@ -29,10 +29,10 @@ Calorimeterfa250Converter_factory::Calorimeterfa250Converter_factory():m_calorim
 	m_NSAMPLES=2000;
 	m_thr=0;
 
-	gPARMS->SetDefaultParameter("CALORIMETER:NSB",m_NSB,"Samples before the maximum to integrate for single phes - in ns");
-	gPARMS->SetDefaultParameter("CALORIMETER:NSA",m_NSA,"Samples after the maximum to integrate for single phes - in ns");
-	gPARMS->SetDefaultParameter("CALORIMETER:NPED",m_NPED,"Number of samples to include in the pedestal computation event-by-event - in ns");
-	gPARMS->SetDefaultParameter("CALORIMETER:NSAMPLES",m_NSAMPLES,"Number of samples to integrate at maximum for good signals - in ns");
+	japp->SetDefaultParameter("CALORIMETER:NSB",m_NSB,"Samples before the maximum to integrate for single phes - in ns");
+	japp->SetDefaultParameter("CALORIMETER:NSA",m_NSA,"Samples after the maximum to integrate for single phes - in ns");
+	japp->SetDefaultParameter("CALORIMETER:NPED",m_NPED,"Number of samples to include in the pedestal computation event-by-event - in ns");
+	japp->SetDefaultParameter("CALORIMETER:NSAMPLES",m_NSAMPLES,"Number of samples to integrate at maximum for good signals - in ns");
 
 
 }
@@ -58,7 +58,7 @@ jerror_t Calorimeterfa250Converter_factory::brun(JEventLoop *eventLoop, int32_t 
 	int threadId= PThreadIDUniqueInt(eventLoop->GetPThreadID());
 	m_calorimeterfa250Converter=new Calorimeterfa250Converter();
 	m_calorimeterfa250Converter->name()=string(Form("h%i",threadId));
-	gPARMS->GetParameter("CALORIMETER:VERBOSE",	m_calorimeterfa250Converter->verbose());
+	japp->GetParameter("CALORIMETER:VERBOSE",	m_calorimeterfa250Converter->verbose());
 
 	m_calorimeterfa250Converter->m_NSB=m_NSB;
 	m_calorimeterfa250Converter->m_NSA=m_NSA;

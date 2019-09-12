@@ -65,7 +65,7 @@ jerror_t IntVetoSiPMHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) 
 	this->updateCalibrationHandler(m_sipm_gain, eventLoop);
 	this->updateCalibrationHandler(m_sipm_ampl, eventLoop);
 
-	gPARMS->GetParameter("INTVETO:VERBOSE", VERBOSE);
+	japp->GetParameter("INTVETO:VERBOSE", VERBOSE);
 	if (VERBOSE > 3) {
 		std::map<TranslationTable::INT_VETO_Index_t, std::vector<double> > gainCalibMap;
 		std::map<TranslationTable::INT_VETO_Index_t, std::vector<double> >::iterator gainCalibMap_it;

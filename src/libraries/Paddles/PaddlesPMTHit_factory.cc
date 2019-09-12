@@ -57,7 +57,7 @@ jerror_t PaddlesPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 	this->updateCalibrationHandler(m_PMT_gain,eventLoop);
 
 
-	gPARMS->GetParameter("PADDLES:VERBOSE",VERBOSE);
+	japp->GetParameter("PADDLES:VERBOSE",VERBOSE);
 	if (VERBOSE>3){
 		std::map  < TranslationTable::PADDLES_Index_t, std::vector < double > > gainCalibMap;
 		std::map  < TranslationTable::PADDLES_Index_t, std::vector < double > >::iterator gainCalibMap_it;

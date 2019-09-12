@@ -21,7 +21,7 @@ class JFactoryGenerator_IntVeto: public jana::JFactoryGenerator{
 	public:
 		JFactoryGenerator_IntVeto(){
 			VERBOSE=0;
-			gPARMS->SetDefaultParameter("INTVETO:VERBOSE", VERBOSE,
+			japp->SetDefaultParameter("INTVETO:VERBOSE", VERBOSE,
 						"Verbosity level for applying messages from INTVETO library."
 						" 0=no messages, 10=all messages.");
 

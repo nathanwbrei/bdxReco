@@ -22,18 +22,18 @@ IntVetoHit_factory::IntVetoHit_factory() :
 	m_N_multipleReadout = 2;
 	m_hit_bottom_workAround = 0;
 
-	gPARMS->SetDefaultParameter("INTVETO:HIT_THR_SINGLE", m_THR_singleReadout, "Threshold in phe (charge) for a detector with single readout");
-	gPARMS->SetDefaultParameter("INTVETO:HIT_THR_MULTI", m_THR_multipleReadout, "Threshold in phe (charge) for a detector with multi readout");
-	gPARMS->SetDefaultParameter("INTVETO:HIT_DT_MULTI", m_DT_multipleReadout, "Time coincidence window (in ns) for hits in a detector with multi readout");
-	gPARMS->SetDefaultParameter("INTVETO:HIT_N_MULTI", m_N_multipleReadout, "Multiplicity for a detector with multi readout");
-	gPARMS->SetDefaultParameter("INTVETO:HIT_BOTTOM_WORKAROUND", m_hit_bottom_workAround, "Workaround for bottom (component==3) that is not a multi counter but 4 singles");
+	japp->SetDefaultParameter("INTVETO:HIT_THR_SINGLE", m_THR_singleReadout, "Threshold in phe (charge) for a detector with single readout");
+	japp->SetDefaultParameter("INTVETO:HIT_THR_MULTI", m_THR_multipleReadout, "Threshold in phe (charge) for a detector with multi readout");
+	japp->SetDefaultParameter("INTVETO:HIT_DT_MULTI", m_DT_multipleReadout, "Time coincidence window (in ns) for hits in a detector with multi readout");
+	japp->SetDefaultParameter("INTVETO:HIT_N_MULTI", m_N_multipleReadout, "Multiplicity for a detector with multi readout");
+	japp->SetDefaultParameter("INTVETO:HIT_BOTTOM_WORKAROUND", m_hit_bottom_workAround, "Workaround for bottom (component==3) that is not a multi counter but 4 singles");
 }
 
 //------------------
 // init
 //------------------
 jerror_t IntVetoHit_factory::init(void) {
-	gPARMS->GetParameter("MC", isMC);
+	japp->GetParameter("MC", isMC);
 
 	return NOERROR;
 }

@@ -27,9 +27,9 @@ jerror_t CataniaEvent_factory::init(void) {
 	m_EC2_cut = 20; //MeV
 	m_ExtVeto_timeWindows = 250; //ns
 	m_IntVeto_timeWindows = 250; //ns
-	gPARMS->SetDefaultParameter("CATANIAEVENT:EC2_CUT", m_EC2_cut, "Cut on MPPC#2 energy in MeV");
-	gPARMS->SetDefaultParameter("CATANIAEVENT:EXTVETO_TIME_WINDOW", m_ExtVeto_timeWindows, "ExtVeto time window (ns)");
-	gPARMS->SetDefaultParameter("CATANIAEVENT:INTVETO_TIME_WINDOW", m_IntVeto_timeWindows, "IntVeto time window (ns)");
+	japp->SetDefaultParameter("CATANIAEVENT:EC2_CUT", m_EC2_cut, "Cut on MPPC#2 energy in MeV");
+	japp->SetDefaultParameter("CATANIAEVENT:EXTVETO_TIME_WINDOW", m_ExtVeto_timeWindows, "ExtVeto time window (ns)");
+	japp->SetDefaultParameter("CATANIAEVENT:INTVETO_TIME_WINDOW", m_IntVeto_timeWindows, "IntVeto time window (ns)");
 
 	return NOERROR;
 }
@@ -38,7 +38,7 @@ jerror_t CataniaEvent_factory::init(void) {
 // brun
 //------------------
 jerror_t CataniaEvent_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	gPARMS->GetParameter("MC", m_isMC);
+	japp->GetParameter("MC", m_isMC);
 	return NOERROR;
 }
 

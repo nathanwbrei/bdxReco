@@ -25,7 +25,7 @@ using namespace std;
 //------------------
 jerror_t CalorimeterSiPMHit_factory::init(void) {
 	VERBOSE = 0;
-	gPARMS->GetParameter("CALORIMETER:VERBOSE", VERBOSE);
+	japp->GetParameter("CALORIMETER:VERBOSE", VERBOSE);
 
 	m_sipm_gain = new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/sipm_gain");
 	this->mapCalibrationHandler(m_sipm_gain);
