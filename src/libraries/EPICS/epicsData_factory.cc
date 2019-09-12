@@ -21,34 +21,23 @@ epicsData_factory::epicsData_factory(){
 	m_deltaTime=0;
 	japp->SetDefaultParameter("EPICS:DELTA_TIME",m_deltaTime,"Time (in s) to add to all EPICS times - can be >0, =0(default), <0");
 }
-//------------------
-// init
-//------------------
-jerror_t epicsData_factory::init(void) {
-	return NOERROR;
-}
 
-//------------------
-// brun
-//------------------
-jerror_t epicsData_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	return NOERROR;
-}
 
-//------------------
-// evnt
-//------------------
-jerror_t epicsData_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void epicsData_factory::Init() {}
+
+void epicsData_factory::ChangeRun(const std::shared_ptr<const JEvent>&) {}
+
+void epicsData_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	vector<const epicsRawData*> m_rawdata;
 	const eventData* tData;
-	loop->Get(m_rawdata);
+
+	event->Get(m_rawdata);
 
 	try {
-		loop->GetSingle(tData);
+	    event->Get(&tData);
 	} catch (unsigned long e) {
 		jout << "epicsData_factory::evnt no eventData bank this event" << endl;
-		return OBJECT_NOT_AVAILABLE;
 	}
 
 	/*If m_rawdata.size is greater than 0, it means that the event is an epics event,
@@ -64,7 +53,7 @@ jerror_t epicsData_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 		m_data.runNumber = tData->runN;
 		m_data.time = tData->time+m_deltaTime;
 		for (int ii = 0; ii < m_rawdata.size(); ii++) {
-			jout << eventnumber << ": Extracting EPICS data: " << m_rawdata[ii]->rawData << std::endl;
+			jout << event->GetEventNumber() << ": Extracting EPICS data: " << m_rawdata[ii]->rawData << std::endl;
 			m_data.decode(m_rawdata[ii]->rawData,m_deltaTime);
 		}
 	}
@@ -73,20 +62,6 @@ jerror_t epicsData_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 	*data = m_data;
 
 	Insert(data);
-	return NOERROR;
 }
 
-//------------------
-// erun
-//------------------
-jerror_t epicsData_factory::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t epicsData_factory::fini(void) {
-	return NOERROR;
-}
 
