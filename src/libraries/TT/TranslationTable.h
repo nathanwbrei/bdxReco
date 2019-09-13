@@ -121,7 +121,7 @@ public:
 				return readout;
 				break;
 			default:
-				jerr << "Wrong id" << std::endl;
+				jerr << "Wrong id" << jendl;
 				break;
 			}
 		}
@@ -181,7 +181,7 @@ public:
 				return readout;
 				break;
 			default:
-				jerr << "Wrong id" << std::endl;
+				jerr << "Wrong id" << jendl;
 				break;
 			}
 		}
@@ -241,7 +241,7 @@ public:
 				return readout;
 				break;
 			default:
-				jerr << "Wrong id" << std::endl;
+				jerr << "Wrong id" << jendl;
 				break;
 			}
 		}
@@ -287,7 +287,7 @@ public:
 				return id;
 				break;
 			default:
-				jerr << "Wrong id" << std::endl;
+				jerr << "Wrong id" << jendl;
 				break;
 			}
 		}

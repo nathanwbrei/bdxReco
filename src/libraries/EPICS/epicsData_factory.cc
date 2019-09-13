@@ -37,7 +37,7 @@ void epicsData_factory::Process(const std::shared_ptr<const JEvent>& event) {
 	try {
 	    event->Get(&tData);
 	} catch (unsigned long e) {
-		jout << "epicsData_factory::evnt no eventData bank this event" << endl;
+		jout << "epicsData_factory::evnt no eventData bank this event" << jendl;
 	}
 
 	/*If m_rawdata.size is greater than 0, it means that the event is an epics event,
@@ -53,7 +53,7 @@ void epicsData_factory::Process(const std::shared_ptr<const JEvent>& event) {
 		m_data.runNumber = tData->runN;
 		m_data.time = tData->time+m_deltaTime;
 		for (int ii = 0; ii < m_rawdata.size(); ii++) {
-			jout << event->GetEventNumber() << ": Extracting EPICS data: " << m_rawdata[ii]->rawData << std::endl;
+			//jout << event->GetEventNumber() << ": Extracting EPICS data: " << m_rawdata[ii]->rawData << jendl;
 			m_data.decode(m_rawdata[ii]->rawData,m_deltaTime);
 		}
 	}

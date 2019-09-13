@@ -90,12 +90,12 @@ template <class T> jerror_t CalibrationHandler<T>::fillCalib(const std::vector<s
 		if (irow>0) prevNdata=nData;
 		nData=calib_data[irow].size()-index.nIDs();
 		if (nData<=0) {
-			jerr<<"Error in CalibrationHandler<T>:::fillCalib. No data?"<<endl;
+			jerr<<"Error in CalibrationHandler<T>:::fillCalib. No data?"<<jendl;
 			m_calib.clear();
 			return 	VALUE_OUT_OF_RANGE;
 		}
 		if ((nData!=prevNdata)&&(irow!=0)){
-			jerr<<"Error in CalibrationHandler<T>::fillCalib. Error on number of datas?"<<endl;
+			jerr<<"Error in CalibrationHandler<T>::fillCalib. Error on number of datas?"<<jendl;
 			m_calib.clear();
 			return 	VALUE_OUT_OF_RANGE;
 		}
@@ -109,8 +109,8 @@ template <class T> jerror_t CalibrationHandler<T>::fillCalib(const std::vector<s
 		}
 		m_insert_check=m_calib.insert(std::make_pair(index,data));
 		if (m_insert_check.second==false){
-			jout<<"Element already exists in the map "<<m_table<<" Doing nothing"<<endl;
-			jout<<"Index print: "<<index.print()<<endl;
+			jout<<"Element already exists in the map "<<m_table<<" Doing nothing"<<jendl;
+			jout<<"Index print: "<<index.print()<<jendl;
 		}
 	}
 	return NOERROR;
@@ -139,9 +139,9 @@ template <class T> vector<double> CalibrationHandler<T>::getCalib(const T &index
 	else{
 		it=m_calib.find(index);
 		if (it==m_calib.end()){
-			jerr<<"CalibrationHandler<T>::getCalib element not found"<<endl;
-			jerr<<"T: "<<index.name()<<endl;
-			jerr<<index.print()<<endl;
+			jerr<<"CalibrationHandler<T>::getCalib element not found"<<jendl;
+			jerr<<"T: "<<index.name()<<jendl;
+			jerr<<index.print()<<jendl;
 			return ret;
 		}
 		else{
@@ -160,10 +160,10 @@ template <class T> double CalibrationHandler<T>::getCalibSingle(const T &index){
 		return this_data.at(0);
 	}
 	else{
-		jerr<<"CalibrationHandler<T>::getCalibSingle error: different than 1 entry: "<<this_data.size()<<std::endl;
-		jerr<<"Table: "<<m_table<<endl;
-		jerr<<"T: "<<index.name()<<endl;
-		jerr<<"T print: "<<index.print()<<endl;
+		jerr<<"CalibrationHandler<T>::getCalibSingle error: different than 1 entry: "<<this_data.size()<<jendl;
+		jerr<<"Table: "<<m_table<<jendl;
+		jerr<<"T: "<<index.name()<<jendl;
+		jerr<<"T print: "<<index.print()<<jendl;
 		return 0;
 	}
 }

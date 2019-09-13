@@ -65,9 +65,9 @@ void  epicsData::Print(Option_t *option) const{
 
 	std::map<string,double>::const_iterator it1;
 	std::map<string,int>::const_iterator it2;
-	jout<<"epicsData print: "<<std::endl;
+	jout<<"epicsData print: "<<jendl;
 	for (it1 = this->values.begin();it1!=this->values.end();it1++){
 		it2=times.find(it1->first);
-		jout<<(it1)->first<<" "<<(it1)->second<<" "<<it2->second<<" "<<std::endl;
+		jout<<(it1)->first<<" "<<(it1)->second<<" "<<it2->second<<" "<<jendl;
 	}
 }

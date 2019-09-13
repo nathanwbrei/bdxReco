@@ -38,7 +38,7 @@ TCanvas* fa250Mode1Hit::Draw(int id) const {
 
 void fa250Mode1Hit::toHisto(TH1D *h) const {
 	if (h == 0) {
-		jerr << "fa250Mode1Hit::toHisto, h pointer is null. Do nothing" << std::endl;
+		jerr << "fa250Mode1Hit::toHisto, h pointer is null. Do nothing" << jendl;
 	}
 	int N = this->samples.size();
 	h->Reset();

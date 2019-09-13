@@ -25,7 +25,7 @@ using namespace CLHEP;
 JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name, JApplication* app) :
 		JEventSource(source_name, app), chan(0), EDT(0), vme_mother_tag(0), child_mode1_tag(0), child_mode7_tag(0), eventHeader_tag(0), curRunNumber(0), curEventNumber(0) {
 
-	jout << "JEventSourceEvioDAQ creator: " << this << endl;
+	jout << "JEventSourceEvioDAQ creator: " << this << jendl;
 
 	/*Here follows some hard-coded definitions, all of them have a corresponding SetDefaultParameter call,
 	 * to be used to change this value via configuration file
@@ -79,7 +79,7 @@ JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name, JApplication* 
 	app->SetDefaultParameter("DAQ:VERBOSE", m_VERBOSE, "Set verbosity level for processing and debugging statements while parsing. 0=no debugging messages. 10=all messages");
 
 	// open EVIO file - buffer is hardcoded at 3M... that right?
-	jout << " Opening input source: " << source_name << endl;
+	jout << " Opening input source: " << source_name << jendl;
 
 	try {
 		chan = new evioFileChannel(source_name, "r", BUFFER_SIZE);
@@ -102,8 +102,8 @@ JEventSourceEvioDAQ::JEventSourceEvioDAQ(const char* source_name, JApplication* 
 			cerr << "===        scons ET=1                                           ===" << endl;
 			throw JException("Failed to open ET system - no ET support enabled: " + this->GetResourceName());
 		} else {
-			jerr << " Here" << endl;
-			jerr << e.toString() << endl;
+			jerr << " Here" << jendl;
+			jerr << e.toString() << jendl;
 			throw e;
 		}
 #endif
@@ -174,7 +174,7 @@ void JEventSourceEvioDAQ::GetEvent(std::shared_ptr<JEvent> event) {
 			return;
 
 		} else {
-			jout << "Source done" << endl;
+			jout << "Source done" << jendl;
 			chan->close();
 			if (chan) {
 				delete chan;
@@ -364,10 +364,10 @@ void JEventSourceEvioDAQ::GetEvent(std::shared_ptr<JEvent> event) {
 
 #else
 		japp->Quit();
-		jout << "Attempting to read from ET system using binary that" << endl;
-		jout << "does not have ET support built in! Try recompiling" << endl;
-		jout << "programs/Utilities/plugins/DAQ with ETROOT defined" << endl;
-		jout << "and pointing to an ET installation." << endl;
+		jout << "Attempting to read from ET system using binary that" << jendl;
+		jout << "does not have ET support built in! Try recompiling" << jendl;
+		jout << "programs/Utilities/plugins/DAQ with ETROOT defined" << jendl;
+		jout << "and pointing to an ET installation." << jendl;
 		throw RETURN_STATUS::kERROR;
 #endif
 	}
@@ -539,7 +539,7 @@ bool JEventSourceEvioDAQ::GetObjects(const std::shared_ptr<const JEvent>& event,
 						int leafSize = leaf->getSize();
 						vector<uint32_t> *pData = const_cast<vector<uint32_t> *>(&(leaf->data));
 						if (leafSize != 5) {  //should have 5 words in head bank
-							jerr << "Incompatible number of words in head bank: got " << leafSize << endl;
+							jerr << "Incompatible number of words in head bank: got " << leafSize << jendl;
 						} else {
 							this_eventData->eventN = (*pData)[2];
 							this_eventData->runN = (*pData)[1];
@@ -744,11 +744,11 @@ void JEventSourceEvioDAQ::ConnectToET(const char* source_name) {
 	}
 
 #else
-	jerr << endl;
-	jerr << "You are attempting to connect to an ET system using a binary that" << endl;
-	jerr << "was compiled without ET support. Please reconfigure and recompile" << endl;
-	jerr << "To get ET support." << endl;
-	jerr << endl;
+	jerr << jendl;
+	jerr << "You are attempting to connect to an ET system using a binary that" << jendl;
+	jerr << "was compiled without ET support. Please reconfigure and recompile" << jendl;
+	jerr << "To get ET support." << jendl;
+	jerr << jendl;
 	throw exception();
 #endif  // HAVE_ET
 }
