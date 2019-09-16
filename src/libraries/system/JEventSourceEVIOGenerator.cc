@@ -49,7 +49,7 @@ JEventSource* JEventSourceEvioGenerator::MakeJEventSource(string source) {
 	m_verbose = mApplication->GetParameterValue<int>("SYSTEM:VERBOSE");
 
 	if (m_isMC == 0) {
-		if (m_verbose > 2) jout << "JEventSourceEvioGenerator::MakeJEventSource for DAQ " << endl;
+		if (m_verbose > 2) jout << "JEventSourceEvioGenerator::MakeJEventSource for DAQ " << jendl;
 		return new JEventSourceEvioDAQ(source.c_str(), mApplication);
 	} else if (m_isMC >= 1) {
 

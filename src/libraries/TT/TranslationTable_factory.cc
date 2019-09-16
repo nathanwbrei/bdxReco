@@ -5,14 +5,15 @@
 // Creator: celentan (on Linux apcx4 2.6.32-504.30.3.el6.x86_64 x86_64)
 //
 
+#include "TranslationTable_factory.h"
+#include <JANA/JEvent.h>
+
 #include <iostream>
 #include <iomanip>
-using namespace std;
 
-#include "TranslationTable_factory.h"
 
 TranslationTable_factory::TranslationTable_factory() :
-		tt(0), isMC(0), VERBOSE(0) {
+		tt(nullptr), isMC(0), VERBOSE(0) {
 
 	japp->SetDefaultParameter("TT:VERBOSE", VERBOSE, "Verbosity level for Applying Translation Table."
 			" 0=no messages, 10=all messages.");
@@ -33,33 +34,29 @@ TranslationTable_factory::TranslationTable_factory() :
 			"Default is empty string which means to parse all. System "
 			"names should be what is returned by DTranslationTable::DetectorName() .");
 	if (VERBOSE > 2) {
-		jout << "TranslationTable_factory creator is called. Pointer is: " << this << endl;
+		jout << "TranslationTable_factory creator is called. Pointer is: " << this << jendl;
 	}
 }
 
-//------------------
-// init
-//------------------
-jerror_t TranslationTable_factory::init(void) {
-	jout << "TranslationTable_factory::init is called" << endl;
+
+void TranslationTable_factory::Init() {
+	jout << "TranslationTable_factory::init is called" << jendl;
 	japp->GetParameter("MC", isMC);
 	japp->GetParameter("TT:VERBOSE", VERBOSE);
-	return NOERROR;
 }
 
-//------------------
-// brun
-//------------------
-jerror_t TranslationTable_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+
+void TranslationTable_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 
 	if (isMC == 0) {
 		// Grab run-dependent translation table from CCDB
 		if (VERBOSE > 3) {
-			jout << "TranslationTable_factory::brun -> TT will be created" << endl;
+			jout << "TranslationTable_factory::brun -> TT will be created" << jendl;
 		}
-		tt = new TranslationTable(eventLoop);
+		tt = new TranslationTable(event->GetJApplication(), event->GetRunNumber());
+
 		// Keep this translation table around and reuse it for susequent events
-		_data.push_back(tt);
+		Insert(tt);
 		SetFactoryFlag(PERSISTANT); /*This is very, very important: the Reset Method is not called at every event, so we do not clear data, and we
 		 can get the TranslationTable also in evnt method of other factories / event processors*/
 
@@ -67,33 +64,13 @@ jerror_t TranslationTable_factory::brun(JEventLoop *eventLoop, int32_t runnumber
 		//	tt->SetSystemsToParse(loop->GetJEvent().GetJEventSource());
 	} else {
 		if (VERBOSE > 3) {
-			jout << "Working on MC, therefore no TT will be created" << endl;
+			jout << "Working on MC, therefore no TT will be created" << jendl;
 		}
 	}
-	return NOERROR;
 }
 
-//------------------
-// evnt
-//------------------
-jerror_t TranslationTable_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 
-	return NOERROR;
-}
+void TranslationTable_factory::Process(const std::shared_ptr<const JEvent>& aEvent) {}
 
-//------------------
-// erun
-//------------------
-jerror_t TranslationTable_factory::erun(void) {
-	return NOERROR;
 
-}
-
-//------------------
-// fini
-//------------------
-jerror_t TranslationTable_factory::fini(void) {
-
-	return NOERROR;
-}
 

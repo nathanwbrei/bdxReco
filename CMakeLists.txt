@@ -389,14 +389,14 @@ add_library(bdxreco STATIC
 #        src/libraries/IntVeto/IntVetoSummary_factory.h
 #        src/libraries/IntVeto/JFactoryGenerator_IntVeto.h
 #
-#        src/libraries/TT/JFactoryGenerator_TT.h
+        src/libraries/TT/JFactoryGenerator_TT.h
         src/libraries/TT/TranslationTable.cc
         src/libraries/TT/TranslationTable.h
         src/libraries/TT/TranslationTable_Dict.cc
-#        src/libraries/TT/TranslationTable_factory.cc
-#        src/libraries/TT/TranslationTable_factory.h
-#        src/libraries/TT/TranslationTable_LinkDef.h
-#
+        src/libraries/TT/TranslationTable_factory.cc
+        src/libraries/TT/TranslationTable_factory.h
+        src/libraries/TT/TranslationTable_LinkDef.h
+
 #        src/libraries/system/BDXEventProcessor.cc
 #        src/libraries/system/BDXEventProcessor.h
 #        src/libraries/system/BDXFactory.h

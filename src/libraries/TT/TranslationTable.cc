@@ -1,6 +1,7 @@
 #include "TranslationTable.h"
 
 #include <JANA/JApplication.h>
+#include <JANA/Services/JCalibrationManager.h>
 
 #include <expat.h>
 #include <sstream>
@@ -30,7 +31,7 @@ std::map<TranslationTable::csc_t, TranslationTable::ChannelInfo>& TranslationTab
 
 
 
-TranslationTable::TranslationTable(JApplication* app) {
+TranslationTable::TranslationTable(JApplication* app, unsigned int run_number) {
 
 
 	// Default is to just read translation table from CCDB. If this fails,
@@ -64,7 +65,8 @@ TranslationTable::TranslationTable(JApplication* app) {
 
 	// Read in Translation table. This will create DChannelInfo objects
 	// and store them in the "TT" map, indexed by csc_t objects
-	ReadTranslationTable(loop->GetJCalibration());
+	auto calib_service = app->GetService<JCalibrationManager>();
+	ReadTranslationTable(calib_service->GetJCalibration(run_number));
 
 
 }
@@ -114,11 +116,11 @@ void TranslationTable::ReadTranslationTable(JCalibration *jcalib)
 	if (jcalib && !NO_CCDB) {
 		map<string,string> tt;
 		string namepath = "Translation/DAQ2detector";
-		jout << "Reading translation table from calib DB: " << namepath << " ..." << std::endl;
+		jout << "Reading translation table from calib DB: " << namepath << " ..." << jendl;
 		jcalib->GetCalib(namepath, tt);
 		if (tt.size() != 1) {
-			jerr << " Error: Unexpected translation table format!" << std::endl;
-			jerr << "        tt.size()=" << tt.size() << " (expected 1)" << std::endl;
+			jerr << " Error: Unexpected translation table format!" << jendl;
+			jerr << "        tt.size()=" << tt.size() << " (expected 1)" << jendl;
 		}else{
 			// Copy table into tt string
 			map<string,string>::iterator iter = tt.begin();
@@ -128,13 +130,13 @@ void TranslationTable::ReadTranslationTable(JCalibration *jcalib)
 
 	// If getting from CCDB fails, try just reading in local file
 	if (tt_xml.size() == 0) {
-		if (!NO_CCDB) jout << "Unable to get translation table from CCDB." << std::endl;
-		jout << "Will try reading TT from local file: " << XML_FILENAME << std::endl;
+		if (!NO_CCDB) jout << "Unable to get translation table from CCDB." << jendl;
+		jout << "Will try reading TT from local file: " << XML_FILENAME << jendl;
 
 		// Open file
 		ifstream ifs(XML_FILENAME.c_str());
 		if (! ifs.is_open()) {
-			jerr << " Error: Cannot open file! Translation table unavailable." << std::endl;
+			jerr << " Error: Cannot open file! Translation table unavailable." << jendl;
 			pthread_mutex_unlock(&Get_TT_Mutex());
 			return;
 		}
@@ -157,7 +159,7 @@ void TranslationTable::ReadTranslationTable(JCalibration *jcalib)
 	// create parser and specify element handlers
 	XML_Parser xmlParser = XML_ParserCreate(NULL);
 	if (xmlParser == NULL) {
-		jerr << "readTranslationTable...unable to create parser" << std::endl;
+		jerr << "readTranslationTable...unable to create parser" << jendl;
 		exit(EXIT_FAILURE);
 	}
 	XML_SetElementHandler(xmlParser,StartElement,EndElement);
@@ -166,11 +168,11 @@ void TranslationTable::ReadTranslationTable(JCalibration *jcalib)
 	// Parse XML string
 	int status=XML_Parse(xmlParser, tt_xml.c_str(), tt_xml.size(), 1); // "1" indicates this is the final piece of XML
 	if (status == 0) {
-		jerr << "  ?readTranslationTable...parseXMLFile parse error for " << XML_FILENAME << std::endl;
-		jerr << XML_ErrorString(XML_GetErrorCode(xmlParser)) << std::endl;
+		jerr << "  ?readTranslationTable...parseXMLFile parse error for " << XML_FILENAME << jendl;
+		jerr << XML_ErrorString(XML_GetErrorCode(xmlParser)) << jendl;
 	}
 
-	jout << Get_TT().size() << " channels defined in translation table" << std::endl;
+	jout << Get_TT().size() << " channels defined in translation table" << jendl;
 	XML_ParserFree(xmlParser);
 
 	pthread_mutex_unlock(&Get_TT_Mutex());
@@ -178,7 +180,7 @@ void TranslationTable::ReadTranslationTable(JCalibration *jcalib)
 	if (VERBOSE > 6){
 		std::map<TranslationTable::csc_t, TranslationTable::ChannelInfo>::const_iterator it;
 		for (it=Get_TT().begin();it!=Get_TT().end();it++){
-			jout<<"Crate: "<<(it)->first.rocid<<" Slot: "<<(it)->first.slot<<" "<<" Channel: "<<(it)->first.channel<<" Detector: "<<DetectorName((it)->second.det_sys)<<endl;
+			jout<<"Crate: "<<(it)->first.rocid<<" Slot: "<<(it)->first.slot<<" "<<" Channel: "<<(it)->first.channel<<" Detector: "<<DetectorName((it)->second.det_sys)<<jendl;
 		}
 	}
 
@@ -194,7 +196,7 @@ TranslationTable::ChannelInfo TranslationTable::getChannelInfo(const csc_t &csc)
 	if (iter == Get_TT().end()) {
 		if (VERBOSE > 6){
 			ttout << csc.rocid << " " << csc.slot << " " <<csc.channel << " ";
-			ttout << "     - Didn't find it" << std::endl;
+			ttout << "     - Didn't find it" << jendl;
 		}
 		m_channel.det_sys=UNKNOWN_DETECTOR;
 		return m_channel;
@@ -202,7 +204,7 @@ TranslationTable::ChannelInfo TranslationTable::getChannelInfo(const csc_t &csc)
 	const ChannelInfo &chaninfo = iter->second;
 	if (VERBOSE > 6){
 		ttout << csc.rocid << " " << csc.slot << " " <<csc.channel << " ";
-		ttout << "     - Found entry for: " << DetectorName(chaninfo.det_sys)<< std::endl;
+		ttout << "     - Found entry for: " << DetectorName(chaninfo.det_sys)<< jendl;
 	}
 	m_channel=chaninfo;
 	return m_channel;
@@ -381,9 +383,9 @@ void StartElement(void *userData, const char *xmlname, const char **atts)
 		}
 
 	} else {
-		jerr << std::endl << std::endl
-				<< "?startElement...unknown xml tag " << xmlname
-				<< std::endl << std::endl;
+		jerr << jendl;
+		jerr << "?startElement...unknown xml tag " << xmlname << jendl;
+		jerr << jendl;
 	}
 
 }

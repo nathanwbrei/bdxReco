@@ -8,22 +8,21 @@
 #ifndef _JFactoryGenerator_TranslationTable_
 #define _JFactoryGenerator_TranslationTable_
 
-#include <JANA/jerror.h>
-#include <JANA/JFactoryGenerator.h>
-
 #include "TranslationTable_factory.h"
 
-class JFactoryGenerator_TT: public jana::JFactoryGenerator{
-	public:
-		JFactoryGenerator_TT(){}
-		virtual ~JFactoryGenerator_TT(){}
-		virtual const char* className(void){return static_className();}
-		static const char* static_className(void){return "JFactoryGenerator_TT";}
-		
-		jerror_t GenerateFactories(jana::JEventLoop *loop){
-			loop->AddFactory(new TranslationTable_factory());
-			return NOERROR;
-		}
+#include <JANA/JFactoryGenerator.h>
+
+
+class JFactoryGenerator_TT : public JFactoryGenerator {
+
+public:
+    JFactoryGenerator_TT() = default;
+
+    virtual ~JFactoryGenerator_TT() = default;
+
+    void GenerateFactories(JFactorySet* factory_set) override {
+        factory_set->Add(new TranslationTable_factory());
+    }
 
 };
 

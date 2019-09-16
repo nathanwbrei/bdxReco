@@ -8,21 +8,19 @@
 #ifndef _TranslationTable_factory_
 #define _TranslationTable_factory_
 
-#include <JANA/JFactory.h>
 #include "TranslationTable.h"
 
-class TranslationTable_factory:public jana::JFactory<TranslationTable>{
+#include <JANA/JFactoryT.h>
+
+class TranslationTable_factory : public JFactoryT<TranslationTable> {
 public:
 	TranslationTable_factory();
-	~TranslationTable_factory(){};
-
+	~TranslationTable_factory() = default;
 
 private:
-	jerror_t init(void);						///< Called once at program start.
-	jerror_t brun(jana::JEventLoop *eventLoop, int32_t runnumber);	///< Called everytime a new run number is detected.
-	jerror_t evnt(jana::JEventLoop *eventLoop, uint64_t eventnumber);	///< Called every event.
-	jerror_t erun(void);						///< Called everytime run number changes, provided brun has been called.
-	jerror_t fini(void);						///< Called after last event of last event source has been processed.
+	void Init() override;
+	void ChangeRun(const std::shared_ptr<const JEvent>& aEvent) override;
+	void Process(const std::shared_ptr<const JEvent>& aEvent) override;
 
 	int isMC;
 	int VERBOSE;

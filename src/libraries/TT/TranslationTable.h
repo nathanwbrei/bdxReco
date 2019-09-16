@@ -12,6 +12,7 @@
 #include <JANA/JFactory.h>
 #include <JANA/JException.h>
 #include <JANA/JApplication.h>
+#include <JANA/Calibrations/JCalibration.h>
 
 #include <TObject.h>
 #include <TString.h>
@@ -25,8 +26,8 @@ class TranslationTable: public JObject{
 public:
 	JOBJECT_PUBLIC(TranslationTable);
 
-	TranslationTable(JApplication* app);
-	~TranslationTable();
+	TranslationTable(JApplication* app, unsigned int run_number);
+	~TranslationTable() override;
 
 	// Each detector system has its own native indexing scheme.
 	// Here, we define a class for each of them that has those
