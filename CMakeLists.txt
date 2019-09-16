@@ -260,37 +260,37 @@ add_library(bdxreco STATIC
 #        src/libraries/Calorimeter/CalorimeterSiPMHit_LinkDef.h
 #        src/libraries/Calorimeter/JFactoryGenerator_Calorimeter.h
 #
-#        src/libraries/DAQ/DAQCalibrationHandler.cc
-#        src/libraries/DAQ/DAQCalibrationHandler.h
-#        src/libraries/DAQ/epicsRawData.h
-#        src/libraries/DAQ/eventData.h
-#        src/libraries/DAQ/fa250ConvertedHit.h
+        src/libraries/DAQ/DAQCalibrationHandler.cc
+        src/libraries/DAQ/DAQCalibrationHandler.h
+        src/libraries/DAQ/epicsRawData.h
+        src/libraries/DAQ/eventData.h
+        src/libraries/DAQ/fa250ConvertedHit.h
 #        src/libraries/DAQ/fa250ConvertedHit_Dict.cc
-#        src/libraries/DAQ/fa250Converter.h
-#        src/libraries/DAQ/fa250Hit.h
+        src/libraries/DAQ/fa250Converter.h
+        src/libraries/DAQ/fa250Hit.h
 #        src/libraries/DAQ/fa250Hit_Dict.cc
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHit.cc
+#         src/libraries/DAQ/fa250Mode1CalibPedSubHit.cc
 #        src/libraries/DAQ/fa250Mode1CalibPedSubHit_Dict.cc
 #        src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.cc
 #        src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.h
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.cc
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.h
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.cc
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.h
+        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.cc
+        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.h
+        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.cc
+        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.h
         src/libraries/DAQ/fa250Mode1Hit.cc
 #        src/libraries/DAQ/fa250Mode1Hit_Dict.cc
-#        src/libraries/DAQ/fa250Mode7Hit.h
-#        src/libraries/DAQ/fa250WaveboardV1Hit.cc
-#        src/libraries/DAQ/fa250WaveboardV1Hit.h
+        src/libraries/DAQ/fa250Mode7Hit.h
+        src/libraries/DAQ/fa250WaveboardV1Hit.cc
+        src/libraries/DAQ/fa250WaveboardV1Hit.h
         src/libraries/DAQ/JEventSourceEVIODAQ.cc
         src/libraries/DAQ/JEventSourceEVIODAQ.h
 #        src/libraries/DAQ/JEventSourceTRIDASDAQ.cc
 #        src/libraries/DAQ/JEventSourceTRIDASDAQ.h
-#        src/libraries/DAQ/JFactoryGenerator_DAQ.h
+        src/libraries/DAQ/JFactoryGenerator_DAQ.h
 
         src/libraries/EPICS/epicsData.cc
         src/libraries/EPICS/epicsData.h
-        src/libraries/EPICS/epicsData_Dict.cc
+#        src/libraries/EPICS/epicsData_Dict.cc
         src/libraries/EPICS/epicsData_factory.cc
         src/libraries/EPICS/epicsData_factory.h
         src/libraries/EPICS/epicsData_LinkDef.h

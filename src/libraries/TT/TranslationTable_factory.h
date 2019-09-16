@@ -15,7 +15,7 @@
 class TranslationTable_factory : public JFactoryT<TranslationTable> {
 public:
 	TranslationTable_factory();
-	~TranslationTable_factory() = default;
+	~TranslationTable_factory() override = default;
 
 private:
 	void Init() override;

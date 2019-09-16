@@ -8,12 +8,9 @@
 #ifndef SRC_LIBRARIES_DAQ_JEVENTSOURCETRIDASDAQ_H_
 #define SRC_LIBRARIES_DAQ_JEVENTSOURCETRIDASDAQ_H_
 
-// JANA headers
 #include <JANA/JEventSource.h>
-#include <JANA/jerror.h>
-
-//TRIDAS headers
 #include <TRIDAS/ptfile_reader.hpp>
+
 using namespace tridas::post_trigger;
 
 
@@ -44,8 +41,7 @@ public:
 		return "JEventSourceEvioDAQ";
 	}
 
-	jerror_t GetEvent(JEvent &event);
-	void FreeEvent(JEvent &event);
+	void GetEvent(JEvent &event);
 	jerror_t GetObjects(JEvent &event, JFactory_base *factory);
 	TRIDASDAQSourceType GetDAQSourceType(void) {
 		return source_type;

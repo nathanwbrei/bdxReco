@@ -25,7 +25,7 @@ public:
 
 	vector<double> samples;
 
-	void Summarize(JObjectSummary& summary) const final {
+	void Summarize(JObjectSummary& summary) const override {
 		summary.add(m_channel.rocid, "crate", "%4d");
 		summary.add(m_channel.slot, "slot", "%4d");
 		summary.add(m_channel.channel, "channel", "%4d");

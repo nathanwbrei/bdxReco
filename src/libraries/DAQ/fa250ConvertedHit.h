@@ -9,7 +9,6 @@
 #define FAINTEGRATEDHIT_H_
 
 #include <JANA/JObject.h>
-#include <JANA/JFactory.h>
 #include "TObject.h"
 
 /*A common class for fad250 converted hits. Can be useful*/

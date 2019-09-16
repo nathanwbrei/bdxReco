@@ -5,32 +5,18 @@
 // Creator: celentan (on Linux apcx4 3.10.0-957.el7.x86_64 x86_64)
 //
 
-#include <iostream>
-#include <iomanip>
-using namespace std;
 #include "fa250Mode1CalibPedSubHit.h"
 #include "fa250Mode1CalibPedSubHitFFT_factory.h"
 #include "TVirtualFFT.h"
 
-//------------------
-// init
-//------------------
-jerror_t fa250Mode1CalibPedSubHitFFT_factory::init(void) {
-	return NOERROR;
-}
+#include <iostream>
+#include <iomanip>
 
-//------------------
-// brun
-//------------------
-jerror_t fa250Mode1CalibPedSubHitFFT_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	return NOERROR;
-}
 
 //------------------
 // evnt
 //------------------
-jerror_t fa250Mode1CalibPedSubHitFFT_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
-
+void fa250Mode1CalibPedSubHitFFT_factory::Process(const std::shared_ptr<const JEvent>& event) {
 	// Code to generate factory data goes here. Add it like:
 	//
 	// fa250Mode1CalibPedSubHitFFT *myfa250Mode1CalibPedSubHitFFT = new fa250Mode1CalibPedSubHitFFT;
@@ -43,7 +29,7 @@ jerror_t fa250Mode1CalibPedSubHitFFT_factory::evnt(JEventLoop *loop, uint64_t ev
 	// by the system and the _data vector will be cleared automatically.
 
 	vector<const fa250Mode1CalibPedSubHit*> fa250Mode1CalibPedSubHits;
-	loop->Get(fa250Mode1CalibPedSubHits);
+	event->Get(fa250Mode1CalibPedSubHits);
 	for (uint32_t i = 0; i < fa250Mode1CalibPedSubHits.size(); i++) {
 
 		const fa250Mode1CalibPedSubHit *hit = fa250Mode1CalibPedSubHits[i];
@@ -109,23 +95,7 @@ jerror_t fa250Mode1CalibPedSubHitFFT_factory::evnt(JEventLoop *loop, uint64_t ev
 
 		// Add original as associated object
 		CalibPedSubHitFFT->AddAssociatedObject(hit);
-		_data.push_back(CalibPedSubHitFFT);
-
+		Insert(CalibPedSubHitFFT);
 	}
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t fa250Mode1CalibPedSubHitFFT_factory::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t fa250Mode1CalibPedSubHitFFT_factory::fini(void) {
-	return NOERROR;
 }
 

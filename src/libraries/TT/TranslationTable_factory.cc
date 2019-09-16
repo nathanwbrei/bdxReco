@@ -55,7 +55,7 @@ void TranslationTable_factory::ChangeRun(const std::shared_ptr<const JEvent>& ev
 		}
 		tt = new TranslationTable(event->GetJApplication(), event->GetRunNumber());
 
-		// Keep this translation table around and reuse it for susequent events
+		// Keep this translation table around and reuse it for subsequent events
 		Insert(tt);
 		SetFactoryFlag(PERSISTANT); /*This is very, very important: the Reset Method is not called at every event, so we do not clear data, and we
 		 can get the TranslationTable also in evnt method of other factories / event processors*/

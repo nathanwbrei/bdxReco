@@ -15,12 +15,12 @@ jerror_t DAQCalibrationHandler::fillCalib(const std::vector<std::vector<double> 
 		if (irow > 0) prevNdata = nData;
 		nData = calib_data.at(irow).size() - 3;   //crate, slot channel
 		if (nData <= 0) {
-			jerr << "Error in DAQCalibrationHandler::fillCalib. No data?" << endl;
+			jerr << "Error in DAQCalibrationHandler::fillCalib. No data?" << jendl;
 			m_calib.clear();
 			return VALUE_OUT_OF_RANGE;
 		}
 		if ((nData != prevNdata) && (irow != 0)) {
-			jerr << "Error in CalorimeterCalibration::fillCalib. Error on number of datas?" << endl;
+			jerr << "Error in CalorimeterCalibration::fillCalib. Error on number of datas?" << jendl;
 			m_calib.clear();
 			return VALUE_OUT_OF_RANGE;
 		}
@@ -35,8 +35,8 @@ jerror_t DAQCalibrationHandler::fillCalib(const std::vector<std::vector<double> 
 		}
 		m_insert_check = m_calib.insert(std::make_pair(index, data));
 		if (m_insert_check.second == false) {
-			jout << "DAQCalibrationHandler:: element already exists in the map Doing nothing" << endl;
-			jout << "Index print: " << index.print() << endl;
+			jout << "DAQCalibrationHandler:: element already exists in the map Doing nothing" << jendl;
+			jout << "Index print: " << index.print() << jendl;
 
 		}
 	}
@@ -61,7 +61,7 @@ vector<double> DAQCalibrationHandler::getCalib(const TranslationTable::csc_t &in
 	} else {
 		it = m_calib.find(index);
 		if (it == m_calib.end()) {
-			jerr << "DAQCalibrationHandler:getCalib element not found. ROC:  " << 1.*index.rocid << " SLOT: " << 1.*index.slot << " CH: " << 1.*index.channel << endl;
+			jerr << "DAQCalibrationHandler:getCalib element not found. ROC:  " << 1.*index.rocid << " SLOT: " << 1.*index.slot << " CH: " << 1.*index.channel << jendl;
 			return ret;
 		} else {
 
@@ -81,7 +81,7 @@ double DAQCalibrationHandler::getCalibSingle(const TranslationTable::csc_t &inde
 //		jout<<index.slot<<" "<<index.channel<<" "<<this_data[0]<<endl;
 		return this_data[0];
 	} else {
-		jerr << "DAQCalibrationHandler::getCalibSingle error: more than 1 entry, there are:" << this_data.size() << std::endl;
+		jerr << "DAQCalibrationHandler::getCalibSingle error: more than 1 entry, there are:" << this_data.size() << jendl;
 		return VALUE_OUT_OF_RANGE;
 	}
 }

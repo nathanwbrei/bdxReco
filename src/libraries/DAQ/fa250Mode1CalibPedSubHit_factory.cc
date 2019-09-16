@@ -12,36 +12,27 @@ using namespace std;
 #include "fa250Mode1CalibPedSubHit_factory.h"
 #include <TT/TranslationTable.h>
 
-//------------------
-// init
-//------------------
-jerror_t fa250Mode1CalibPedSubHit_factory::init(void) {
+
+void fa250Mode1CalibPedSubHit_factory::Init() {
 	m_pedestals = new DAQCalibrationHandler("/DAQ/pedestals");
 	this->mapCalibrationHandler(m_pedestals);
 
 	m_parms = new DAQCalibrationHandler("DAQ/parms");
 	this->mapCalibrationHandler(m_parms);
-
-	return NOERROR;
 }
 
-//------------------
-// brun
-//------------------
-jerror_t fa250Mode1CalibPedSubHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+
+void fa250Mode1CalibPedSubHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	// Here, we would normally get this from the CalibPedSubration DB.
 	LSB = 0.4884; //this is in any case the default
 
-	this->updateCalibrationHandler(m_pedestals, eventLoop);
-	this->updateCalibrationHandler(m_parms, eventLoop);
-
-	return NOERROR;
+	this->clearCalibrationHandler(m_pedestals); // TODO: This line came from erun(). Is doing this good enough?
+	this->updateCalibrationHandler(m_pedestals, japp); // TODO: Argument should probably be JEvent instead of JApp
+	this->updateCalibrationHandler(m_parms, japp);
 }
 
-//------------------
-// evnt
-//------------------
-jerror_t fa250Mode1CalibPedSubHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+
+void fa250Mode1CalibPedSubHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	vector<const fa250Mode1Hit*> hits;
 	vector<const fa250WaveboardV1Hit*> wbhitsV1;
@@ -53,7 +44,7 @@ jerror_t fa250Mode1CalibPedSubHit_factory::evnt(JEventLoop *loop, uint64_t event
 	TranslationTable::csc_t index;
 
 	//First get and process fa250Mode1Hit from JLab FADC
-	loop->Get(hits);
+	event->Get(hits);
 
 	for (uint32_t i = 0; i < hits.size(); i++) {
 
@@ -90,11 +81,11 @@ jerror_t fa250Mode1CalibPedSubHit_factory::evnt(JEventLoop *loop, uint64_t event
 		CalibPedSubHit->m_RMS = fabs(RMS * LSB); //a.c. there are cases (v1725) where LSB is < 0, but RMS is >0!
 		// Add original as associated object 
 		CalibPedSubHit->AddAssociatedObject(hit);
-		_data.push_back(CalibPedSubHit);
+		Insert(CalibPedSubHit);
 	}
 
 	//Then get fa250Hit from waveboard V1
-	loop->Get(wbhitsV1);
+	event->Get(wbhitsV1);
 	for (uint32_t i = 0; i < wbhitsV1.size(); i++) {
 
 		const fa250WaveboardV1Hit *hit = wbhitsV1[i];
@@ -130,27 +121,7 @@ jerror_t fa250Mode1CalibPedSubHit_factory::evnt(JEventLoop *loop, uint64_t event
 		CalibPedSubHit->m_RMS = fabs(RMS * LSB);
 		// Add original as associated object
 		CalibPedSubHit->AddAssociatedObject(hit);
-		_data.push_back(CalibPedSubHit);
+		Insert(CalibPedSubHit);
 	}
-
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t fa250Mode1CalibPedSubHit_factory::erun(void) {
-
-	this->clearCalibrationHandler(m_pedestals);
-
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t fa250Mode1CalibPedSubHit_factory::fini(void) {
-
-	return NOERROR;
 }
 

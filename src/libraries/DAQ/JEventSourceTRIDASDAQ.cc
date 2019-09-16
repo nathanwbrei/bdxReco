@@ -8,7 +8,6 @@ using namespace std;
 
 // JANA headers
 #include <JANA/JEvent.h>
-#include <JANA/JParameterManager.h>
 #include <JANA/JApplication.h>
 
 //DAQ
@@ -20,7 +19,7 @@ using namespace std;
 JEventSourceTRIDASDAQ::JEventSourceTRIDASDAQ(const char* source_name, JApplication* app) :
 		JEventSource(source_name, app), curRunNumber(0), curEventNumber(0), ptReader(0), ptTimeSlice(0), ptEvent(0) {
 
-	jout << "JEventSourceTRIDASDAQ creator: " << this << endl;
+	jout << "JEventSourceTRIDASDAQ creator: " << this << jendl;
 
 	curEventType = 0;
 	source_type = kNoSource;
@@ -38,13 +37,13 @@ JEventSourceTRIDASDAQ::JEventSourceTRIDASDAQ(const char* source_name, JApplicati
 	it_ptTimeSlice = ptTimeSlice->begin();
 
 	//currEventTimeSlice = 0;
-	jout << "JEventSourceTRIDASDAQ creator DONE: " << this << endl;
+	jout << "JEventSourceTRIDASDAQ creator DONE: " << this << jendl;
 
 }
 
 // Destructor
 JEventSourceTRIDASDAQ::~JEventSourceTRIDASDAQ() {
-	cout << " Closing input file " << source_name << " ." << endl;
+	cout << " Closing input file " << GetResourceName() << " ." << endl;
 
 }
 
