@@ -10,6 +10,7 @@
 using namespace std;
 
 #include "epicsData_factory.h"
+#include <JANA/JEvent.h>
 #include <DAQ/epicsRawData.h>
 #include <DAQ/eventData.h>
 

@@ -28,7 +28,7 @@ using namespace std;
 // Constructor
 BDXEventProcessor::BDXEventProcessor() :
 		m_output(0), m_tt(0), m_isMC(0), m_eventDST(0), m_runInfo(0), m_event(0), eventN(0), m_eventHeader(0), eventT(0), deltaTime(0), runN(0), isET(0) {
-	bout << "BDXEventProcessor creator start" << endl;
+	bout << "BDXEventProcessor creator start" << jendl;
 	optf = "";
 	m_DObuildDST = 0;
 	m_buildDST = "";
@@ -41,7 +41,7 @@ BDXEventProcessor::BDXEventProcessor() :
 
 	m_root_lock = japp->GetService<JGlobalRootLock>();
 
-	bout << "BDXEventProcessor creator end" << endl;
+	bout << "BDXEventProcessor creator end" << jendl;
 }
 
 // Destructor
@@ -49,31 +49,30 @@ BDXEventProcessor::~BDXEventProcessor() {
 
 }
 
-// init
-jerror_t BDXEventProcessor::init(void) {
+void BDXEventProcessor::Init() {
 
-	bout << "BDXEventProcessor::init" << endl;
+	bout << "BDXEventProcessor::init" << jendl;
 	japp->GetParameter("MC", m_isMC);
 	japp->SetDefaultParameter("SYSTEM:BUILD_DST", m_buildDST, "Enable DST, using the form \"TYPE\". TYPE is the name of an existing event builder. Example: -PSYSTEM:BUILD_DST=\"CataniaProto2\" (also: FullMC, JLabFlux)");
-	bout << "Building DST is: " << m_buildDST << endl;
+	bout << "Building DST is: " << m_buildDST << jendl;
 
 	if (m_buildDST.size() == 0) {
-		bout << "No DST will be built" << endl;
+		bout << "No DST will be built" << jendl;
 		m_DObuildDST = 0;
 	} else {
 		m_DObuildDST = 1;
 	}
 
 	japp->SetDefaultParameter("SYSTEM:OUTPUT", optf, "Set OUTPUT file type and name, using the form \"TYPE,FILENAME\". Type can be ROOT, EVIO, TXT. Example: -PSYSTEM:OUTPUT=\"ROOT,out.root\" ");
-	bout << "Out string is: " << optf << endl;
+	bout << "Out string is: " << optf << jendl;
 	outType.assign(optf, 0, optf.find(","));
 	outFile.assign(optf, optf.find(",") + 1, optf.size());
 
 	std::transform(outType.begin(), outType.end(), outType.begin(), ::tolower);
 
 	if (optf != "none") {
-		bout << "Again, out string is: " << optf << endl;
-		bout << "Out file type is: " << outType << endl;
+		bout << "Again, out string is: " << optf << jendl;
+		bout << "Out file type is: " << outType << jendl;
 		if (outType == "root") {
 			m_output = new JROOTOutput();
 		} else if (outType == "root_et") { /*Special case, when we connect to ET-ring*/
@@ -81,15 +80,15 @@ jerror_t BDXEventProcessor::init(void) {
 			isET = 1;
 			m_output = new JROOTOutput();
 #else
-			bout << "root_et file type was requested, but no ET-support was built. Exiting!" << endl;
+			bout << "root_et file type was requested, but no ET-support was built. Exiting!" << jendl;
 			exit(1);
 #endif
 		} else if (outType == "evio") {
-			berr << "evio not yet implemented" << endl;
+			berr << "evio not yet implemented" << jendl;
 		} else if (outType == "txt") {
-			berr << "txt not yet implemented" << endl;
+			berr << "txt not yet implemented" << jendl;
 		} else {
-			berr << "file type not recognized: " << outType << endl;
+			berr << "file type not recognized: " << outType << jendl;
 		}
 
 	}
@@ -111,25 +110,25 @@ jerror_t BDXEventProcessor::init(void) {
 	m_runInfo->Branch("dT", &deltaTime);
 
 	m_root_lock->release_lock();
-	return NOERROR;
 }
 
-// brun
-jerror_t BDXEventProcessor::brun(JApplication *eventLoop, int32_t runnumber) {
 
-	bout << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << endl;
+void BDXEventProcessor::BeginRun(const std::shared_ptr<const JEvent>& event) {
+
+	auto runnumber = event->GetRunNumber();
+	bout << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << jendl;
 
 	// lock all root operations
 	m_root_lock->acquire_write_lock();
 
 	if (isFirstCallToBrun) {
 		if (m_output != 0) {
-			bout << "got m_output, className is: " << m_output->className() << endl;
-			if (strcmp(m_output->className(), "JROOTOutput") == 0) {
+			bout << "got m_output, className is: " << m_output->className() << jendl;
+			if (strcmp(m_output->className().c_str(), "JROOTOutput") == 0) {
 				JROOTOutput* m_ROOTOutput = (JROOTOutput*) m_output;
 				if (isET == 1) {
 					outFile = string(Form("out.%i.online.root", runnumber));
-					bout << "Running on ET with root thus changing file name to: " << outFile << endl;
+					bout << "Running on ET with root thus changing file name to: " << outFile << jendl;
 				}
 				m_ROOTOutput->OpenOutput(outFile);
 
@@ -149,19 +148,24 @@ jerror_t BDXEventProcessor::brun(JApplication *eventLoop, int32_t runnumber) {
 	}
 
 	if (m_isMC == 0) {
-		eventLoop->GetSingle(m_tt);
+		event->Get(&m_tt);
 	}
 	// lock all root operations
 	m_root_lock->release_lock();
-	return NOERROR;
 }
 
-// evnt
-jerror_t BDXEventProcessor::evnt(JApplication *loop, uint64_t eventnumber) {
+
+void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 
 	const eventData* tData;
 	vector<const TEvent*> events;
 	const epicsData* eData;
+
+	if (event->GetRunNumber() != m_last_run_number) {
+		// We have to handle run begin/end manually because JANA2 no longer takes care of this for us
+		EndRun();
+		BeginRun(event);
+	}
 
 	/*For non-MC case, check that:
 	 * There's a valid eventData (true for both DAQ and EPICS)
@@ -170,26 +174,26 @@ jerror_t BDXEventProcessor::evnt(JApplication *loop, uint64_t eventnumber) {
 	 */
 	if (m_isMC == 0) {
 		try {
-			loop->GetSingle(tData);
+			event->Get(&tData);
 		} catch (unsigned long e) {
-			bout << "No eventData bank this event " << endl;
-			return OBJECT_NOT_AVAILABLE;
+			bout << "No eventData bank this event " << jendl;
+			return;
 		}
 		/*This is the EPICS part. The call here will force getting data from the epicsDataProcessed_factory, that takes care of persistency*/
 		try {
-			loop->GetSingle(eData);
+			event->Get(&eData);
 		} catch (unsigned long e) {
-			return OBJECT_NOT_AVAILABLE;
+			return;
 		}
 
 		if (tData->eventType != eventSource::DAQ) {
-			return OBJECT_NOT_AVAILABLE;
+		    return;
 		}
 	}
 	if (m_DObuildDST) {
-		loop->Get(events, m_buildDST.c_str());
+		event->Get(events, m_buildDST.c_str());
 		if (events.size() != 1) {
-			return RESOURCE_UNAVAILABLE;
+			return; // RESOURCE_UNAVAILABLE;
 		}
 		/*Add EPICS data in case of non-MC*/
 		if (m_output != 0) {
@@ -207,7 +211,7 @@ jerror_t BDXEventProcessor::evnt(JApplication *loop, uint64_t eventnumber) {
 		if (m_output != 0) {
 		    m_root_lock->acquire_write_lock();
 			eventT = tData->time;
-			eventN = eventnumber;
+			eventN = event->GetEventNumber();
 
 			runN = tData->runN;
 			m_eventHeader->Fill();
@@ -217,125 +221,40 @@ jerror_t BDXEventProcessor::evnt(JApplication *loop, uint64_t eventnumber) {
 			m_root_lock->release_lock();
 		}
 	}
-	return NOERROR;
 }
 
-// erun
-jerror_t BDXEventProcessor::erun(void) {
+
+void BDXEventProcessor::EndRun() {
 
     m_root_lock->acquire_write_lock();
 	deltaTime = stopTime - startTime;
-	bout << "BDXEventProcessor::erun " << endl;
-	bout << "Run start: " << startTime << " stop: " << stopTime << " diff: " << deltaTime << endl;
+	bout << "BDXEventProcessor::erun " << jendl;
+	bout << "Run start: " << startTime << " stop: " << stopTime << " diff: " << deltaTime << jendl;
 	m_runInfo->Fill();
 
 	if (m_output && (isET == 1)) {
 		m_output->CloseOutput();
 	}
 	m_root_lock->release_lock();
-	return NOERROR;
 }
 
-// fini
-jerror_t BDXEventProcessor::fini(void) {
+
+void BDXEventProcessor::Finish() {
+
+	// We have to handle run begin/end manually because JANA2 no longer takes care of this for us
+	EndRun();
+
 	// If another EventProcessor is in the list ahead of this one, then
 	// it will have finished before this is called. e.g. closed the
 	// ROOT file!
-	bout << "BDXEventProcessor fini called" << endl;
+	bout << "BDXEventProcessor::Finish called" << jendl;
 	fflush(stdout);
 	m_root_lock->acquire_write_lock();
 	if (m_output) {
 		m_output->CloseOutput(); /*This is ok, CloseOutput takes care of m_output already closed*/
 	}
 	m_root_lock->release_lock();
-	bout << "BDXEventProcessor fini ends" << endl;
+	bout << "BDXEventProcessor Finish ends" << jendl;
 	fflush(stdout);
-	return NOERROR;
 }
 
-void BDXEventProcessor::updateCalibration(CalibrationHandlerBase* cal, JApplication* eventLoop) {
-	/*First, check the table name for cal*/
-	string name = cal->getTable();
-	/*Verify the key is in the map*/
-	m_calibrations_it = m_calibrations.find(name);
-	if (m_calibrations_it == m_calibrations.end()) {
-		berr << "BDXEventProcessor::updateCalibration error, calibration handler associated with table " << name << " was not registered!" << endl;
-		return;
-	}
-
-	vector<CalibrationHandlerBase*> calibrations = m_calibrations[name];
-	vector<CalibrationHandlerBase*>::iterator calibrations_it;
-
-	/*Another check*/
-	calibrations_it = find(calibrations.begin(), calibrations.end(), cal);
-	if (calibrations_it == calibrations.end()) {
-		berr << "UpdateCalibration, key: " << name << " was found but not this specific calibrationHandler!" << endl;
-		return;
-	}
-	/*Verify if all the calibrators already have been set for this run*/
-	/*Since we are multi-thread mode, it is possible this method is called by different factories at different times.
-	 * Need to perform a clever check:
-	 * 1) Loop over all the calibrations handlers for the given table.
-	 * 1A) If ALL off them have been loaded, do nothing
-	 * 1B) If NONE of them have been loaded, do that
-	 * 1C) If ONE of them at least have been loaded, use it for all the non-calibrated ones
-	 */
-	bool flagAll = true;
-	int calibratedOne = -1;
-	for (calibrations_it = calibrations.begin(); calibrations_it != calibrations.end(); calibrations_it++) {
-		if ((*calibrations_it)->hasLoadedCurrentRun() == false) flagAll = false;
-		else
-			calibratedOne = std::distance(calibrations.begin(), calibrations_it); //save the index of this calibrated object
-	}
-	if (flagAll) { /*flagAll is true if ALL off them have been loaded*/
-		bout << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " ALREADY DONE " << endl;
-		return;
-	} else if (calibratedOne != -1) { /*It means there is at least an already-calibrated object!*/
-		bout << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " Load from data: " << calibratedOne << endl;
-		for (int ical = 0; ical < calibrations.size(); ical++) {
-			if (ical == calibratedOne) continue;
-			else if (calibrations[ical]->hasLoadedCurrentRun() == true) continue;
-			else {
-				calibrations[ical]->fillCalib(calibrations[calibratedOne]->getRawCalibData());
-			}
-		}
-	} else {
-		/*Get the data*/
-		vector<vector<double> > m_data;
-		eventLoop->GetCalib(name, m_data);
-		bout << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " Load from DB " << endl;
-		for (calibrations_it = calibrations.begin(); calibrations_it != calibrations.end(); calibrations_it++) {
-			(*calibrations_it)->fillCalib(m_data);
-			(*calibrations_it)->setLoadedCurrentRun(true);
-		}
-	}
-	bout << "Done table" << name << endl;
-}
-
-void BDXEventProcessor::clearCalibration(CalibrationHandlerBase* cal) {
-	/*First, check the table name for cal*/
-	string name = cal->getTable();
-	/*Verify the key is in the map*/
-	m_calibrations_it = m_calibrations.find(name);
-	if (m_calibrations_it == m_calibrations.end()) {
-		berr << "BDXEventProcessor::clearCalibration error, calibration handler associated with table " << name << " was not registered!" << endl;
-		return;
-	}
-
-	vector<CalibrationHandlerBase*> calibrations = m_calibrations[name];
-	vector<CalibrationHandlerBase*>::iterator calibrations_it;
-
-	/*Another check*/
-	calibrations_it = find(calibrations.begin(), calibrations.end(), cal);
-	if (calibrations_it == calibrations.end()) {
-		berr << "BDXEventProcessor::clearCalibration, key: " << name << " was found but not this specific calibrationHandler!" << endl;
-		return;
-	}
-	for (calibrations_it = calibrations.begin(); calibrations_it != calibrations.end(); calibrations_it++) {
-		(*calibrations_it)->setLoadedCurrentRun(false);
-	}
-}
-
-void BDXEventProcessor::addCalibration(CalibrationHandlerBase* cal) {
-	this->m_calibrations[cal->getTable()].push_back(cal);
-}

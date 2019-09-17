@@ -6,7 +6,6 @@ using namespace std;
 #include <system/JEventSourceTRIDASGenerator.h>
 #include <DAQ/JEventSourceTRIDASDAQ.h>
 
-#include <JANA/JParameterManager.h>
 
 //---------------------------------
 // Description

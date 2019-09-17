@@ -8,15 +8,18 @@
 #ifndef _fa250Mode1PedSubHit_factory_
 #define _fa250Mode1PedSubHit_factory_
 
-#include <JANA/JFactory.h>
-#include <system/BDXFactory.h>
+#include <JANA/JFactoryT.h>
+#include <JANA/JEvent.h>
 #include <DAQ/DAQCalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
 #include "fa250Mode1CalibPedSubHit.h"
 #include "fa250WaveboardV1Hit.h"
 
-class fa250Mode1CalibPedSubHit_factory : public BDXFactory<fa250Mode1CalibPedSubHit> {
+class fa250Mode1CalibPedSubHit_factory : public JFactoryT<fa250Mode1CalibPedSubHit> {
 public:
-    fa250Mode1CalibPedSubHit_factory() : m_pedestals(nullptr) {};
+    fa250Mode1CalibPedSubHit_factory() : m_pedestals(nullptr) {
+
+    };
     ~fa250Mode1CalibPedSubHit_factory() override = default;
 
 
@@ -25,6 +28,7 @@ private:
     void ChangeRun(const std::shared_ptr<const JEvent>& aEvent) override;
     void Process(const std::shared_ptr<const JEvent>& aEvent) override;
 
+    std::shared_ptr<BDXCalibrationService> calibration_service;
     DAQCalibrationHandler* m_pedestals;
     DAQCalibrationHandler* m_parms;
     double LSB; //LSB in mV

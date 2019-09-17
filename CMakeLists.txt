@@ -149,7 +149,13 @@ add_library(jana2 STATIC
         src/external/jana2/src/lib/JANA/Engine/JArrowTopology.h
         src/external/jana2/src/lib/JANA/JLogger.h
         src/external/jana2/src/lib/JANA/Utils/JBacktrace.h
-        src/external/jana2/src/lib/JANA/Services/JGlobalRootLock.h)
+        src/external/jana2/src/lib/JANA/Services/JGlobalRootLock.h
+        src/external/jana2/src/lib/JANA/Calibrations/JCalibration.h
+        src/external/jana2/src/lib/JANA/Calibrations/JCalibration.cc
+        src/external/jana2/src/lib/JANA/Calibrations/JCalibrationFile.h
+        src/external/jana2/src/lib/JANA/Calibrations/JCalibrationFile.cc
+
+        )
 target_include_directories(jana2 PUBLIC "src/external/jana2/src/lib")
 target_link_libraries(jana2 ${CMAKE_DL_LIBS})
 
@@ -268,17 +274,17 @@ add_library(bdxreco STATIC
 #        src/libraries/DAQ/fa250ConvertedHit_Dict.cc
         src/libraries/DAQ/fa250Converter.h
         src/libraries/DAQ/fa250Hit.h
-#        src/libraries/DAQ/fa250Hit_Dict.cc
-#         src/libraries/DAQ/fa250Mode1CalibPedSubHit.cc
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHit_Dict.cc
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.cc
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.h
+        src/libraries/DAQ/fa250Hit_Dict.cc
+        src/libraries/DAQ/fa250Mode1CalibPedSubHit.cc
+        src/libraries/DAQ/fa250Mode1CalibPedSubHit_Dict.cc
+        src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.cc
+        src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.h
         src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.cc
         src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.h
         src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.cc
         src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.h
         src/libraries/DAQ/fa250Mode1Hit.cc
-#        src/libraries/DAQ/fa250Mode1Hit_Dict.cc
+        src/libraries/DAQ/fa250Mode1Hit_Dict.cc
         src/libraries/DAQ/fa250Mode7Hit.h
         src/libraries/DAQ/fa250WaveboardV1Hit.cc
         src/libraries/DAQ/fa250WaveboardV1Hit.h
@@ -290,7 +296,7 @@ add_library(bdxreco STATIC
 
         src/libraries/EPICS/epicsData.cc
         src/libraries/EPICS/epicsData.h
-#        src/libraries/EPICS/epicsData_Dict.cc
+        src/libraries/EPICS/epicsData_Dict.cc
         src/libraries/EPICS/epicsData_factory.cc
         src/libraries/EPICS/epicsData_factory.h
         src/libraries/EPICS/epicsData_LinkDef.h
@@ -397,25 +403,25 @@ add_library(bdxreco STATIC
         src/libraries/TT/TranslationTable_factory.h
         src/libraries/TT/TranslationTable_LinkDef.h
 
-#        src/libraries/system/BDXEventProcessor.cc
-#        src/libraries/system/BDXEventProcessor.h
+        src/libraries/system/BDXEventProcessor.cc
+        src/libraries/system/BDXEventProcessor.h
 #        src/libraries/system/BDXFactory.h
-#        src/libraries/system/BDXObject.cc
-#        src/libraries/system/BDXObject.h
-#        src/libraries/system/BDXObject_Dict.cc
-#        src/libraries/system/BDXObject_LinkDef.h
-#        src/libraries/system/CalibrationHandler.h
+        src/libraries/system/BDXObject.cc
+        src/libraries/system/BDXObject.h
+        src/libraries/system/BDXObject_Dict.cc
+        src/libraries/system/BDXObject_LinkDef.h
+        src/libraries/system/CalibrationHandler.h
         src/libraries/system/JEventSourceEVIOGenerator.cc
         src/libraries/system/JEventSourceEVIOGenerator.h
 #        src/libraries/system/JEventSourceTRIDASGenerator.cc
 #        src/libraries/system/JEventSourceTRIDASGenerator.h
-#        src/libraries/system/JFactoryGenerator_system.h
-#        src/libraries/system/JOutput.h
-#        src/libraries/system/JROOTOutput.cc
-#        src/libraries/system/JROOTOutput.h
-#        src/libraries/system/string_utilities.h
+        src/libraries/system/JFactoryGenerator_system.h
+        src/libraries/system/JOutput.h
+        src/libraries/system/JROOTOutput.cc
+        src/libraries/system/JROOTOutput.h
+        src/libraries/system/string_utilities.h
 
-        src/libraries/system/CalibrationService.cc src/libraries/system/CalibrationService.h)
+        src/libraries/system/CalibrationService.cc src/libraries/system/CalibrationService.h src/libraries/system/BDXCalibrationService.h)
 
 find_package(ROOT)
 include_directories(${ROOT_INCLUDE_DIRS})

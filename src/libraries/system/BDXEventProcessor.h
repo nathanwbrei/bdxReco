@@ -24,12 +24,9 @@ using namespace std;
 class TranslationTable;
 class JOutput;
 class TTree;
-class CataniaEventProto2;
 class TEvent;
 
-/*This class is the "main" event processor, that gets called in any case,
- * also if we use users plugins
- *
+/* This class is the "main" event processor, that gets called in any case, also if we use users plugins
  * Here I want to handle the output in a proper way.
  */
 
@@ -42,26 +39,15 @@ public:
 
 	JOutput* getOutput(){return m_output;}
 
-	void addCalibration(CalibrationHandlerBase* cal);
-	void updateCalibration(CalibrationHandlerBase* cal, JApplication* app);
-	void clearCalibration(CalibrationHandlerBase* cal);
 private:
-	jerror_t init();                                 // Called once at program start.
-	jerror_t brun(JApplication*, int32_t runnumber);       // Called everytime a new run number is detected.
-	jerror_t evnt(JApplication*, uint64_t eventnumber);     // Called every event.
-	jerror_t erun();                                 // Called everytime run number changes, provided brun has been called.
-	jerror_t fini();                                 // Called after last event of last event source has been processed.
+    void Init() override;
+	void Process(const std::shared_ptr<const JEvent>& aEvent) override;
+	void Finish() override;
 
-	/*Following part is very critical. We can't have CalibrationHandlers in each factory,
-	 * since this requires access to calibrations in each thread. And this may be time consuming,
-	 * specially if using remote mysql.
-	 * Therefore,
-	 * - Have the factories creating their own calibrations
-	 * - Have them adding these to the m_calibrations vector, containing a pair of the pointer and a string to the CCDB path
-	 * - Have factories getting back the pointer in their brun method
-	 */
-	map<string,vector<CalibrationHandlerBase*> >  m_calibrations;
-	map<string,vector<CalibrationHandlerBase*> >::iterator m_calibrations_it;
+	// JANA2 does not support callbacks for begin/end run, so we hack around this for now
+	void BeginRun(const std::shared_ptr<const JEvent>& event);
+	void EndRun();
+	uint64_t m_last_run_number = std::numeric_limits<uint64_t>::max();
 
 
 	string           optf;     // Output file
@@ -72,11 +58,9 @@ private:
 	const TranslationTable *m_tt;
 	int m_isMC;
 
-
 	/*The EventHeader tree*/
 	TTree *m_eventHeader;
 	int eventN,runN,eventT;
-
 
 	/*Time*/
 	Long64_t startTime,stopTime,deltaTime;

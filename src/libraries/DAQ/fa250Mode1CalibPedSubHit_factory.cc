@@ -14,11 +14,13 @@ using namespace std;
 
 
 void fa250Mode1CalibPedSubHit_factory::Init() {
-	m_pedestals = new DAQCalibrationHandler("/DAQ/pedestals");
-	this->mapCalibrationHandler(m_pedestals);
 
+	m_pedestals = new DAQCalibrationHandler("/DAQ/pedestals");
 	m_parms = new DAQCalibrationHandler("DAQ/parms");
-	this->mapCalibrationHandler(m_parms);
+
+	calibration_service = japp->GetService<BDXCalibrationService>();
+	calibration_service->addCalibration(m_pedestals);
+	calibration_service->addCalibration(m_parms);
 }
 
 
@@ -26,9 +28,9 @@ void fa250Mode1CalibPedSubHit_factory::ChangeRun(const std::shared_ptr<const JEv
 	// Here, we would normally get this from the CalibPedSubration DB.
 	LSB = 0.4884; //this is in any case the default
 
-	this->clearCalibrationHandler(m_pedestals); // TODO: This line came from erun(). Is doing this good enough?
-	this->updateCalibrationHandler(m_pedestals, japp); // TODO: Argument should probably be JEvent instead of JApp
-	this->updateCalibrationHandler(m_parms, japp);
+	calibration_service->clearCalibration(m_pedestals); // TODO: This line came from erun(). Is doing this good enough?
+	calibration_service->updateCalibration(m_pedestals, event->GetRunNumber(), event->GetEventNumber()); // TODO: Argument should probably be JEvent instead of JApp
+	calibration_service->updateCalibration(m_parms, event->GetRunNumber(), event->GetEventNumber());
 }
 
 

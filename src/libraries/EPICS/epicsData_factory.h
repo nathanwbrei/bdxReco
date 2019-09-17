@@ -8,22 +8,26 @@
 #ifndef _epicsData_factory_
 #define _epicsData_factory_
 
-#include <JANA/JFactory.h>
-#include <system/BDXFactory.h>
+#include <JANA/JFactoryT.h>
 #include "epicsData.h"
 
-class epicsData_factory:public BDXFactory<epicsData>{
-	public:
-		epicsData_factory();
-		~epicsData_factory() = default;
+class epicsData_factory : public JFactoryT<epicsData> {
 
-	private:
+public:
 
-        void Init() override;
-        void ChangeRun(const std::shared_ptr<const JEvent>&) override;
-        void Process(const std::shared_ptr<const JEvent>&) override;
+    epicsData_factory();
 
-		int m_deltaTime; 						//this is the time (in s) added to the each EPICS entry - to account for possible mis-matches.
+    ~epicsData_factory() override = default;
+
+private:
+
+    void Init() override;
+
+    void ChangeRun(const std::shared_ptr<const JEvent>&) override;
+
+    void Process(const std::shared_ptr<const JEvent>&) override;
+
+    int m_deltaTime;                        //this is the time (in s) added to the each EPICS entry - to account for possible mis-matches.
 };
 
 #endif // _epicsData_factory_
