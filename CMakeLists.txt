@@ -326,9 +326,9 @@ add_library(bdxreco STATIC
 #        src/libraries/EventBuilder/JFactoryGenerator_EventBuilder.h
 #        src/libraries/EventBuilder/MCEvent.h
 #        src/libraries/EventBuilder/MCEvent_Dict.cc
-#        src/libraries/EventBuilder/TEvent.cc
-#        src/libraries/EventBuilder/TEvent.h
-#        src/libraries/EventBuilder/TEvent_Dict.cc
+        src/libraries/EventBuilder/TEvent.cc
+        src/libraries/EventBuilder/TEvent.h
+        src/libraries/EventBuilder/TEvent_Dict.cc
 #        src/libraries/EventBuilder/TEvent_factory.cc
 #        src/libraries/EventBuilder/TEvent_factory.h
 #        src/libraries/EventBuilder/TEvent_factory_BDXmini.cc
@@ -340,10 +340,10 @@ add_library(bdxreco STATIC
 #        src/libraries/EventBuilder/TEvent_factory_JLabFlux.cc
 #        src/libraries/EventBuilder/TEvent_factory_JLabFlux.h
 #        src/libraries/EventBuilder/TEvent_LinkDef.h
-#        src/libraries/EventBuilder/TEventHeader.cc
-#        src/libraries/EventBuilder/TEventHeader.h
-#        src/libraries/EventBuilder/TEventHeader_Dict.cc
-#        src/libraries/EventBuilder/TEventHeader_LinkDef.h
+        src/libraries/EventBuilder/TEventHeader.cc
+        src/libraries/EventBuilder/TEventHeader.h
+        src/libraries/EventBuilder/TEventHeader_Dict.cc
+        src/libraries/EventBuilder/TEventHeader_LinkDef.h
 #
 #        src/libraries/ExtVeto/ExtVetoDigiHit.h
 #        src/libraries/ExtVeto/ExtVetoDigiHit_Dict.cc

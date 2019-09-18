@@ -8,7 +8,7 @@
 
 #include <system/JEventSourceEVIOGenerator.h>
 //#include <system/JEventSourceTRIDASGenerator.h>
-//#include <system/BDXEventProcessor.h>
+#include <system/BDXEventProcessor.h>
 
 //factory generators
 /*
@@ -40,6 +40,7 @@ int main(int narg, char *argv[])
 	//TH1::AddDirectory(kFALSE);
 
 	JApplication app;
+	japp = &app;
 
 	//if(narg==1){
 	//	app.Usage();
@@ -77,8 +78,8 @@ int main(int narg, char *argv[])
 //	jout<<"JFactoryGenerator_BDXmini DONE"<<endl;
 //	app.AddFactoryGenerator(new JFactoryGenerator_EventBuilder());
 //	jout<<"JFactoryGenerator_EventBuilder DONE"<<endl;
-//	app.AddProcessor(new BDXEventProcessor());
-//	jout<<"BDXEventProcessor DONE"<<endl;
+	app.Add(new BDXEventProcessor());
+	jout<<"BDXEventProcessor DONE"<<jendl;
 	app.Run();
 
 	return 1;

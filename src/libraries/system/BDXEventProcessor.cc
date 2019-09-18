@@ -28,7 +28,10 @@ using namespace std;
 // Constructor
 BDXEventProcessor::BDXEventProcessor() :
 		m_output(0), m_tt(0), m_isMC(0), m_eventDST(0), m_runInfo(0), m_event(0), eventN(0), m_eventHeader(0), eventT(0), deltaTime(0), runN(0), isET(0) {
-	bout << "BDXEventProcessor creator start" << jendl;
+
+	bout.SetTag("BDXEventProcessor >>");
+	berr.SetTag("BDXEventProcessorError >>");
+	LOG_DEBUG(bout) << "BDXEventProcessor creator start" << jendl;
 	optf = "";
 	m_DObuildDST = 0;
 	m_buildDST = "";
@@ -36,43 +39,41 @@ BDXEventProcessor::BDXEventProcessor() :
 	startTime = 9999999999;
 	stopTime = -9999999999;
 
-	bout.SetTag("BDXEventProcessor >>");
-	berr.SetTag("BDXEventProcessorError >>");
 
 	m_root_lock = japp->GetService<JGlobalRootLock>();
 
-	bout << "BDXEventProcessor creator end" << jendl;
+	LOG_DEBUG(bout) << "BDXEventProcessor creator end" << jendl;
 }
 
 // Destructor
 BDXEventProcessor::~BDXEventProcessor() {
-
+	LOG_DEBUG(bout) << "Destroying BDXEventProcessor!" << LOG_END;
 }
 
 void BDXEventProcessor::Init() {
 
-	bout << "BDXEventProcessor::init" << jendl;
+	LOG_DEBUG(bout) << "BDXEventProcessor::init" << jendl;
 	japp->GetParameter("MC", m_isMC);
 	japp->SetDefaultParameter("SYSTEM:BUILD_DST", m_buildDST, "Enable DST, using the form \"TYPE\". TYPE is the name of an existing event builder. Example: -PSYSTEM:BUILD_DST=\"CataniaProto2\" (also: FullMC, JLabFlux)");
-	bout << "Building DST is: " << m_buildDST << jendl;
+	LOG_DEBUG(bout) << "Building DST is: " << m_buildDST << jendl;
 
 	if (m_buildDST.size() == 0) {
-		bout << "No DST will be built" << jendl;
+		LOG_DEBUG(bout) << "No DST will be built" << jendl;
 		m_DObuildDST = 0;
 	} else {
 		m_DObuildDST = 1;
 	}
 
 	japp->SetDefaultParameter("SYSTEM:OUTPUT", optf, "Set OUTPUT file type and name, using the form \"TYPE,FILENAME\". Type can be ROOT, EVIO, TXT. Example: -PSYSTEM:OUTPUT=\"ROOT,out.root\" ");
-	bout << "Out string is: " << optf << jendl;
+	LOG_DEBUG(bout) << "Out string is: " << optf << jendl;
 	outType.assign(optf, 0, optf.find(","));
 	outFile.assign(optf, optf.find(",") + 1, optf.size());
 
 	std::transform(outType.begin(), outType.end(), outType.begin(), ::tolower);
 
 	if (optf != "none") {
-		bout << "Again, out string is: " << optf << jendl;
-		bout << "Out file type is: " << outType << jendl;
+		LOG_INFO(bout) << "Again, out string is: " << optf << jendl;
+		LOG_INFO(bout) << "Out file type is: " << outType << jendl;
 		if (outType == "root") {
 			m_output = new JROOTOutput();
 		} else if (outType == "root_et") { /*Special case, when we connect to ET-ring*/
@@ -80,15 +81,15 @@ void BDXEventProcessor::Init() {
 			isET = 1;
 			m_output = new JROOTOutput();
 #else
-			bout << "root_et file type was requested, but no ET-support was built. Exiting!" << jendl;
+			LOG_DEBUG(bout) << "root_et file type was requested, but no ET-support was built. Exiting!" << jendl;
 			exit(1);
 #endif
 		} else if (outType == "evio") {
-			berr << "evio not yet implemented" << jendl;
+			LOG_ERROR(berr) << "evio not yet implemented" << jendl;
 		} else if (outType == "txt") {
-			berr << "txt not yet implemented" << jendl;
+			LOG_ERROR(berr) << "txt not yet implemented" << jendl;
 		} else {
-			berr << "file type not recognized: " << outType << jendl;
+			LOG_ERROR(berr) << "file type not recognized: " << outType << jendl;
 		}
 
 	}
@@ -116,19 +117,19 @@ void BDXEventProcessor::Init() {
 void BDXEventProcessor::BeginRun(const std::shared_ptr<const JEvent>& event) {
 
 	auto runnumber = event->GetRunNumber();
-	bout << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << jendl;
+	LOG_DEBUG(bout) << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << jendl;
 
 	// lock all root operations
 	m_root_lock->acquire_write_lock();
 
 	if (isFirstCallToBrun) {
 		if (m_output != 0) {
-			bout << "got m_output, className is: " << m_output->className() << jendl;
+			LOG_DEBUG(bout) << "got m_output, className is: " << m_output->className() << jendl;
 			if (strcmp(m_output->className().c_str(), "JROOTOutput") == 0) {
 				JROOTOutput* m_ROOTOutput = (JROOTOutput*) m_output;
 				if (isET == 1) {
 					outFile = string(Form("out.%i.online.root", runnumber));
-					bout << "Running on ET with root thus changing file name to: " << outFile << jendl;
+					LOG_DEBUG(bout) << "Running on ET with root thus changing file name to: " << outFile << jendl;
 				}
 				m_ROOTOutput->OpenOutput(outFile);
 
@@ -176,7 +177,7 @@ void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 		try {
 			event->Get(&tData);
 		} catch (unsigned long e) {
-			bout << "No eventData bank this event " << jendl;
+			LOG_DEBUG(bout) << "No eventData bank this event " << jendl;
 			return;
 		}
 		/*This is the EPICS part. The call here will force getting data from the epicsDataProcessed_factory, that takes care of persistency*/
@@ -228,8 +229,8 @@ void BDXEventProcessor::EndRun() {
 
     m_root_lock->acquire_write_lock();
 	deltaTime = stopTime - startTime;
-	bout << "BDXEventProcessor::erun " << jendl;
-	bout << "Run start: " << startTime << " stop: " << stopTime << " diff: " << deltaTime << jendl;
+	LOG_DEBUG(bout) << "BDXEventProcessor::erun " << jendl;
+	LOG_DEBUG(bout) << "Run start: " << startTime << " stop: " << stopTime << " diff: " << deltaTime << jendl;
 	m_runInfo->Fill();
 
 	if (m_output && (isET == 1)) {
@@ -242,19 +243,20 @@ void BDXEventProcessor::EndRun() {
 void BDXEventProcessor::Finish() {
 
 	// We have to handle run begin/end manually because JANA2 no longer takes care of this for us
+	DoInitialize(); // In case JANA terminates immediately, makes sure that Init got called
 	EndRun();
 
 	// If another EventProcessor is in the list ahead of this one, then
 	// it will have finished before this is called. e.g. closed the
 	// ROOT file!
-	bout << "BDXEventProcessor::Finish called" << jendl;
+	LOG_DEBUG(bout) << "BDXEventProcessor::Finish called" << jendl;
 	fflush(stdout);
 	m_root_lock->acquire_write_lock();
 	if (m_output) {
 		m_output->CloseOutput(); /*This is ok, CloseOutput takes care of m_output already closed*/
 	}
 	m_root_lock->release_lock();
-	bout << "BDXEventProcessor Finish ends" << jendl;
+	LOG_DEBUG(bout) << "BDXEventProcessor Finish ends" << jendl;
 	fflush(stdout);
 }
 
