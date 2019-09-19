@@ -36,7 +36,7 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t TEvent_factory_CataniaProto2::init(void) {
+void TEvent_factory_CataniaProto2::Init() {
 
 	m_tag = "";
 	japp->GetParameter("MC", m_isMC);
@@ -66,21 +66,18 @@ jerror_t TEvent_factory_CataniaProto2::init(void) {
 	}
 
 	m_root_lock->release_lock();
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory_CataniaProto2::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	return NOERROR;
+void TEvent_factory_CataniaProto2::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t TEvent_factory_CataniaProto2::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& event) {
 
 	vector<const fa250Mode1Hit*> fahits;
 	uint32_t fineTime = 0;
@@ -206,26 +203,22 @@ jerror_t TEvent_factory_CataniaProto2::evnt(JEventLoop *loop, uint64_t eventnumb
 
 	/*publish the event*/
 	_data.push_back(m_event);
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t TEvent_factory_CataniaProto2::erun(void) {
-	return NOERROR;
+void TEvent_factory_CataniaProto2::EndRun() {
 }
 
 //------------------
 // fini
 //------------------
-jerror_t TEvent_factory_CataniaProto2::fini(void) {
+void TEvent_factory_CataniaProto2::Finish() {
 	m_root_lock->acquire_write_lock();
 //	if (m_CaloHits!=0) delete (m_CaloHits);
 //	if (m_IntVetoHits!=0) delete (m_IntVetoHits);
 //	if (m_ExtVetoHits!=0) delete (m_ExtVetoHits);
 	m_root_lock->release_lock();
-	return NOERROR;
 }
 

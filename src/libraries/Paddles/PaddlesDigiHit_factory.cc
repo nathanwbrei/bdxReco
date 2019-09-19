@@ -18,15 +18,14 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t PaddlesDigiHit_factory::init(void)
+void PaddlesDigiHit_factory::Init()
 {
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t PaddlesDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void PaddlesDigiHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 	jout<<"PaddlesDigiHit_factory::brun new run number: "<<runnumber<<endl;
 	m_tt=0;
@@ -35,14 +34,12 @@ jerror_t PaddlesDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 		jerr<<" unable to get the TranslationTable from this run!"<<endl;
 		return OBJECT_NOT_AVAILABLE;
 	}
-	return NOERROR;
-
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t PaddlesDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void PaddlesDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	vector <const PaddlesPMTHit *> m_data;
@@ -66,25 +63,5 @@ jerror_t PaddlesDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
 		m_PaddlesDigiHit->AddAssociatedObject(*m_it);
 		_data.push_back(m_PaddlesDigiHit);
 	}
-
-
-
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t PaddlesDigiHit_factory::erun(void)
-{
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t PaddlesDigiHit_factory::fini(void)
-{
-	return NOERROR;
 }
 

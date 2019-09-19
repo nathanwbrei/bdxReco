@@ -31,7 +31,7 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t TEvent_factory_JLabFlux::init(void) {
+void TEvent_factory_JLabFlux::Init() {
 
 	m_tag = "";
 	japp->GetParameter("MC", m_isMC);
@@ -55,21 +55,18 @@ jerror_t TEvent_factory_JLabFlux::init(void) {
 	m_CaloMCRealHits = new TClonesArray("CalorimeterMCRealHit");
 #endif
 	m_root_lock->release_lock();
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory_JLabFlux::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	return NOERROR;
+void TEvent_factory_JLabFlux::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t TEvent_factory_JLabFlux::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void TEvent_factory_JLabFlux::Process(const std::shared_ptr<const JEvent>& event) {
 
 	/*Create the TEvent*/
 	TEvent* m_event = new TEvent();
@@ -162,27 +159,22 @@ jerror_t TEvent_factory_JLabFlux::evnt(JEventLoop *loop, uint64_t eventnumber) {
 
 	/*publish the event*/
 	_data.push_back(m_event);
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t TEvent_factory_JLabFlux::erun(void) {
-	return NOERROR;
+void TEvent_factory_JLabFlux::EndRun() {
 }
 
 //------------------
 // fini
 //------------------
-jerror_t TEvent_factory_JLabFlux::fini(void) {
+void TEvent_factory_JLabFlux::Finish() {
     m_root_lock->acquire_write_lock();
 //	if (m_CaloHits!=0) delete (m_CaloHits);
 //	if (m_IntVetoHits!=0) delete (m_IntVetoHits);
 //	if (m_ExtVetoHits!=0) delete (m_ExtVetoHits);
 	m_root_lock->release_lock();
-
-	return NOERROR;
 }
 

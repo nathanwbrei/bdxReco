@@ -15,7 +15,7 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t ExtVetofa250Converter_factory::init(void)
+void ExtVetofa250Converter_factory::Init()
 {
 	m_extVetofa250Converter=new ExtVetofa250Converter();
 	m_extVetofa250Converter->threshold=new CalibrationHandler<TranslationTable::EXT_VETO_Index_t>("/ExtVeto/Threshold");
@@ -30,7 +30,7 @@ jerror_t ExtVetofa250Converter_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t ExtVetofa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void ExtVetofa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 	if (m_isFirstCallToBrun){
 		m_isFirstCallToBrun=0;
@@ -51,7 +51,7 @@ jerror_t ExtVetofa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runn
 //------------------
 // evnt
 //------------------
-jerror_t ExtVetofa250Converter_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void ExtVetofa250Converter_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	// Code to generate factory data goes here. Add it like:
@@ -65,12 +65,8 @@ jerror_t ExtVetofa250Converter_factory::evnt(JEventLoop *loop, uint64_t eventnum
 	// Note that the objects you create here will be deleted later
 	// by the system and the _data vector will be cleared automatically.
 
-	return NOERROR;
 }
 
-//------------------
-// erun
-//------------------
 jerror_t ExtVetofa250Converter_factory::erun(void)
 {
 
@@ -80,9 +76,6 @@ jerror_t ExtVetofa250Converter_factory::erun(void)
 	return NOERROR;
 }
 
-//------------------
-// fini
-//------------------
 jerror_t ExtVetofa250Converter_factory::fini(void)
 {
 	_data.clear();

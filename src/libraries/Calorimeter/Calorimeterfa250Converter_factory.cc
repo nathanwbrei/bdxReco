@@ -39,22 +39,19 @@ Calorimeterfa250Converter_factory::Calorimeterfa250Converter_factory():m_calorim
 //------------------
 // init
 //------------------
-jerror_t Calorimeterfa250Converter_factory::init(void)
+void Calorimeterfa250Converter_factory::Init()
 {
-
-
 	m_thr=new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/thr");
 	this->mapCalibrationHandler(m_thr);
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t Calorimeterfa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void Calorimeterfa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 
-	this->updateCalibrationHandler(m_thr,eventLoop);
+	this->updateCalibrationHandler(m_thr,event);
 	int threadId= PThreadIDUniqueInt(eventLoop->GetPThreadID());
 	m_calorimeterfa250Converter=new Calorimeterfa250Converter();
 	m_calorimeterfa250Converter->name()=string(Form("h%i",threadId));
@@ -67,42 +64,34 @@ jerror_t Calorimeterfa250Converter_factory::brun(JEventLoop *eventLoop, int32_t 
 	m_calorimeterfa250Converter->m_thrDB=m_thr;
 
 
-	_data.push_back(m_calorimeterfa250Converter);
+	Insert(m_calorimeterfa250Converter);
 	SetFactoryFlag(PERSISTANT);
-
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t Calorimeterfa250Converter_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void Calorimeterfa250Converter_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
-
-
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t Calorimeterfa250Converter_factory::erun(void)
+void Calorimeterfa250Converter_factory::EndRun()
 {
 	//if (m_calorimeterfa250Converter!=0) delete m_calorimeterfa250Converter;
-	_data.clear();
-	return NOERROR;
+	mData.clear();
 }
 
 //------------------
 // fini
 //------------------
-jerror_t Calorimeterfa250Converter_factory::fini(void)
+void Calorimeterfa250Converter_factory::Finish()
 {
 	/*if (m_calorimeterfa250Converter!=0){
 		delete m_calorimeterfa250Converter;
 	}*/
-	_data.clear();
-	return NOERROR;
+	mData.clear();
 }
 

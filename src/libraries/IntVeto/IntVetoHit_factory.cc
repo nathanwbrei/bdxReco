@@ -32,24 +32,20 @@ IntVetoHit_factory::IntVetoHit_factory() :
 //------------------
 // init
 //------------------
-jerror_t IntVetoHit_factory::init(void) {
+void IntVetoHit_factory::Init() {
 	japp->GetParameter("MC", isMC);
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t IntVetoHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
-
-	return NOERROR;
+void IntVetoHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t IntVetoHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void IntVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	//1: Here, we get from the framework the objects we need to process
 	//1a: create vectors
@@ -160,21 +156,5 @@ jerror_t IntVetoHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 			}
 		}
 	} //End loop on the map
-
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t IntVetoHit_factory::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t IntVetoHit_factory::fini(void) {
-	return NOERROR;
 }
 

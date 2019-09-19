@@ -29,7 +29,7 @@ IntVetoSiPMHit_factory::IntVetoSiPMHit_factory() :
 //------------------
 // init
 //------------------
-jerror_t IntVetoSiPMHit_factory::init(void) {
+void IntVetoSiPMHit_factory::Init() {
 	jout << "IntVetoSiPMHit_factory::init" << endl;
 	VERBOSE = 0;
 	m_sipm_gain = new CalibrationHandler<TranslationTable::INT_VETO_Index_t>("/InnerVeto/sipm_gain");
@@ -46,7 +46,7 @@ jerror_t IntVetoSiPMHit_factory::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t IntVetoSiPMHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void IntVetoSiPMHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	jout << "IntVetoSiPMHit_factory::brun new run number: " << runnumber << endl;
 	m_tt = 0;
 	eventLoop->GetSingle(m_tt);
@@ -93,7 +93,7 @@ jerror_t IntVetoSiPMHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) 
 //------------------
 // evnt
 //------------------
-jerror_t IntVetoSiPMHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void IntVetoSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 	TranslationTable::ChannelInfo m_channel;
 	TranslationTable::csc_t m_csc;
 	double m_q_gain;

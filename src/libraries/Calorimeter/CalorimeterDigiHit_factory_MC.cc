@@ -11,6 +11,8 @@ using namespace std;
 
 #include "CalorimeterDigiHit_factory_MC.h"
 
+#include <JANA/JEvent.h>
+
 #include <MC/CalorimeterMCHit.h>
 #include <MC/MCType.h>
 #include <Calorimeter/CalorimeterDigiHit.h>
@@ -21,22 +23,14 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t CalorimeterDigiHit_factory_MC::init(void) {
+void CalorimeterDigiHit_factory_MC::Init() {
 	japp->GetParameter("MC", m_isMC);
-	return NOERROR;
-}
-
-//------------------
-// brun
-//------------------
-jerror_t CalorimeterDigiHit_factory_MC::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t CalorimeterDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void CalorimeterDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& event) {
 
 	CalorimeterDigiHit *m_CalorimeterDigiHit = 0;
 	const CalorimeterMCHit *m_CalorimeterMCHit = 0;
@@ -47,7 +41,7 @@ jerror_t CalorimeterDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnum
 	vector<const CalorimeterMCHit*>::const_iterator it;
 
 	//1b: retrieve CalorimeterMCHit objects
-	loop->Get(m_CalorimeterMCHits);
+	event->Get(m_CalorimeterMCHits);
 	m_map.clear();
 	for (it = m_CalorimeterMCHits.begin(); it != m_CalorimeterMCHits.end(); it++) {
 		TranslationTable::CALO_Index_t index;
@@ -90,24 +84,8 @@ jerror_t CalorimeterDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnum
 
 	for (m_map_it = m_map.begin(); m_map_it != m_map.end(); m_map_it++) {
 		m_CalorimeterDigiHit = m_map_it->second;
-		_data.push_back(m_CalorimeterDigiHit);
+		Insert(m_CalorimeterDigiHit);
 	}
-
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t CalorimeterDigiHit_factory_MC::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t CalorimeterDigiHit_factory_MC::fini(void) {
-	return NOERROR;
 }
 
 void CalorimeterDigiHit_factory_MC::SetIndex(TranslationTable::CALO_Index_t &index, const CalorimeterMCHit *mchit, int MC) {

@@ -29,7 +29,7 @@ class PaddlesHit : public JObject, public TObject {
 		void Summarize(JObjectSummary& summary) const final {};
 
 		TranslationTable::PADDLES_Index_t m_channel;
-		oid_t PaddlesDigiHit_id;
+		uint64_t PaddlesDigiHit_id;
 
 };
 

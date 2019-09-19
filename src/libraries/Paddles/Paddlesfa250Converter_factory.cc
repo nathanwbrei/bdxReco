@@ -16,7 +16,7 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t Paddlesfa250Converter_factory::init(void)
+void Paddlesfa250Converter_factory::Init()
 {
 	m_isFirstCallToBrun=1;
 	m_Paddlesfa250Converter=new Paddlesfa250Converter();
@@ -32,7 +32,7 @@ jerror_t Paddlesfa250Converter_factory::init(void)
 //------------------
 // brun
 //------------------
-jerror_t Paddlesfa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void Paddlesfa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 
 
@@ -55,7 +55,7 @@ jerror_t Paddlesfa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runn
 //------------------
 // evnt
 //------------------
-jerror_t Paddlesfa250Converter_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void Paddlesfa250Converter_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	// Code to generate factory data goes here. Add it like:
@@ -75,7 +75,7 @@ jerror_t Paddlesfa250Converter_factory::evnt(JEventLoop *loop, uint64_t eventnum
 //------------------
 // erun
 //------------------
-jerror_t Paddlesfa250Converter_factory::erun(void)
+void Paddlesfa250Converter_factory::EndRun()
 {
 
 	this->clearCalibrationHandler(m_Paddlesfa250Converter->threshold);
@@ -88,7 +88,7 @@ jerror_t Paddlesfa250Converter_factory::erun(void)
 //------------------
 // fini
 //------------------
-jerror_t Paddlesfa250Converter_factory::fini(void)
+void Paddlesfa250Converter_factory::Finish()
 {
 	_data.clear();
 	return NOERROR;

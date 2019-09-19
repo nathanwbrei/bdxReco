@@ -8,12 +8,11 @@
 #ifndef _JFactoryGenerator_system_
 #define _JFactoryGenerator_system_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 
 
-class JFactoryGenerator_system: public jana::JFactoryGenerator{
+class JFactoryGenerator_system: public JFactoryGenerator{
 	public:
 		JFactoryGenerator_system(){
 			VERBOSE=0;
@@ -25,9 +24,7 @@ class JFactoryGenerator_system: public jana::JFactoryGenerator{
 		virtual const char* className(void){return static_className();}
 		static const char* static_className(void){return "JFactoryGenerator_system";}
 		
-		jerror_t GenerateFactories(jana::JEventLoop *loop){
-
-			return NOERROR;
+		void GenerateFactories(JFactorySet *factorySet){
 		}
 
 	private:

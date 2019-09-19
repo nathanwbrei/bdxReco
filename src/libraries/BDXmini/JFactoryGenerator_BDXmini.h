@@ -8,13 +8,12 @@
 #ifndef _JFactoryGenerator_BDXmini_
 #define _JFactoryGenerator_BDXmini_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 #include "triggerDataBDXmini_factory.h"
 
 
-class JFactoryGenerator_BDXmini: public jana::JFactoryGenerator {
+class JFactoryGenerator_BDXmini: public JFactoryGenerator {
 public:
 	JFactoryGenerator_BDXmini() {
 	}
@@ -27,9 +26,8 @@ public:
 		return "JFactoryGenerator_BDXmini";
 	}
 
-	jerror_t GenerateFactories(jana::JEventLoop *loop) {
-		loop->AddFactory(new triggerDataBDXmini_factory());
-		return NOERROR;
+	void GenerateFactories(JFactorySet *factorySet) {
+		factorySet->Add(new triggerDataBDXmini_factory());
 	}
 
 };

@@ -17,7 +17,9 @@ TCanvas* CalorimeterHit::Draw(int id)const{
 
 
 	vector <const fa250Mode1CalibPedSubHit*> waves;
-	this->Get(waves); //Get those associated to this object
+	//this->Get(waves); //Get those associated to this object
+	// TODO: Re-add associated object Get
+
 	Nwaves=waves.size();
 
 	/*Keep the first wave only*/

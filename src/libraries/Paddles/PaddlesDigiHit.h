@@ -30,7 +30,7 @@ class PaddlesDigiHit : public JObject, public TObject {
 
 		TranslationTable::PADDLES_Index_t m_channel; //both crate-slot channel and detector-specific ID. Since this is a detector-based object, the readout field will be ==0
 		double Q,T;
-		oid_t PaddlesPMTHit_id;
+		uint64_t PaddlesPMTHit_id;
 
 };
 

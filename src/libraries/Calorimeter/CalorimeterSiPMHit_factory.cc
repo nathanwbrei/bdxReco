@@ -23,20 +23,18 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t CalorimeterSiPMHit_factory::init(void) {
+void CalorimeterSiPMHit_factory::Init() {
 	VERBOSE = 0;
 	japp->GetParameter("CALORIMETER:VERBOSE", VERBOSE);
 
 	m_sipm_gain = new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/sipm_gain");
 	this->mapCalibrationHandler(m_sipm_gain);
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterSiPMHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void CalorimeterSiPMHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 
 	jout << "CalorimeterSiPMHit_factory::brun new run number: " << runnumber << endl;
 	m_tt = 0;
@@ -67,13 +65,12 @@ jerror_t CalorimeterSiPMHit_factory::brun(JEventLoop *eventLoop, int32_t runnumb
 	}
 
 	jout << "CalorimeterSiPMHit_factory::brun done" << endl;
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t CalorimeterSiPMHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void CalorimeterSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	TranslationTable::ChannelInfo m_channel;
 	TranslationTable::csc_t m_csc;
@@ -140,24 +137,19 @@ jerror_t CalorimeterSiPMHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber
 			_data.push_back(m_CalorimeterSiPMHit);
 		}
 	}
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t CalorimeterSiPMHit_factory::erun(void) {
+void CalorimeterSiPMHit_factory::EndRun() {
 
 	this->clearCalibrationHandler(m_sipm_gain);
-
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t CalorimeterSiPMHit_factory::fini(void) {
-	return NOERROR;
+void CalorimeterSiPMHit_factory::Finish() {
 }
 

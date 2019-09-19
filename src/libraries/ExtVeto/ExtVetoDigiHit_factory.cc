@@ -18,29 +18,24 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t ExtVetoDigiHit_factory::init(void) {
-	return NOERROR;
-}
+void ExtVetoDigiHit_factory::Init() {}
 
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void ExtVetoDigiHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	jout << "ExtVetoDigiHit_factory::brun new run number: " << runnumber << endl;
 	m_tt = 0;
 	eventLoop->GetSingle(m_tt);
 	if (m_tt == 0) {
 		jerr << " unable to get the TranslationTable from this run!" << endl;
-		return OBJECT_NOT_AVAILABLE;
 	}
-	return NOERROR;
-
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t ExtVetoDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void ExtVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& aEvent) {
 
 	ExtVetoDigiHit *m_ExtVetoDigiHit = 0;
 
@@ -63,21 +58,5 @@ jerror_t ExtVetoDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 		m_ExtVetoDigiHit->pedMean = m_ExtVetoPMTHit->pedMean;
 		_data.push_back(m_ExtVetoDigiHit);
 	}
-
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t ExtVetoDigiHit_factory::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t ExtVetoDigiHit_factory::fini(void) {
-	return NOERROR;
 }
 

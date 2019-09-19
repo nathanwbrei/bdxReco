@@ -55,7 +55,7 @@ TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
 //------------------
 // init
 //------------------
-jerror_t TEvent_factory_BDXmini::init(void) {
+void TEvent_factory_BDXmini::Init() {
 
 	jout << "TEvent_factory_BDXmini::init was called" << endl;
 	m_tag = "";
@@ -88,14 +88,14 @@ jerror_t TEvent_factory_BDXmini::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory_BDXmini::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void TEvent_factory_BDXmini::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t TEvent_factory_BDXmini::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event) {
 
 	/*Create the TEvent*/
 	TEvent* m_event = new TEvent();
@@ -249,14 +249,14 @@ jerror_t TEvent_factory_BDXmini::evnt(JEventLoop *loop, uint64_t eventnumber) {
 //------------------
 // erun
 //------------------
-jerror_t TEvent_factory_BDXmini::erun(void) {
+void TEvent_factory_BDXmini::EndRun() {
 	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t TEvent_factory_BDXmini::fini(void) {
+void TEvent_factory_BDXmini::Finish() {
     m_root_lock->acquire_write_lock();
 //	if (m_CaloHits!=0) delete (m_CaloHits);
 //	if (m_IntVetoHits!=0) delete (m_IntVetoHits);

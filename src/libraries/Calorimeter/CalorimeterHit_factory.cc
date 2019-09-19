@@ -11,6 +11,7 @@ using namespace std;
 
 #include "CalorimeterHit_factory.h"
 
+#include <JANA/JEvent.h>
 //objects we need from the framework
 #include <TT/TranslationTable.h>
 #include <Calorimeter/CalorimeterDigiHit.h>
@@ -36,19 +37,18 @@ CalorimeterHit_factory::CalorimeterHit_factory() :
 //------------------
 // init
 //------------------
-jerror_t CalorimeterHit_factory::init(void) {
+void CalorimeterHit_factory::Init() {
 
 	m_ene = new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/Ene");
 	this->mapCalibrationHandler(m_ene);
 
 	japp->GetParameter("MC", isMC);
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void CalorimeterHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 
 	this->updateCalibrationHandler(m_ene, eventLoop);
 
@@ -56,20 +56,18 @@ jerror_t CalorimeterHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) 
 		std::map<TranslationTable::CALO_Index_t, std::vector<double> > gainCalibMap;
 		std::map<TranslationTable::CALO_Index_t, std::vector<double> >::iterator gainCalibMap_it;
 		gainCalibMap = m_ene->getCalibMap();
-		jout << "Got following ene for run number: " << runnumber << endl;
-		jout << "Rows: " << gainCalibMap.size() << endl;
+		jout << "Got following ene for run number: " << event->GetRunNumber() << jendl;
+		jout << "Rows: " << gainCalibMap.size() << jendl;
 		for (gainCalibMap_it = gainCalibMap.begin(); gainCalibMap_it != gainCalibMap.end(); gainCalibMap_it++) {
-			jout << gainCalibMap_it->first.sector << " " << gainCalibMap_it->first.x << " " << gainCalibMap_it->first.y << " " << gainCalibMap_it->first.readout << " " << gainCalibMap_it->second[0] << " " << gainCalibMap_it->second[1] << endl;
+			jout << gainCalibMap_it->first.sector << " " << gainCalibMap_it->first.x << " " << gainCalibMap_it->first.y << " " << gainCalibMap_it->first.readout << " " << gainCalibMap_it->second[0] << " " << gainCalibMap_it->second[1] << jendl;
 		}
 	}
-
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t CalorimeterHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void CalorimeterHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	//1: Here, we get from the framework the objects we need to process
 	//1a: create vectors
@@ -84,9 +82,9 @@ jerror_t CalorimeterHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 	double gain, ped;
 
 	if (isMC) {
-		loop->Get(m_CalorimeterDigiHits, "MC");
+		event->Get(m_CalorimeterDigiHits, "MC");
 	} else {
-		loop->Get(m_CalorimeterDigiHits);
+		event->Get(m_CalorimeterDigiHits);
 	}
 	/*Do the matching
 	 */
@@ -130,7 +128,7 @@ jerror_t CalorimeterHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 					m_CalorimeterHit->E /= gain;
 				}
 				m_CalorimeterHit->AddAssociatedObject(m_CalorimeterDigiHit);
-				_data.push_back(m_CalorimeterHit); //publish it
+				Insert(m_CalorimeterHit); //publish it
 			}
 		}
 		/*Multiple readout object:
@@ -179,29 +177,24 @@ jerror_t CalorimeterHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 				if (gain != 0) {
 					m_CalorimeterHit->E /= gain;
 				}
-				_data.push_back(m_CalorimeterHit);
+				Insert(m_CalorimeterHit);
 			}
 		}
 
 	}
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t CalorimeterHit_factory::erun(void) {
+void CalorimeterHit_factory::EndRun() {
 
 	this->clearCalibrationHandler(m_ene);
-
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t CalorimeterHit_factory::fini(void) {
-	return NOERROR;
+void CalorimeterHit_factory::Finish() {
 }
 

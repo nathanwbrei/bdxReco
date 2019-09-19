@@ -8,7 +8,6 @@
 #ifndef _JFactoryGenerator_DAQ_
 #define _JFactoryGenerator_DAQ_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 #include "fa250Mode1Hit.h"
@@ -19,7 +18,7 @@
 #include "epicsRawData.h"
 #include "fa250WaveboardV1Hit.h"
 
-class JFactoryGenerator_DAQ: public jana::JFactoryGenerator {
+class JFactoryGenerator_DAQ: public JFactoryGenerator {
 public:
 	JFactoryGenerator_DAQ() {
 	}
@@ -32,15 +31,14 @@ public:
 		return "JFactoryGenerator_DAQ";
 	}
 
-	jerror_t GenerateFactories(jana::JEventLoop *loop) {
-		loop->AddFactory(new JFactory<fa250WaveboardV1Hit>());
-		loop->AddFactory(new JFactory<fa250Mode1Hit>());
-		loop->AddFactory(new JFactory<fa250Mode7Hit>());
-		loop->AddFactory(new JFactory<eventData>());
-		loop->AddFactory(new JFactory<epicsRawData>());
-		loop->AddFactory(new fa250Mode1CalibPedSubHit_factory());
-		loop->AddFactory(new fa250Mode1CalibPedSubHitFFT_factory());
-		return NOERROR;
+	void GenerateFactories(JFactorySet* factorySet) {
+		factorySet->Add(new JFactoryT<fa250WaveboardV1Hit>());
+		factorySet->Add(new JFactoryT<fa250Mode1Hit>());
+		factorySet->Add(new JFactoryT<fa250Mode7Hit>());
+		factorySet->Add(new JFactoryT<eventData>());
+		factorySet->Add(new JFactoryT<epicsRawData>());
+		factorySet->Add(new fa250Mode1CalibPedSubHit_factory());
+		factorySet->Add(new fa250Mode1CalibPedSubHitFFT_factory());
 	}
 
 };

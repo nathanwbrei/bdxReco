@@ -8,7 +8,6 @@
 #ifndef _JFactoryGenerator_Paddles_
 #define _JFactoryGenerator_Paddles_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 #include "Paddlesfa250Converter_factory.h"
@@ -17,7 +16,7 @@
 #include "PaddlesDigiHit_factory_MC.h"
 #include "PaddlesHit_factory.h"
 
-class JFactoryGenerator_Paddles: public jana::JFactoryGenerator{
+class JFactoryGenerator_Paddles: public JFactoryGenerator{
 	public:
 		JFactoryGenerator_Paddles(){
 			VERBOSE=0;
@@ -29,14 +28,12 @@ class JFactoryGenerator_Paddles: public jana::JFactoryGenerator{
 		virtual const char* className(void){return static_className();}
 		static const char* static_className(void){return "JFactoryGenerator_Paddles";}
 		
-		jerror_t GenerateFactories(jana::JEventLoop *loop){
-			loop->AddFactory(new Paddlesfa250Converter_factory());
-			loop->AddFactory(new PaddlesPMTHit_factory());
-			loop->AddFactory(new PaddlesDigiHit_factory());
-			loop->AddFactory(new PaddlesDigiHit_factory_MC());
-			loop->AddFactory(new PaddlesHit_factory());
-
-			return NOERROR;
+		void GenerateFactories(JFactorySet *factorySet){
+			factorySet->Add(new Paddlesfa250Converter_factory());
+			factorySet->Add(new PaddlesPMTHit_factory());
+			factorySet->Add(new PaddlesDigiHit_factory());
+			factorySet->Add(new PaddlesDigiHit_factory_MC());
+			factorySet->Add(new PaddlesHit_factory());
 		}
 
 	private:

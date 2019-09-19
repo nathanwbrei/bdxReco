@@ -17,23 +17,21 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t IntVetoSummary_factory::init(void)
+void IntVetoSummary_factory::Init()
 {
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t IntVetoSummary_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void IntVetoSummary_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t IntVetoSummary_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void IntVetoSummary_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	vector<const IntVetoHit*> m_intVetoHits;
@@ -91,16 +89,14 @@ jerror_t IntVetoSummary_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
 //------------------
 // erun
 //------------------
-jerror_t IntVetoSummary_factory::erun(void)
+void IntVetoSummary_factory::EndRun()
 {
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t IntVetoSummary_factory::fini(void)
+void IntVetoSummary_factory::Finish()
 {
-	return NOERROR;
 }
 

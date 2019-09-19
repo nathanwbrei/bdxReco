@@ -20,15 +20,14 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t IntVetoDigiHit_factory::init(void)
+void IntVetoDigiHit_factory::Init()
 {
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t IntVetoDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void IntVetoDigiHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 
 	jout<<"IntVetoDigiHit_factory::brun new run number: "<<runnumber<<endl;
@@ -38,13 +37,12 @@ jerror_t IntVetoDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 		jerr<<" unable to get the TranslationTable from this run!"<<endl;
 		return OBJECT_NOT_AVAILABLE;
 	}
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t IntVetoDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void IntVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	TranslationTable::INT_VETO_Index_t m_channel;

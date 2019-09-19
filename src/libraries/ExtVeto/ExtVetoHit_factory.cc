@@ -29,29 +29,25 @@ ExtVetoHit_factory::ExtVetoHit_factory() :
 //------------------
 // init
 //------------------
-jerror_t ExtVetoHit_factory::init(void) {
+void ExtVetoHit_factory::Init() {
 	japp->GetParameter("MC", isMC);
 
 	m_ENE_gain = new CalibrationHandler<TranslationTable::EXT_VETO_Index_t>("/ExtVeto/Ene");
 	this->mapCalibrationHandler(m_ENE_gain);
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void ExtVetoHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 
 	this->updateCalibrationHandler(m_ENE_gain, eventLoop);
-
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t ExtVetoHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void ExtVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	//1: Here, we get from the framework the objects we need to process
 	//1a: create vectors
@@ -114,17 +110,14 @@ jerror_t ExtVetoHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 //------------------
 // erun
 //------------------
-jerror_t ExtVetoHit_factory::erun(void) {
+void ExtVetoHit_factory::EndRun() {
 
 	this->clearCalibrationHandler(m_ENE_gain);
-
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t ExtVetoHit_factory::fini(void) {
-	return NOERROR;
+void ExtVetoHit_factory::Finish() {
 }
 

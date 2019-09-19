@@ -20,23 +20,21 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t PaddlesDigiHit_factory_MC::init(void)
+void PaddlesDigiHit_factory_MC::Init()
 {
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t PaddlesDigiHit_factory_MC::brun(JEventLoop *eventLoop, int32_t runnumber)
+void PaddlesDigiHit_factory_MC::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t PaddlesDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnumber)
+void PaddlesDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	PaddlesDigiHit *m_PaddlesDigiHit=0;
@@ -80,22 +78,6 @@ jerror_t PaddlesDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnumber)
 		m_PaddlesDigiHit=m_map_it->second;
 		_data.push_back(m_PaddlesDigiHit);
 	}
-	return NOERROR;
 }
 
-//------------------
-// erun
-//------------------
-jerror_t PaddlesDigiHit_factory_MC::erun(void)
-{
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t PaddlesDigiHit_factory_MC::fini(void)
-{
-	return NOERROR;
-}
 

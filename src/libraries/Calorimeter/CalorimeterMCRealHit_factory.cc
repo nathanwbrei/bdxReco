@@ -14,25 +14,12 @@ using namespace std;
 #include "MC/CalorimeterMCHit.h"
 
 
-//------------------
-// init
-//------------------
-jerror_t CalorimeterMCRealHit_factory::init(void) {
-	return NOERROR;
-}
-
-//------------------
-// brun
-//------------------
-jerror_t CalorimeterMCRealHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void CalorimeterMCRealHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	japp->GetParameter("MC", isMC);
 	return NOERROR;
 }
 
-//------------------
-// evnt
-//------------------
-jerror_t CalorimeterMCRealHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void CalorimeterMCRealHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	vector<const CalorimeterMCHit*> m_CalorimeterMCHits;
 	vector<const CalorimeterMCHit*>::const_iterator it;
@@ -74,17 +61,3 @@ jerror_t CalorimeterMCRealHit_factory::evnt(JEventLoop *loop, uint64_t eventnumb
 		_data.push_back(m_CalorimeterMCRealHit);
 	}
 }
-//------------------
-// erun
-//------------------
-jerror_t CalorimeterMCRealHit_factory::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t CalorimeterMCRealHit_factory::fini(void) {
-	return NOERROR;
-}
-

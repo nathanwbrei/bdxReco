@@ -35,20 +35,19 @@ IntVetofa250Converter_factory::IntVetofa250Converter_factory():
 //------------------
 // init
 //------------------
-jerror_t IntVetofa250Converter_factory::init(void)
+void IntVetofa250Converter_factory::Init()
 {
 	jout<<"IntVetofa250Converter_factory::init"<<endl;
 	m_intVetofa250Converter=new IntVetofa250Converter();
 	m_intVetofa250Converter->m_thrCalib=new CalibrationHandler<TranslationTable::INT_VETO_Index_t>("/InnerVeto/sipm_ampl");
 	this->mapCalibrationHandler(m_intVetofa250Converter->m_thrCalib);
 	jout<<"IntVetofa250Converter_factory::init done"<<endl;
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t IntVetofa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void IntVetofa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 	jout<<"IntVetofa250Converter_factory::brun"<<endl;
 	this->updateCalibrationHandler(	m_intVetofa250Converter->m_thrCalib,eventLoop);
@@ -68,14 +67,12 @@ jerror_t IntVetofa250Converter_factory::brun(JEventLoop *eventLoop, int32_t runn
 		m_isFirstCallToBrun=0;
 	}
 	SetFactoryFlag(PERSISTANT);
-
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t IntVetofa250Converter_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void IntVetofa250Converter_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	// Code to generate factory data goes here. Add it like:
@@ -89,13 +86,12 @@ jerror_t IntVetofa250Converter_factory::evnt(JEventLoop *loop, uint64_t eventnum
 	// Note that the objects you create here will be deleted later
 	// by the system and the _data vector will be cleared automatically.
 
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t IntVetofa250Converter_factory::erun(void)
+void IntVetofa250Converter_factory::EndRun()
 {
 
 	this->clearCalibrationHandler(m_intVetofa250Converter->m_thrCalib);
@@ -103,18 +99,16 @@ jerror_t IntVetofa250Converter_factory::erun(void)
 		delete m_intVetofa250Converter;
 	}*/
 	_data.clear();
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t IntVetofa250Converter_factory::fini(void)
+void IntVetofa250Converter_factory::Finish()
 {
 /*	if (m_intVetofa250Converter!=0){
 		delete m_intVetofa250Converter;
 	}*/
 	_data.clear();
-	return NOERROR;
 }
 

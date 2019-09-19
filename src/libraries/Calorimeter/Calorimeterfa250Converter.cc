@@ -17,7 +17,6 @@
 #include <DAQ/fa250Mode1CalibPedSubHit.h>
 #include <DAQ/fa250Mode7Hit.h>
 
-#include <JANA/JParameterManager.h>
 #include <DAQ/fa250Mode1CalibPedSubHit.h>
 
 double fSinglePhe2Pole(double *x, double *par) {
@@ -48,12 +47,12 @@ CalorimeterSiPMHit* Calorimeterfa250Converter::convertHit(const fa250Hit *hit, c
 	m_CalorimeterSiPMHit->m_channel = m_channel;
 	m_CalorimeterSiPMHit->timestamp = hit->timestamp;
 
-	if (strcmp(hit->className(), "fa250Mode1CalibPedSubHit") == 0) {
+	if (strcmp(hit->className().c_str(), "fa250Mode1CalibPedSubHit") == 0) {
 		this->convertMode1Hit(m_CalorimeterSiPMHit, (const fa250Mode1CalibPedSubHit*) hit);
-	} else if (strcmp(hit->className(), "fa250Mode7Hit") == 0) {
+	} else if (strcmp(hit->className().c_str(), "fa250Mode7Hit") == 0) {
 		this->convertMode7Hit(m_CalorimeterSiPMHit, (const fa250Mode7Hit*) hit);
 	} else {
-		jerr << "Calorimeterfa250Converter::convertHit unsupported class name: " << hit->className() << std::endl;
+		jerr << "Calorimeterfa250Converter::convertHit unsupported class name: " << hit->className() << jendl;
 		return 0;
 	}
 	return m_CalorimeterSiPMHit;
@@ -163,7 +162,7 @@ jerror_t Calorimeterfa250Converter::convertMode1Hit(CalorimeterSiPMHit* output, 
 	for (int itime = 0; itime < m_crossingTimes.size(); itime++) {
 
 		if (m_crossingTimesDelta[itime] < 0) {
-			jerr << "Calorimeterfa20Converter::convertMode1Hit error, negative ToT?" << std::endl;
+			jerr << "Calorimeterfa20Converter::convertMode1Hit error, negative ToT?" << jendl;
 		} else if (m_crossingTimesDelta[itime] > m_SIGNAL_TOT / input->m_dT) {
 			m_signalCrossingIndexes.push_back(itime);
 		} else if ((m_crossingTimesDelta[itime] > m_MIN_TOT / input->m_dT) || (m_crossingTimes[itime].second) == (size) || (m_crossingTimes[itime].first) == (0)) {

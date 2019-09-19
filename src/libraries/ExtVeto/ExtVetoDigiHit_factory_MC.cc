@@ -18,7 +18,7 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t ExtVetoDigiHit_factory_MC::init(void) {
+void ExtVetoDigiHit_factory_MC::Init() {
 	japp->GetParameter("MC", m_isMC);
 	return NOERROR;
 }
@@ -26,14 +26,14 @@ jerror_t ExtVetoDigiHit_factory_MC::init(void) {
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoDigiHit_factory_MC::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void ExtVetoDigiHit_factory_MC::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t ExtVetoDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void ExtVetoDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& event) {
 
 	ExtVetoDigiHit *m_ExtVetoDigiHit = 0;
 

@@ -8,9 +8,8 @@
 #ifndef _PaddlesPMTHit_factory_
 #define _PaddlesPMTHit_factory_
 
-#include <JANA/JFactory.h>
+#include <JANA/JFactoryT.h>
 #include <Paddles/PaddlesPMTHit.h>
-#include <system/BDXFactory.h>
 #include <system/CalibrationHandler.h>
 
 class TranslationTable;
@@ -18,18 +17,18 @@ class Paddlesfa250Converter;
 
 
 
-class PaddlesPMTHit_factory:public BDXFactory<PaddlesPMTHit>{
+class PaddlesPMTHit_factory:public JFactoryT<PaddlesPMTHit>{
 	public:
 		PaddlesPMTHit_factory():m_tt(0),m_Paddlesfa250Converter(0),m_PMT_gain(0){};
 		~PaddlesPMTHit_factory(){};
 
 
 	private:
-		jerror_t init(void);						///< Called once at program start.
-		jerror_t brun(jana::JEventLoop *eventLoop, int32_t runnumber);	///< Called everytime a new run number is detected.
-		jerror_t evnt(jana::JEventLoop *eventLoop, uint64_t eventnumber);	///< Called every event.
-		jerror_t erun(void);						///< Called everytime run number changes, provided brun has been called.
-		jerror_t fini(void);						///< Called after last event of last event source has been processed.
+		void Init() override;
+		void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
+		void Process(const std::shared_ptr<const JEvent>& aEvent) override;
+		void EndRun();
+		void Finish();
 
 		const TranslationTable *m_tt;
 		const Paddlesfa250Converter *m_Paddlesfa250Converter;

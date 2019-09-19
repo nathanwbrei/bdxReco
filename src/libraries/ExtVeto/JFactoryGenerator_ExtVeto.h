@@ -8,7 +8,6 @@
 #ifndef _JFactoryGenerator_ExtVeto_
 #define _JFactoryGenerator_ExtVeto_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 #include "ExtVetofa250Converter_factory.h"
 #include "ExtVetoPMTHit_factory.h"
@@ -17,7 +16,7 @@
 #include "ExtVetoHit_factory.h"
 #include "ExtVetoSummary_factory.h"
 
-class JFactoryGenerator_ExtVeto: public jana::JFactoryGenerator{
+class JFactoryGenerator_ExtVeto: public JFactoryGenerator{
 	public:
 		JFactoryGenerator_ExtVeto(){
 
@@ -34,14 +33,13 @@ class JFactoryGenerator_ExtVeto: public jana::JFactoryGenerator{
 		virtual const char* className(void){return static_className();}
 		static const char* static_className(void){return "JFactoryGenerator_ExtVeto";}
 		
-		jerror_t GenerateFactories(jana::JEventLoop *loop){
-			loop->AddFactory(new ExtVetoPMTHit_factory());
-			loop->AddFactory(new ExtVetofa250Converter_factory());
-			loop->AddFactory(new ExtVetoDigiHit_factory());
-			loop->AddFactory(new ExtVetoDigiHit_factory_MC());
-			loop->AddFactory(new ExtVetoHit_factory());
-			loop->AddFactory(new ExtVetoSummary_factory());
-			return NOERROR;
+		void GenerateFactories(JFactorySet *factorySet){
+			factorySet->Add(new ExtVetoPMTHit_factory());
+			factorySet->Add(new ExtVetofa250Converter_factory());
+			factorySet->Add(new ExtVetoDigiHit_factory());
+			factorySet->Add(new ExtVetoDigiHit_factory_MC());
+			factorySet->Add(new ExtVetoHit_factory());
+			factorySet->Add(new ExtVetoSummary_factory());
 		}
 	private:
 			int VERBOSE;

@@ -8,7 +8,6 @@
 #ifndef _JFactoryGenerator_CALORIMETER_
 #define _JFactoryGenerator_CALORIMETER_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 #include "CalorimeterSiPMHit_factory.h"
@@ -20,7 +19,7 @@
 #include "CalorimeterMCRealHit_factory.h"
 
 
-class JFactoryGenerator_Calorimeter: public jana::JFactoryGenerator{
+class JFactoryGenerator_Calorimeter: public JFactoryGenerator{
 	public:
 		JFactoryGenerator_Calorimeter(){
 			VERBOSE=0;
@@ -33,16 +32,14 @@ class JFactoryGenerator_Calorimeter: public jana::JFactoryGenerator{
 		virtual const char* className(void){return static_className();}
 		static const char* static_className(void){return "JFactoryGenerator_CALORIMETER";}
 		
-		jerror_t GenerateFactories(jana::JEventLoop *loop){
-			loop->AddFactory(new CalorimeterSiPMHit_factory());
-			loop->AddFactory(new Calorimeterfa250Converter_factory());
-			loop->AddFactory(new CalorimeterDigiHit_factory());
-			loop->AddFactory(new CalorimeterDigiHit_factory_MC());
-			loop->AddFactory(new CalorimeterHit_factory());
-			loop->AddFactory(new CalorimeterMCRealHit_factory());
-			loop->AddFactory(new CalorimeterCluster_factory());
-			return NOERROR;
-
+		void GenerateFactories(JFactorySet *factorySet){
+			factorySet->Add(new CalorimeterSiPMHit_factory());
+			factorySet->Add(new Calorimeterfa250Converter_factory());
+			factorySet->Add(new CalorimeterDigiHit_factory());
+			factorySet->Add(new CalorimeterDigiHit_factory_MC());
+			factorySet->Add(new CalorimeterHit_factory());
+			factorySet->Add(new CalorimeterMCRealHit_factory());
+			factorySet->Add(new CalorimeterCluster_factory());
 		}
 
 	private:

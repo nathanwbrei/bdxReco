@@ -8,21 +8,19 @@
 #ifndef _JFactoryGenerator_EPICS_
 #define _JFactoryGenerator_EPICS_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 #include "epicsData_factory.h"
 
-class JFactoryGenerator_EPICS: public jana::JFactoryGenerator{
+class JFactoryGenerator_EPICS: public JFactoryGenerator{
 	public:
 		JFactoryGenerator_EPICS(){}
 		virtual ~JFactoryGenerator_EPICS(){}
-		virtual const char* className(void){return static_className();}
-		static const char* static_className(void){return "JFactoryGenerator_EPICS";}
+		virtual const char* className(){return static_className();}
+		static const char* static_className(){return "JFactoryGenerator_EPICS";}
 		
-		jerror_t GenerateFactories(jana::JEventLoop *loop){
-			loop->AddFactory(new epicsData_factory());
-			return NOERROR;
+		void GenerateFactories(JFactorySet *factorySet){
+			factorySet->Add(new epicsData_factory());
 		}
 
 };

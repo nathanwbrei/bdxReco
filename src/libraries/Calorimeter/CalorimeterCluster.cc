@@ -26,7 +26,8 @@ TCanvas* CalorimeterCluster::Draw(int id)const{
 
 	vector <const CalorimeterHit*> chits;
 	int ix,iy,idx;
-	this->Get(chits); //Get those associated to this object
+	//this->Get(chits); //Get those associated to this object
+	// TODO: Get associated objects doesn't exist at the moment!
 
 	m_canvas->Divide(4,4);
 

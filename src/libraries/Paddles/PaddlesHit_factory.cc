@@ -18,28 +18,25 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t PaddlesHit_factory::init(void)
+void PaddlesHit_factory::Init()
 {
 	japp->GetParameter("MC",isMC);
 	m_ENE_gain=new	CalibrationHandler<TranslationTable::PADDLES_Index_t>("Paddles/Ene");
 	this->mapCalibrationHandler(m_ENE_gain);
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t PaddlesHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void PaddlesHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 	this->updateCalibrationHandler(m_ENE_gain,eventLoop);
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t PaddlesHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void PaddlesHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	// Code to generate factory data goes here. Add it like:
@@ -80,27 +77,20 @@ jerror_t PaddlesHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
 		m_PaddlesHit->AddAssociatedObject(*m_it);
 		_data.push_back(m_PaddlesHit);
 	}
-
-
-
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t PaddlesHit_factory::erun(void)
+void PaddlesHit_factory::EndRun()
 {
 	this->clearCalibrationHandler(m_ENE_gain);
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t PaddlesHit_factory::fini(void)
+void PaddlesHit_factory::Finish()
 {
-	return NOERROR;
 }
 

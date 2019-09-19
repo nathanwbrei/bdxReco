@@ -10,12 +10,11 @@
 using namespace std;
 
 #include "triggerDataBDXmini_factory.h"
+#include <JANA/JEvent.h>
 #include <DAQ/eventData.h>
 
-//------------------
-// init
-//------------------
-jerror_t triggerDataBDXmini_factory::init(void) {
+
+void triggerDataBDXmini_factory::Init() {
 	m_isMC = 0;
 	japp->GetParameter("MC", m_isMC);
 
@@ -25,21 +24,12 @@ jerror_t triggerDataBDXmini_factory::init(void) {
 
 	japp->SetDefaultParameter("BDXMINI:TRG_MIN_TIME", m_chanTimeMin, "Trigger time - min ");
 	japp->SetDefaultParameter("BDXMINI:TRG_MAX_TIME", m_chanTimeMax, "Trigger time - max");
-
-	return NOERROR;
 }
 
-//------------------
-// brun
-//------------------
-jerror_t triggerDataBDXmini_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	return NOERROR;
+void triggerDataBDXmini_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 }
 
-//------------------
-// evnt
-//------------------
-jerror_t triggerDataBDXmini_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void triggerDataBDXmini_factory::Process(const std::shared_ptr<const JEvent>& event) {
 	const eventData* tData;
 
 	int nTriggers = 0;
@@ -62,18 +52,18 @@ jerror_t triggerDataBDXmini_factory::evnt(JEventLoop *loop, uint64_t eventnumber
 
 	/*Check - MC do nothing*/
 	if (m_isMC) {
-		return NOERROR;
+		return;
 	}
 
 	try {
-		loop->GetSingle(tData);
+		event->Get(&tData);
 	} catch (unsigned long e) {
-		jout << " triggerDataBDXmini_factory::evnt no eventData bank this event" << std::endl;
-		return OBJECT_NOT_AVAILABLE;
+		jout << " triggerDataBDXmini_factory::evnt no eventData bank this event" << jendl;
+		throw JException("triggerDataBDXmini_factory::evnt no eventData bank this event");
 	}
 	/*If this is an EPICS event, do nothing.*/
 	if (tData->eventType == eventSource::EPICS) {
-		return NOERROR;
+		return;
 	}
 
 	for (ii = 0; ii < tData->triggerWords.size() / 2; ii++) {
@@ -135,21 +125,8 @@ jerror_t triggerDataBDXmini_factory::evnt(JEventLoop *loop, uint64_t eventnumber
 		}
 	}
 
-	_data.push_back(m_triggerDataBDXmini);
-	return NOERROR;
+	Insert(m_triggerDataBDXmini);
 }
 
-//------------------
-// erun
-//------------------
-jerror_t triggerDataBDXmini_factory::erun(void) {
-	return NOERROR;
-}
 
-//------------------
-// fini
-//------------------
-jerror_t triggerDataBDXmini_factory::fini(void) {
-	return NOERROR;
-}
 

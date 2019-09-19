@@ -10,6 +10,7 @@
 #include <iomanip>
 using namespace std;
 
+#include <JANA/JEvent.h>
 
 //objects we need from the framework
 #include <TT/TranslationTable.h>
@@ -19,32 +20,16 @@ using namespace std;
 
 #include "CalorimeterDigiHit_factory.h"
 
-//------------------
-// init
-//------------------
-jerror_t CalorimeterDigiHit_factory::init(void)
+void CalorimeterDigiHit_factory::Init()
 {
-	return NOERROR;
 }
 
-//------------------
-// brun
-//------------------
-jerror_t CalorimeterDigiHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void CalorimeterDigiHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-
-
-
-	return NOERROR;
 }
 
-//------------------
-// evnt
-//------------------
-jerror_t CalorimeterDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void CalorimeterDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
-
-
 	TranslationTable::CALO_Index_t m_channel;
 	CalorimeterDigiHit *m_CalorimeterDigiHit=0;
 
@@ -54,7 +39,7 @@ jerror_t CalorimeterDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber
 	vector <const CalorimeterSiPMHit*>::const_iterator it;
 	const CalorimeterSiPMHit*  m_CalorimeterSiPMHit;
 	//1b: retrieve CalorimeterSiPMHit objects
-	loop->Get(m_CalorimeterSiPMHits);
+	event->Get(m_CalorimeterSiPMHits);
 
 	for (it=m_CalorimeterSiPMHits.begin();it!=m_CalorimeterSiPMHits.end();it++){
 		 m_CalorimeterSiPMHit=(*it);
@@ -68,27 +53,8 @@ jerror_t CalorimeterDigiHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber
 		 m_CalorimeterDigiHit->RMSflag=m_CalorimeterSiPMHit->RMSflag;
 		 m_CalorimeterDigiHit->type=m_CalorimeterSiPMHit->type;
 		 m_CalorimeterDigiHit->AddAssociatedObject(m_CalorimeterSiPMHit);
-		 _data.push_back(m_CalorimeterDigiHit);
+		 Insert(m_CalorimeterDigiHit);
 	}
-
-	return NOERROR;
 }
 
-
-
-//------------------
-// erun
-//------------------
-jerror_t CalorimeterDigiHit_factory::erun(void)
-{
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t CalorimeterDigiHit_factory::fini(void)
-{
-	return NOERROR;
-}
 

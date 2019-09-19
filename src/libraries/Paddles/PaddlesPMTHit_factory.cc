@@ -25,18 +25,17 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t PaddlesPMTHit_factory::init(void)
+void PaddlesPMTHit_factory::Init()
 {
 	VERBOSE=0;
 	m_PMT_gain=new CalibrationHandler<TranslationTable::PADDLES_Index_t>("/Paddles/PMT_gain");
 	this->mapCalibrationHandler(m_PMT_gain);
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t PaddlesPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void PaddlesPMTHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 	jout<<"PaddlesPMTHit_factory::brun new run number: "<<runnumber<<endl;
 	m_tt=0;
@@ -68,14 +67,12 @@ jerror_t PaddlesPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 			jout<<gainCalibMap_it->first.id<<" "<<gainCalibMap_it->second.at(0)<<endl;
 		}
 	}
-
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t PaddlesPMTHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void PaddlesPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 	TranslationTable::ChannelInfo m_channel;
 	//	TranslationTable::csc_t		  m_csc;
@@ -161,29 +158,22 @@ jerror_t PaddlesPMTHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
 
 		}
 	}
-
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t PaddlesPMTHit_factory::erun(void)
+void PaddlesPMTHit_factory::EndRun()
 {
 
 	this->clearCalibrationHandler(m_PMT_gain);
 
-
-
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t PaddlesPMTHit_factory::fini(void)
+void PaddlesPMTHit_factory::Finish()
 {
-	return NOERROR;
 }
 

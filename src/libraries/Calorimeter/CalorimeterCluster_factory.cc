@@ -17,6 +17,7 @@
 
 using namespace std;
 
+#include <JANA/JEvent.h>
 #include "CalorimeterCluster_factory.h"
 
 #include "CalorimeterHit.h"
@@ -36,23 +37,21 @@ CalorimeterCluster_factory::CalorimeterCluster_factory(){
 //------------------
 // init
 //------------------
-jerror_t CalorimeterCluster_factory::init(void)
+void CalorimeterCluster_factory::Init()
 {
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t CalorimeterCluster_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void CalorimeterCluster_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t CalorimeterCluster_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void CalorimeterCluster_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	/*Variables required*/
@@ -62,7 +61,7 @@ jerror_t CalorimeterCluster_factory::evnt(JEventLoop *loop, uint64_t eventnumber
 
 	vector<const CalorimeterHit*> all_hits;
 	vector<const CalorimeterHit*>::const_iterator all_hits_it;
-	loop->Get(all_hits);
+	event->Get(all_hits);
 
 	double Emax=-99999;
 	bool hasSeed=false;
@@ -102,32 +101,11 @@ jerror_t CalorimeterCluster_factory::evnt(JEventLoop *loop, uint64_t eventnumber
 		else{ //There is a cluster
 			CalorimeterCluster *cluster = new CalorimeterCluster;        //Create a cluster
 			this->setCluster(cluster,this_sector_seed,this_sector_hits); //set all the cluster properties (see below)
-			_data.push_back(cluster); 							         //publish it
+			Insert(cluster); 							         //publish it
 		}
 	}//end loop on sectors
-
-
-
-
-	return NOERROR;
 }
 
-//------------------
-// erun
-//------------------
-jerror_t CalorimeterCluster_factory::erun(void)
-{
-	return NOERROR;
-}
-
-
-//------------------
-// fini
-//------------------
-jerror_t CalorimeterCluster_factory::fini(void)
-{
-	return NOERROR;
-}
 
 void CalorimeterCluster_factory::setCluster(CalorimeterCluster *cluster,const CalorimeterHit *seed,const std::vector<const CalorimeterHit*> &hits)const{
 	std::vector<const CalorimeterHit*>::const_iterator hits_it;

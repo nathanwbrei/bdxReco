@@ -8,7 +8,7 @@
 #ifndef _TEvent_factory_CataniaProto2_
 #define _TEvent_factory_CataniaProto2_
 
-#include <JANA/JFactory.h>
+#include <JANA/JFactoryT.h>
 #include <JANA/Services/JGlobalRootLock.h>
 #include "TEvent.h"
 #include <string.h>
@@ -16,18 +16,18 @@
 class TClonesArray;
 
 
-class TEvent_factory_CataniaProto2:public jana::JFactory<TEvent>{
+class TEvent_factory_CataniaProto2:public JFactoryT<TEvent>{
 	public:
 		TEvent_factory_CataniaProto2(){};
 		~TEvent_factory_CataniaProto2(){};
 		const char* Tag(void){return "CataniaProto2";}
 
 	private:
-		jerror_t init(void);						///< Called once at program start.
-		jerror_t brun(jana::JEventLoop *eventLoop, int32_t runnumber);	///< Called everytime a new run number is detected.
-		jerror_t evnt(jana::JEventLoop *eventLoop, uint64_t eventnumber);	///< Called every event.
-		jerror_t erun(void);						///< Called everytime run number changes, provided brun has been called.
-		jerror_t fini(void);						///< Called after last event of last event source has been processed.
+		void Init() override;
+		void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
+		void Process(const std::shared_ptr<const JEvent>& aEvent) override;
+		void EndRun();
+		void Finish();
 
 
 		TClonesArray *m_CaloDigiHits;

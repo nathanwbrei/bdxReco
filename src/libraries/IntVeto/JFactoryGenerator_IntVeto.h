@@ -8,7 +8,6 @@
 #ifndef _JFactoryGenerator_VETO_INT_
 #define _JFactoryGenerator_VETO_INT_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 #include "IntVetoSiPMHit_factory.h"
@@ -17,7 +16,9 @@
 #include "IntVetoHit_factory.h"
 #include "IntVetofa250Converter_factory.h"
 #include "IntVetoSummary_factory.h"
-class JFactoryGenerator_IntVeto: public jana::JFactoryGenerator{
+
+
+class JFactoryGenerator_IntVeto: public JFactoryGenerator{
 	public:
 		JFactoryGenerator_IntVeto(){
 			VERBOSE=0;
@@ -30,15 +31,13 @@ class JFactoryGenerator_IntVeto: public jana::JFactoryGenerator{
 		virtual const char* className(void){return static_className();}
 		static const char* static_className(void){return "JFactoryGenerator_VETO_INT";}
 		
-		jerror_t GenerateFactories(jana::JEventLoop *loop){
-			loop->AddFactory(new IntVetoSiPMHit_factory());
-			loop->AddFactory(new IntVetofa250Converter_factory());
-			loop->AddFactory(new IntVetoDigiHit_factory());
-			loop->AddFactory(new IntVetoDigiHit_factory_MC());
-			loop->AddFactory(new IntVetoHit_factory());
-			loop->AddFactory(new IntVetoSummary_factory());
-			return NOERROR;
-
+		void GenerateFactories(JFactorySet *factorySet){
+			factorySet->Add(new IntVetoSiPMHit_factory());
+			factorySet->Add(new IntVetofa250Converter_factory());
+			factorySet->Add(new IntVetoDigiHit_factory());
+			factorySet->Add(new IntVetoDigiHit_factory_MC());
+			factorySet->Add(new IntVetoHit_factory());
+			factorySet->Add(new IntVetoSummary_factory());
 		}
 
 	private:

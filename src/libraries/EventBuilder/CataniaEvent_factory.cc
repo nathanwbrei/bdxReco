@@ -22,7 +22,7 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t CataniaEvent_factory::init(void) {
+void CataniaEvent_factory::Init() {
 
 	m_EC2_cut = 20; //MeV
 	m_ExtVeto_timeWindows = 250; //ns
@@ -30,22 +30,19 @@ jerror_t CataniaEvent_factory::init(void) {
 	japp->SetDefaultParameter("CATANIAEVENT:EC2_CUT", m_EC2_cut, "Cut on MPPC#2 energy in MeV");
 	japp->SetDefaultParameter("CATANIAEVENT:EXTVETO_TIME_WINDOW", m_ExtVeto_timeWindows, "ExtVeto time window (ns)");
 	japp->SetDefaultParameter("CATANIAEVENT:INTVETO_TIME_WINDOW", m_IntVeto_timeWindows, "IntVeto time window (ns)");
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t CataniaEvent_factory::brun(JEventLoop *eventLoop, int32_t runnumber) {
+void CataniaEvent_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	japp->GetParameter("MC", m_isMC);
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t CataniaEvent_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void CataniaEvent_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	vector<const CalorimeterDigiHit*> cdigihits;
 	vector<const CalorimeterDigiHit*>::const_iterator cdigihits_it;
@@ -214,21 +211,5 @@ jerror_t CataniaEvent_factory::evnt(JEventLoop *loop, uint64_t eventnumber) {
 		}
 	}
 	_data.push_back(m_event);
-
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t CataniaEvent_factory::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t CataniaEvent_factory::fini(void) {
-	return NOERROR;
 }
 

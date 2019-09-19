@@ -23,17 +23,16 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t ExtVetoPMTHit_factory::init(void)
+void ExtVetoPMTHit_factory::Init()
 {
 	m_PMT_gain=new CalibrationHandler<TranslationTable::EXT_VETO_Index_t>("/ExtVeto/PMT_gain");
 	this->mapCalibrationHandler(m_PMT_gain);
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t ExtVetoPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void ExtVetoPMTHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 	jout<<"ExtVetoDigiHit_factory::brun new run number: "<<runnumber<<endl;
 	m_tt=0;
@@ -65,17 +64,12 @@ jerror_t ExtVetoPMTHit_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
 
 		}
 	}
-
-
-
-
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t ExtVetoPMTHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void ExtVetoPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 	TranslationTable::ChannelInfo m_channel;
 	TranslationTable::csc_t		  m_csc;
@@ -147,25 +141,20 @@ jerror_t ExtVetoPMTHit_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
 			_data.push_back(m_ExtVetoPMTHit);
 		}
 	}
-
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t ExtVetoPMTHit_factory::erun(void)
+void ExtVetoPMTHit_factory::EndRun()
 {
 	this->clearCalibrationHandler(m_PMT_gain);
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t ExtVetoPMTHit_factory::fini(void)
+void ExtVetoPMTHit_factory::Finish()
 {
-	return NOERROR;
 }
 

@@ -8,7 +8,6 @@
 #ifndef _JFactoryGenerator_EventBuilder_
 #define _JFactoryGenerator_EventBuilder_
 
-#include <JANA/jerror.h>
 #include <JANA/JFactoryGenerator.h>
 
 
@@ -22,7 +21,7 @@
 #include "TEvent_factory_FullMC.h"
 #endif
 
-class JFactoryGenerator_EventBuilder: public jana::JFactoryGenerator {
+class JFactoryGenerator_EventBuilder: public JFactoryGenerator {
 public:
 	JFactoryGenerator_EventBuilder() {
 	}
@@ -35,17 +34,15 @@ public:
 		return "JFactoryGenerator_EventBuilder";
 	}
 
-	jerror_t GenerateFactories(jana::JEventLoop *loop) {
+	void GenerateFactories(JFactorySet *factorySet) {
 
-
-		loop->AddFactory(new CataniaEvent_factory());
-		loop->AddFactory(new TEvent_factory_CataniaProto2());
-		loop->AddFactory(new TEvent_factory_JLabFlux());
-		loop->AddFactory(new TEvent_factory_BDXmini());
+		factorySet->Add(new CataniaEvent_factory());
+		factorySet->Add(new TEvent_factory_CataniaProto2());
+		factorySet->Add(new TEvent_factory_JLabFlux());
+		factorySet->Add(new TEvent_factory_BDXmini());
 #ifdef MC_SUPPORT_ENABLE
-		loop->AddFactory(new TEvent_factory_FullMC());
+		factorySet->Add(new TEvent_factory_FullMC());
 #endif
-		return NOERROR;
 	}
 
 };

@@ -22,7 +22,7 @@ void triggerDataBDXmini::setNTriggers(unsigned int n) {
 
 unsigned int triggerDataBDXmini::getNtriggers_single(int itrg) const {
 	if ((itrg < 0) || (itrg >= nTriggersMAX)) {
-		jout << "triggerDataBDXmini::getNtriggers_single error trigger number " << itrg << endl;
+		jout << "triggerDataBDXmini::getNtriggers_single error trigger number " << itrg << jendl;
 		return 0;
 	}
 	return trgTimes[itrg].size();
@@ -30,11 +30,11 @@ unsigned int triggerDataBDXmini::getNtriggers_single(int itrg) const {
 
 int triggerDataBDXmini::getTriggerTime_single(int itrg, int n) const {
 	if ((itrg < 0) || (itrg >= nTriggersMAX)) {
-		jout << "triggerDataBDXmini::getTriggerTime_single error trigger number" << itrg << endl;
+		jout << "triggerDataBDXmini::getTriggerTime_single error trigger number" << itrg << jendl;
 		return 0;
 	}
 	if ((n < 0) || (n >= trgTimes[itrg].size())) {
-		jout << "triggerDataBDXmini::getTriggerTime_single error on trigger count" << n << endl;
+		jout << "triggerDataBDXmini::getTriggerTime_single error on trigger count" << n << jendl;
 		return 0;
 	}
 	return trgTimes[itrg][n];
@@ -42,7 +42,7 @@ int triggerDataBDXmini::getTriggerTime_single(int itrg, int n) const {
 
 void triggerDataBDXmini::addTriggerTime_single(int itrg, int data) {
 	if ((itrg < 0) || (itrg >= nTriggersMAX)) {
-		jout << "triggerDataBDXmini::addTriggerTime_single error trigger number" << itrg << endl;
+		jout << "triggerDataBDXmini::addTriggerTime_single error trigger number" << itrg << jendl;
 		return;
 	}
 	trgTimes[itrg].push_back(data);
@@ -50,7 +50,7 @@ void triggerDataBDXmini::addTriggerTime_single(int itrg, int data) {
 
 bool triggerDataBDXmini::hasChannel(int ich) const {
 	if ((ich < 0) || (ich > nChansMAX)) {
-		jout << "triggerDataBDXmini::hasChannel error ch number " << ich << endl;
+		jout << "triggerDataBDXmini::hasChannel error ch number " << ich << jendl;
 		return false;
 	}
 	return channels[ich];
@@ -58,7 +58,7 @@ bool triggerDataBDXmini::hasChannel(int ich) const {
 
 bool triggerDataBDXmini::hasChannelTRG(int ich) const {
 	if ((ich < 0) || (ich > nChansMAX)) {
-		jout << "triggerDataBDXmini::hasChannelTRG error ch number " << ich << endl;
+		jout << "triggerDataBDXmini::hasChannelTRG error ch number " << ich << jendl;
 		return false;
 	}
 	return channelsTRG[ich];
@@ -66,28 +66,28 @@ bool triggerDataBDXmini::hasChannelTRG(int ich) const {
 
 void triggerDataBDXmini::setChannel(int ich) {
 	if ((ich < 0) || (ich > nChansMAX)) {
-		jout << "triggerDataBDXmini::setChannelTRG error ch number " << ich << endl;
+		jout << "triggerDataBDXmini::setChannelTRG error ch number " << ich << jendl;
 		return;
 	}
 	channels[ich] = true;
 }
 void triggerDataBDXmini::setChannelTRG(int ich) {
 	if ((ich < 0) || (ich > nChansMAX)) {
-		jout << "triggerDataBDXmini::setChannelTRG error ch number " << ich << endl;
+		jout << "triggerDataBDXmini::setChannelTRG error ch number " << ich << jendl;
 		return;
 	}
 	channelsTRG[ich] = true;
 }
 void triggerDataBDXmini::unsetChannel(int ich) {
 	if ((ich < 0) || (ich > nChansMAX)) {
-		jout << "triggerDataBDXmini::unsetChannel error ch number " << ich << endl;
+		jout << "triggerDataBDXmini::unsetChannel error ch number " << ich << jendl;
 		return;
 	}
 	channels[ich] = false;
 }
 void triggerDataBDXmini::unsetChannelTRG(int ich) {
 	if ((ich < 0) || (ich > nChansMAX)) {
-		jout << "triggerDataBDXmini::unsetChannelTRG error ch number " << ich << endl;
+		jout << "triggerDataBDXmini::unsetChannelTRG error ch number " << ich << jendl;
 		return;
 	}
 	channelsTRG[ich] = false;
