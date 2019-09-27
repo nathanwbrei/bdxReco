@@ -10,6 +10,8 @@
 #include <iomanip>
 using namespace std;
 
+#include <JANA/JEvent.h>
+
 #include <Paddles/PaddlesDigiHit_factory.h>
 #include <Paddles/PaddlesPMTHit.h>
 
@@ -27,12 +29,12 @@ void PaddlesDigiHit_factory::Init()
 //------------------
 void PaddlesDigiHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	jout<<"PaddlesDigiHit_factory::brun new run number: "<<runnumber<<endl;
+	jout<<"PaddlesDigiHit_factory::brun new run number: "<<event->GetRunNumber()<<jendl;
 	m_tt=0;
-	eventLoop->GetSingle(m_tt);
+	event->Get(&m_tt);
 	if (m_tt==0){
-		jerr<<" unable to get the TranslationTable from this run!"<<endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr<<" unable to get the TranslationTable from this run!"<<jendl;
+		throw JException("Unable to get TranslationTable from this run!");
 	}
 }
 
@@ -45,7 +47,7 @@ void PaddlesDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 	vector <const PaddlesPMTHit *> m_data;
 	vector <const PaddlesPMTHit *>::const_iterator m_it;
 
-	loop->Get(m_data);
+	event->Get(m_data);
 
 	/*Create here the digi hit from the PMT hit*/
 	PaddlesDigiHit *m_PaddlesDigiHit=0;
@@ -58,10 +60,11 @@ void PaddlesDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 //		m_PaddlesDigiHit->m_channel.readout=0; //This is a physical object
 		m_PaddlesDigiHit->Q=(*m_it)->Q;
 		m_PaddlesDigiHit->T=(*m_it)->T;
-		m_PaddlesDigiHit->PaddlesPMTHit_id=(*m_it)->id;
+		//m_PaddlesDigiHit->PaddlesPMTHit_id=(*m_it)->id;
+		// TODO: Bring this back probably
 
 		m_PaddlesDigiHit->AddAssociatedObject(*m_it);
-		_data.push_back(m_PaddlesDigiHit);
+		mData.push_back(m_PaddlesDigiHit);
 	}
 }
 

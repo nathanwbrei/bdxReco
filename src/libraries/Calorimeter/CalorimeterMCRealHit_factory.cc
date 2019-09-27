@@ -9,6 +9,7 @@
 #include <iomanip>
 using namespace std;
 
+#include <JANA/JEvent.h>
 #include "Calorimeter/CalorimeterDigiHit_factory_MC.h"
 #include "CalorimeterMCRealHit_factory.h"
 #include "MC/CalorimeterMCHit.h"
@@ -16,7 +17,6 @@ using namespace std;
 
 void CalorimeterMCRealHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 	japp->GetParameter("MC", isMC);
-	return NOERROR;
 }
 
 void CalorimeterMCRealHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
@@ -29,10 +29,10 @@ void CalorimeterMCRealHit_factory::Process(const std::shared_ptr<const JEvent>& 
 	CalorimeterMCRealHit *m_CalorimeterMCRealHit = 0;
 
 	if (isMC == 0) {
-		return OBJECT_NOT_AVAILABLE;
+	    throw JException("MC is not available!");
 	}
 
-	loop->Get(m_CalorimeterMCHits);
+	event->Get(m_CalorimeterMCHits);
 	m_map.clear();
 
 	for (it = m_CalorimeterMCHits.begin(); it != m_CalorimeterMCHits.end(); it++) {
@@ -58,6 +58,6 @@ void CalorimeterMCRealHit_factory::Process(const std::shared_ptr<const JEvent>& 
 	}
 	for (m_map_it = m_map.begin(); m_map_it != m_map.end(); m_map_it++) {
 		m_CalorimeterMCRealHit = m_map_it->second;
-		_data.push_back(m_CalorimeterMCRealHit);
+		mData.push_back(m_CalorimeterMCRealHit);
 	}
 }

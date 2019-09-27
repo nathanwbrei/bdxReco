@@ -9,6 +9,7 @@
 #define _Calorimeterfa250Converter_factory_
 
 #include <JANA/JFactoryT.h>
+#include <system/BDXCalibrationService.h>
 #include "Calorimeterfa250Converter.h"
 
 class Calorimeterfa250Converter_factory:public JFactoryT<Calorimeterfa250Converter>{
@@ -32,6 +33,7 @@ class Calorimeterfa250Converter_factory:public JFactoryT<Calorimeterfa250Convert
 		int m_NPED;
 		int m_NSAMPLES;
 
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 		CalibrationHandler<TranslationTable::CALO_Index_t> *m_thr;
 
 };

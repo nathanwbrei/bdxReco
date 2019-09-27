@@ -11,6 +11,7 @@
 #include <JANA/JFactoryT.h>
 #include "CalorimeterSiPMHit.h"
 #include <system/CalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
 #include <TT/TranslationTable.h>
 class Calorimeterfa250Converter;
 
@@ -31,6 +32,7 @@ class CalorimeterSiPMHit_factory:public JFactoryT<CalorimeterSiPMHit>{
 		const Calorimeterfa250Converter *m_Calorimeterfa250Converter;
 
 		CalibrationHandler<TranslationTable::CALO_Index_t> *m_sipm_gain;
+	    std::shared_ptr<BDXCalibrationService> m_calibration_service;
 
 		int VERBOSE;
 };

@@ -9,6 +9,8 @@
 #include <iomanip>
 using namespace std;
 
+#include <JANA/JEvent.h>
+
 //objects we need from the framework
 #include <DAQ/fa250Mode1CalibPedSubHit.h>
 #include <DAQ/fa250Mode7Hit.h>
@@ -28,7 +30,9 @@ void CalorimeterSiPMHit_factory::Init() {
 	japp->GetParameter("CALORIMETER:VERBOSE", VERBOSE);
 
 	m_sipm_gain = new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/sipm_gain");
-	this->mapCalibrationHandler(m_sipm_gain);
+
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_sipm_gain);
 }
 
 //------------------
@@ -36,35 +40,35 @@ void CalorimeterSiPMHit_factory::Init() {
 //------------------
 void CalorimeterSiPMHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 
-	jout << "CalorimeterSiPMHit_factory::brun new run number: " << runnumber << endl;
+	jout << "CalorimeterSiPMHit_factory::brun new run number: " << event->GetRunNumber() << jendl;
 	m_tt = 0;
-	eventLoop->GetSingle(m_tt);
+	event->Get(&m_tt);
 	if (m_tt == 0) {
-		jerr << " unable to get the TranslationTable from this run!" << endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr << " unable to get the TranslationTable from this run!" << jendl;
+		throw JException("Unable to get TranslationTable from this run!");
 	}
 
 	m_Calorimeterfa250Converter = 0;
-	eventLoop->GetSingle(m_Calorimeterfa250Converter);
+	event->Get(&m_Calorimeterfa250Converter);
 	if (m_Calorimeterfa250Converter == 0) {
-		jerr << " unable to get the Calorimeterfa250Converter!" << endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr << " unable to get the Calorimeterfa250Converter!" << jendl;
+		throw JException("Unable to get Calorimeterfa250Converter!");
 	}
 
-	this->updateCalibrationHandler(m_sipm_gain, eventLoop);
+	m_calibration_service->updateCalibration(m_sipm_gain, event->GetRunNumber(), event->GetEventNumber());
 
 	if (VERBOSE > 3) {
 		std::map<TranslationTable::CALO_Index_t, std::vector<double> > gainCalibMap;
 		std::map<TranslationTable::CALO_Index_t, std::vector<double> >::iterator gainCalibMap_it;
 		gainCalibMap = m_sipm_gain->getCalibMap();
-		jout << "Got following sipm_gain for run number: " << runnumber << endl;
-		jout << "Rows: " << gainCalibMap.size() << endl;
+		jout << "Got following sipm_gain for run number: " << event->GetRunNumber() << jendl;
+		jout << "Rows: " << gainCalibMap.size() << jendl;
 		for (gainCalibMap_it = gainCalibMap.begin(); gainCalibMap_it != gainCalibMap.end(); gainCalibMap_it++) {
-			jout << gainCalibMap_it->first.sector << " " << gainCalibMap_it->first.x << " " << gainCalibMap_it->first.y << " " << gainCalibMap_it->first.readout << " " << gainCalibMap_it->second.at(0) << endl;
+			jout << gainCalibMap_it->first.sector << " " << gainCalibMap_it->first.x << " " << gainCalibMap_it->first.y << " " << gainCalibMap_it->first.readout << " " << gainCalibMap_it->second.at(0) << jendl;
 		}
 	}
 
-	jout << "CalorimeterSiPMHit_factory::brun done" << endl;
+	jout << "CalorimeterSiPMHit_factory::brun done" << jendl;
 }
 
 //------------------
@@ -86,8 +90,8 @@ void CalorimeterSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& ev
 
 
 	//1b: retrieve objects
-	loop->Get(m_fa250Mode1CalibPedSubHit);
-	loop->Get(m_fa250Mode7Hit);
+	event->Get(m_fa250Mode1CalibPedSubHit);
+	event->Get(m_fa250Mode7Hit);
 
 
 	/*2: Now we have the daq objects, still indexed as "crate-slot-channel"
@@ -115,7 +119,7 @@ void CalorimeterSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& ev
 				m_CalorimeterSiPMHit->Qphe = m_CalorimeterSiPMHit->Qraw / m_q_calib;
 			}
 
-			_data.push_back(m_CalorimeterSiPMHit);
+			mData.push_back(m_CalorimeterSiPMHit);
 		}
 	}
 
@@ -134,7 +138,7 @@ void CalorimeterSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& ev
 				m_CalorimeterSiPMHit->Qphe = m_CalorimeterSiPMHit->Qraw / m_q_calib;
 			}
 
-			_data.push_back(m_CalorimeterSiPMHit);
+			mData.push_back(m_CalorimeterSiPMHit);
 		}
 	}
 }
@@ -144,7 +148,7 @@ void CalorimeterSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& ev
 //------------------
 void CalorimeterSiPMHit_factory::EndRun() {
 
-	this->clearCalibrationHandler(m_sipm_gain);
+	m_calibration_service->clearCalibration(m_sipm_gain);
 }
 
 //------------------

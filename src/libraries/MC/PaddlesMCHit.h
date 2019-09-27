@@ -20,7 +20,8 @@ public:
     JOBJECT_PUBLIC(PaddlesMCHit);
 
     void Summarize(JObjectSummary& summary) const final {
-        summary.add(id, "id", "%4d");
+        //summary.add(id, "id", "%4d");
+        // TODO: Bring this back, possibly
     }
 
     //dgtz banks

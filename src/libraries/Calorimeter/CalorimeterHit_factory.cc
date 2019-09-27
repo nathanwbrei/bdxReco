@@ -17,6 +17,7 @@ using namespace std;
 #include <Calorimeter/CalorimeterDigiHit.h>
 //objects we put in the framework
 #include <Calorimeter/CalorimeterHit.h>
+#include <system/BDXCalibrationService.h>
 
 
 CalorimeterHit_factory::CalorimeterHit_factory() :
@@ -40,7 +41,8 @@ CalorimeterHit_factory::CalorimeterHit_factory() :
 void CalorimeterHit_factory::Init() {
 
 	m_ene = new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/Ene");
-	this->mapCalibrationHandler(m_ene);
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_ene);
 
 	japp->GetParameter("MC", isMC);
 }
@@ -50,7 +52,7 @@ void CalorimeterHit_factory::Init() {
 //------------------
 void CalorimeterHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 
-	this->updateCalibrationHandler(m_ene, eventLoop);
+    m_calibration_service->updateCalibration(m_ene, event->GetRunNumber(), event->GetEventNumber());
 
 	if (VERBOSE > 3) {
 		std::map<TranslationTable::CALO_Index_t, std::vector<double> > gainCalibMap;
@@ -189,7 +191,7 @@ void CalorimeterHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 //------------------
 void CalorimeterHit_factory::EndRun() {
 
-	this->clearCalibrationHandler(m_ene);
+	m_calibration_service->clearCalibration(m_ene);
 }
 
 //------------------

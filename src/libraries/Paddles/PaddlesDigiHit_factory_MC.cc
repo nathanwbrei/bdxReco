@@ -10,7 +10,7 @@
 #include <iomanip>
 using namespace std;
 
-
+#include <JANA/JEvent.h>
 #include <MC/PaddlesMCHit.h>
 #include <Paddles/PaddlesDigiHit.h>
 
@@ -48,7 +48,7 @@ void PaddlesDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& eve
 	vector <const PaddlesMCHit*>::const_iterator it;
 
 	//1b: retrieve PaddlesSiPMHit objects
-	loop->Get(m_PaddlesMCHits);
+	event->Get(m_PaddlesMCHits);
 
 	m_map.clear();
 
@@ -76,7 +76,7 @@ void PaddlesDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& eve
 
 	for (m_map_it=m_map.begin();m_map_it!=m_map.end();m_map_it++){
 		m_PaddlesDigiHit=m_map_it->second;
-		_data.push_back(m_PaddlesDigiHit);
+		mData.push_back(m_PaddlesDigiHit);
 	}
 }
 

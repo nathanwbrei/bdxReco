@@ -11,6 +11,8 @@
 #include <JANA/JFactoryT.h>
 #include "CalorimeterHit.h"
 #include <system/CalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
+
 class TranslationTable;
 
 class CalorimeterDigiHit;
@@ -36,6 +38,7 @@ class CalorimeterHit_factory:public JFactoryT<CalorimeterHit>{
 		int m_N_multipleReadout;
 		int VERBOSE;
 
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 		CalibrationHandler<TranslationTable::CALO_Index_t> *m_ene;
 
 		TranslationTable::CALO_Index_t m_channel;

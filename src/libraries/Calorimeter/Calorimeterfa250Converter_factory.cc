@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <iomanip>
+#include <JANA/JEvent.h>
+#include <JANA/Utils/JCpuInfo.h>
 
 #include "TString.h"
 using namespace std;
@@ -15,15 +17,7 @@ using namespace std;
 #include "Calorimeterfa250Converter_factory.h"
 
 
-int PThreadIDUniqueInt(pthread_t tid){
-	int ret;
-	memcpy(&ret, &tid, std::min(sizeof(tid), sizeof(ret)));
-	return ret;
-}
-
 Calorimeterfa250Converter_factory::Calorimeterfa250Converter_factory():m_calorimeterfa250Converter(0){
-
-
 
 	m_NPED=20;
 	m_NSAMPLES=2000;
@@ -42,7 +36,8 @@ Calorimeterfa250Converter_factory::Calorimeterfa250Converter_factory():m_calorim
 void Calorimeterfa250Converter_factory::Init()
 {
 	m_thr=new CalibrationHandler<TranslationTable::CALO_Index_t>("/Calorimeter/thr");
-	this->mapCalibrationHandler(m_thr);
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_thr);
 }
 
 //------------------
@@ -51,18 +46,17 @@ void Calorimeterfa250Converter_factory::Init()
 void Calorimeterfa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 
-	this->updateCalibrationHandler(m_thr,event);
-	int threadId= PThreadIDUniqueInt(eventLoop->GetPThreadID());
+    m_calibration_service->updateCalibration(m_thr, event->GetRunNumber(), event->GetEventNumber());
+	int threadId = JCpuInfo::GetCpuID();
 	m_calorimeterfa250Converter=new Calorimeterfa250Converter();
 	m_calorimeterfa250Converter->name()=string(Form("h%i",threadId));
-	japp->GetParameter("CALORIMETER:VERBOSE",	m_calorimeterfa250Converter->verbose());
+	japp->GetParameter("CALORIMETER:VERBOSE", m_calorimeterfa250Converter->verbose());
 
 	m_calorimeterfa250Converter->m_NSB=m_NSB;
 	m_calorimeterfa250Converter->m_NSA=m_NSA;
 	m_calorimeterfa250Converter->m_NPED=m_NPED;
 	m_calorimeterfa250Converter->m_NSAMPLES=m_NSAMPLES;
 	m_calorimeterfa250Converter->m_thrDB=m_thr;
-
 
 	Insert(m_calorimeterfa250Converter);
 	SetFactoryFlag(PERSISTANT);
