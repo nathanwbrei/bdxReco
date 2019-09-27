@@ -10,6 +10,7 @@
 
 #include <JANA/JFactoryT.h>
 #include "Paddlesfa250Converter.h"
+#include <system/BDXCalibrationService.h>
 
 
 class Paddlesfa250Converter_factory:public JFactoryT<Paddlesfa250Converter>{
@@ -27,6 +28,7 @@ class Paddlesfa250Converter_factory:public JFactoryT<Paddlesfa250Converter>{
 
 		int m_isFirstCallToBrun;
 		Paddlesfa250Converter *m_Paddlesfa250Converter;
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 
 };
 

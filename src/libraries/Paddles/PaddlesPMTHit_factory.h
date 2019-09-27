@@ -11,6 +11,7 @@
 #include <JANA/JFactoryT.h>
 #include <Paddles/PaddlesPMTHit.h>
 #include <system/CalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
 
 class TranslationTable;
 class Paddlesfa250Converter;
@@ -34,6 +35,7 @@ class PaddlesPMTHit_factory:public JFactoryT<PaddlesPMTHit>{
 		const Paddlesfa250Converter *m_Paddlesfa250Converter;
 
 		CalibrationHandler<TranslationTable::PADDLES_Index_t> *m_PMT_gain;
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 
 		int VERBOSE;
 

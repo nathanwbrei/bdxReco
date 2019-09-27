@@ -9,12 +9,12 @@ PaddlesPMTHit* Paddlesfa250Converter::convertHit(const fa250Hit *hit, const Tran
 	PaddlesPMTHit *m_PaddlesPMTHit = new PaddlesPMTHit;
 	m_PaddlesPMTHit->m_channel = m_channel;
 
-	if (strcmp(hit->className(), "fa250Mode1Hit") == 0) {
+	if (strcmp(hit->className().c_str(), "fa250Mode1Hit") == 0) {
 		this->convertMode1Hit(m_PaddlesPMTHit, (const fa250Mode1Hit*) hit, m_channel);
-	} else if (strcmp(hit->className(), "fa250Mode7Hit") == 0) {
+	} else if (strcmp(hit->className().c_str(), "fa250Mode7Hit") == 0) {
 		this->convertMode7Hit(m_PaddlesPMTHit, (const fa250Mode7Hit*) hit);
 	} else {
-		jerr << "Paddlesfa250Converter::convertHit unsupported class name: " << hit->className() << std::endl;
+		jerr << "Paddlesfa250Converter::convertHit unsupported class name: " << hit->className() << jendl;
 		return 0;
 	}
 	return m_PaddlesPMTHit;

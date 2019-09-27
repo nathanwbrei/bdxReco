@@ -57,16 +57,16 @@ TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
 //------------------
 void TEvent_factory_BDXmini::Init() {
 
-	jout << "TEvent_factory_BDXmini::init was called" << endl;
+	jout << "TEvent_factory_BDXmini::init was called" << jendl;
 	m_tag = "";
 	japp->GetParameter("MC", m_isMC);
 	if (m_isMC) {
-		jout << "BDXmini event build - MC mode" << endl;
+		jout << "BDXmini event build - MC mode" << jendl;
 		japp->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
 		m_tag = "MC";
 	}
 	if ((m_isMC) && (m_isMC != MCType::BDXmini_V1)) {
-		jout << "Error! Can use this only with MC==200, i.e. BDXmini" << endl;
+		jout << "Error! Can use this only with MC==200, i.e. BDXmini" << jendl;
 		return VALUE_OUT_OF_RANGE;
 	}
 
@@ -81,15 +81,12 @@ void TEvent_factory_BDXmini::Init() {
 	m_CaloMCRealHits = new TClonesArray("CalorimeterMCRealHit");
 #endif
 	m_root_lock->release_lock();
-
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
 void TEvent_factory_BDXmini::ChangeRun(const std::shared_ptr<const JEvent>& event) {
-	return NOERROR;
 }
 
 //------------------
@@ -125,16 +122,16 @@ void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event)
 
 	if (!m_isMC) {
 		try {
-			loop->GetSingle(tData);
+			event->Get(&tData);
 		} catch (unsigned long e) {
-			jout << "TEvent_factory_BDXmini::evnt no triggerData bank this event" << endl;
+			jout << "TEvent_factory_BDXmini::evnt no triggerData bank this event" << jendl;
 			return OBJECT_NOT_AVAILABLE;
 		}
 
 		try {
 			loop->GetSingle(bdxtData);
 		} catch (unsigned long e) {
-			jout << "TEvent_factory_BDXmini::evnt no triggerDataBdxmini bank this event" << endl;
+			jout << "TEvent_factory_BDXmini::evnt no triggerDataBdxmini bank this event" << jendl;
 			return OBJECT_NOT_AVAILABLE;
 		}
 
@@ -241,16 +238,13 @@ void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event)
 #endif
 
 	/*publish the event*/
-	_data.push_back(m_event);
-
-	return NOERROR;
+	mData.push_back(m_event);
 }
 
 //------------------
 // erun
 //------------------
 void TEvent_factory_BDXmini::EndRun() {
-	return NOERROR;
 }
 
 //------------------
@@ -262,7 +256,5 @@ void TEvent_factory_BDXmini::Finish() {
 //	if (m_IntVetoHits!=0) delete (m_IntVetoHits);
 //	if (m_ExtVetoHits!=0) delete (m_ExtVetoHits);
 	m_root_lock->release_lock();
-
-	return NOERROR;
 }
 

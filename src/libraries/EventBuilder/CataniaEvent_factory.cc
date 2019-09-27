@@ -17,6 +17,7 @@ using namespace std;
 #include <ExtVeto/ExtVetoHit.h>
 #include <Paddles/PaddlesHit.h>
 #include <DAQ/eventData.h>
+#include <JANA/JEvent.h>
 
 
 //------------------
@@ -44,6 +45,7 @@ void CataniaEvent_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 //------------------
 void CataniaEvent_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
+	auto eventnumber = event->GetEventNumber();
 	vector<const CalorimeterDigiHit*> cdigihits;
 	vector<const CalorimeterDigiHit*>::const_iterator cdigihits_it;
 
@@ -61,21 +63,21 @@ void CataniaEvent_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	const eventData *evData;
 	if (m_isMC) {
-		loop->Get(cdigihits, "MC");
+		event->Get(cdigihits, "MC");
 	} else {
-		loop->Get(cdigihits);
+		event->Get(cdigihits);
 	}
-	loop->Get(chits);
-	loop->Get(ivhits);
-	loop->Get(evhits);
-	loop->Get(phits);
+	event->Get(chits);
+	event->Get(ivhits);
+	event->Get(evhits);
+	event->Get(phits);
 
 	if (m_isMC == 0) {
 		try {
-			loop->GetSingle(evData);
+			event->Get(&evData);
 		} catch (unsigned long e) {
-			jout << "CataniaEvent_factor no eventData this event: " << eventnumber << endl;
-			return NOERROR;
+			jout << "CataniaEvent_factor no eventData this event: " << eventnumber << jendl;
+			return;
 		}
 	}
 	CataniaEvent *m_event = new CataniaEvent();
@@ -92,7 +94,7 @@ void CataniaEvent_factory::Process(const std::shared_ptr<const JEvent>& event) {
 		m_event->tWord = evData->triggerWords[0];
 		m_event->eventN = evData->eventN;
 		if (m_event->eventN != eventnumber) {
-			jerr << "CataniaEvent_factor::Something wrong with event number!" << endl;
+			jerr << "CataniaEvent_factor::Something wrong with event number!" << jendl;
 		}
 		m_event->runN = evData->runN;
 	} else {
@@ -210,6 +212,6 @@ void CataniaEvent_factory::Process(const std::shared_ptr<const JEvent>& event) {
 			break;
 		}
 	}
-	_data.push_back(m_event);
+	mData.push_back(m_event);
 }
 

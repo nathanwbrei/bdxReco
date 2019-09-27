@@ -10,6 +10,7 @@
 #include <iomanip>
 using namespace std;
 
+#include <JANA/JEvent.h>
 //objects we need from the framework
 #include <DAQ/fa250Mode1Hit.h>
 #include <DAQ/fa250Mode7Hit.h>
@@ -29,7 +30,8 @@ void PaddlesPMTHit_factory::Init()
 {
 	VERBOSE=0;
 	m_PMT_gain=new CalibrationHandler<TranslationTable::PADDLES_Index_t>("/Paddles/PMT_gain");
-	this->mapCalibrationHandler(m_PMT_gain);
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_PMT_gain);
 }
 
 //------------------
@@ -37,34 +39,33 @@ void PaddlesPMTHit_factory::Init()
 //------------------
 void PaddlesPMTHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	jout<<"PaddlesPMTHit_factory::brun new run number: "<<runnumber<<endl;
+	jout<<"PaddlesPMTHit_factory::brun new run number: "<<event->GetRunNumber()<<jendl;
 	m_tt=0;
-	eventLoop->GetSingle(m_tt);
+	event->Get(&m_tt);
 	if (m_tt==0){
-		jerr<<" unable to get the TranslationTable from this run!"<<endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr<<" unable to get the TranslationTable from this run!"<<jendl;
+		throw JException("Unable to get TranslationTable from this run!");
 	}
 
 	m_Paddlesfa250Converter=0;
-	eventLoop->GetSingle(m_Paddlesfa250Converter);
+	event->Get(&m_Paddlesfa250Converter);
 	if (m_Paddlesfa250Converter==0){
-		jerr<<" unable to get the Paddlesfa250Converter!"<<endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr<<" unable to get the Paddlesfa250Converter!"<<jendl;
+		throw JException("Unable to get Paddlesfa250Converter!");
 	}
 
 
-	this->updateCalibrationHandler(m_PMT_gain,eventLoop);
-
+	m_calibration_service->updateCalibration(m_PMT_gain, event->GetRunNumber(), event->GetEventNumber());
 
 	japp->GetParameter("PADDLES:VERBOSE",VERBOSE);
 	if (VERBOSE>3){
 		std::map  < TranslationTable::PADDLES_Index_t, std::vector < double > > gainCalibMap;
 		std::map  < TranslationTable::PADDLES_Index_t, std::vector < double > >::iterator gainCalibMap_it;
 		gainCalibMap=m_PMT_gain->getCalibMap();
-		jout<<"Got following PMT_gain for run number: "<<runnumber<<endl;
-		jout<<"Rows: "<<gainCalibMap.size()<<endl;
+		jout<<"Got following PMT_gain for run number: "<<event->GetEventNumber()<<jendl;
+		jout<<"Rows: "<<gainCalibMap.size()<<jendl;
 		for (gainCalibMap_it=gainCalibMap.begin();gainCalibMap_it!=gainCalibMap.end();gainCalibMap_it++){
-			jout<<gainCalibMap_it->first.id<<" "<<gainCalibMap_it->second.at(0)<<endl;
+			jout<<gainCalibMap_it->first.id<<" "<<gainCalibMap_it->second.at(0)<<jendl;
 		}
 	}
 }
@@ -89,8 +90,8 @@ void PaddlesPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 
 	//1b: retrieve objects
 
-	loop->Get(m_fa250Mode1Hit);
-	loop->Get(m_fa250Mode7Hit);
+	event->Get(m_fa250Mode1Hit);
+	event->Get(m_fa250Mode7Hit);
 
 	/*2: Now we have the daq objects, still indexed as "crate-slot-channel"
 	 *	 Use the translation table to produce the digitized hit of the inner veto
@@ -123,7 +124,7 @@ void PaddlesPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 				m_PaddlesPMTHit->Q/=m_q_calib;		// number of phe
 			}
 
-			_data.push_back(m_PaddlesPMTHit);
+			mData.push_back(m_PaddlesPMTHit);
 
 		}
 	}
@@ -154,7 +155,7 @@ void PaddlesPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 
 
 
-			_data.push_back(m_PaddlesPMTHit);
+			mData.push_back(m_PaddlesPMTHit);
 
 		}
 	}
@@ -165,9 +166,7 @@ void PaddlesPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 //------------------
 void PaddlesPMTHit_factory::EndRun()
 {
-
-	this->clearCalibrationHandler(m_PMT_gain);
-
+	m_calibration_service->clearCalibration(m_PMT_gain);
 }
 
 //------------------

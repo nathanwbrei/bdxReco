@@ -10,9 +10,9 @@
 #include <iomanip>
 using namespace std;
 
+#include <JANA/JEvent.h>
 #include <Paddles/PaddlesHit_factory.h>
 #include <Paddles/PaddlesDigiHit.h>
-
 #include <TT/TranslationTable.h>
 
 //------------------
@@ -22,7 +22,8 @@ void PaddlesHit_factory::Init()
 {
 	japp->GetParameter("MC",isMC);
 	m_ENE_gain=new	CalibrationHandler<TranslationTable::PADDLES_Index_t>("Paddles/Ene");
-	this->mapCalibrationHandler(m_ENE_gain);
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_ENE_gain);
 }
 
 //------------------
@@ -30,7 +31,7 @@ void PaddlesHit_factory::Init()
 //------------------
 void PaddlesHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	this->updateCalibrationHandler(m_ENE_gain,eventLoop);
+	m_calibration_service->updateCalibration(m_ENE_gain, event->GetRunNumber(), event->GetEventNumber());
 }
 
 //------------------
@@ -54,10 +55,10 @@ void PaddlesHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 	vector <const PaddlesDigiHit *>::const_iterator m_it;
 
 	if (isMC){
-		loop->Get(m_data,"MC");
+		event->Get(m_data,"MC");
 	}
 	else{
-		loop->Get(m_data);
+		event->Get(m_data);
 	}
 	double m_Ene;
 
@@ -75,7 +76,7 @@ void PaddlesHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 		m_PaddlesHit->T=(*m_it)->T;
 
 		m_PaddlesHit->AddAssociatedObject(*m_it);
-		_data.push_back(m_PaddlesHit);
+		mData.push_back(m_PaddlesHit);
 	}
 }
 
@@ -84,7 +85,7 @@ void PaddlesHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 //------------------
 void PaddlesHit_factory::EndRun()
 {
-	this->clearCalibrationHandler(m_ENE_gain);
+	m_calibration_service->clearCalibration(m_ENE_gain);
 }
 
 //------------------

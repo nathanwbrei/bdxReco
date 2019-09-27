@@ -10,6 +10,7 @@
 #include <iomanip>
 using namespace std;
 
+#include <JANA/JEvent.h>
 #include <Paddles/Paddlesfa250Converter_factory.h>
 #include <system/CalibrationHandler.h>
 
@@ -19,14 +20,14 @@ using namespace std;
 void Paddlesfa250Converter_factory::Init()
 {
 	m_isFirstCallToBrun=1;
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
 	m_Paddlesfa250Converter=new Paddlesfa250Converter();
 
 	m_Paddlesfa250Converter->threshold=new CalibrationHandler<TranslationTable::PADDLES_Index_t>("/Paddles/Threshold");
-	this->mapCalibrationHandler(m_Paddlesfa250Converter->threshold);
+	m_calibration_service->addCalibration(m_Paddlesfa250Converter->threshold);
 
 	m_Paddlesfa250Converter->m_pedestals=new DAQCalibrationHandler("/DAQ/pedestals");
-	this->mapCalibrationHandler(m_Paddlesfa250Converter->m_pedestals);
-	return NOERROR;
+	m_calibration_service->addCalibration(m_Paddlesfa250Converter->m_pedestals);
 }
 
 //------------------
@@ -35,21 +36,14 @@ void Paddlesfa250Converter_factory::Init()
 void Paddlesfa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 
-
-	this->updateCalibrationHandler(m_Paddlesfa250Converter->threshold,eventLoop);
-	this->updateCalibrationHandler(m_Paddlesfa250Converter->m_pedestals,eventLoop);
+	m_calibration_service->updateCalibration(m_Paddlesfa250Converter->threshold, event->GetRunNumber(), event->GetEventNumber());
+	m_calibration_service->updateCalibration(m_Paddlesfa250Converter->m_pedestals, event->GetRunNumber(), event->GetEventNumber());
 
 	if (m_isFirstCallToBrun){
 			m_isFirstCallToBrun=0;
-			_data.push_back(m_Paddlesfa250Converter);
+			mData.push_back(m_Paddlesfa250Converter);
 			SetFactoryFlag(PERSISTANT);
 		}
-
-
-
-
-
-	return NOERROR;
 }
 
 //------------------
@@ -69,7 +63,6 @@ void Paddlesfa250Converter_factory::Process(const std::shared_ptr<const JEvent>&
 	// Note that the objects you create here will be deleted later
 	// by the system and the _data vector will be cleared automatically.
 
-	return NOERROR;
 }
 
 //------------------
@@ -78,11 +71,8 @@ void Paddlesfa250Converter_factory::Process(const std::shared_ptr<const JEvent>&
 void Paddlesfa250Converter_factory::EndRun()
 {
 
-	this->clearCalibrationHandler(m_Paddlesfa250Converter->threshold);
-	this->clearCalibrationHandler(m_Paddlesfa250Converter->m_pedestals);
-
-
-	return NOERROR;
+	m_calibration_service->clearCalibration(m_Paddlesfa250Converter->threshold);
+	m_calibration_service->clearCalibration(m_Paddlesfa250Converter->m_pedestals);
 }
 
 //------------------
@@ -90,7 +80,6 @@ void Paddlesfa250Converter_factory::EndRun()
 //------------------
 void Paddlesfa250Converter_factory::Finish()
 {
-	_data.clear();
-	return NOERROR;
+    mData.clear(); // TODO: Why is this here? Unless there is a good reason, delete this
 }
 

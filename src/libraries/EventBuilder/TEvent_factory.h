@@ -8,10 +8,10 @@
 #ifndef _TEvent_factory_
 #define _TEvent_factory_
 
-#include <JANA/JFactory.h>
+#include <JANA/JFactoryT.h>
 #include "TEvent.h"
 
-class TEvent_factory:public jana::JFactory<TEvent>{
+class TEvent_factory:public JFactoryT<TEvent>{
 	public:
 		TEvent_factory(){};
 		~TEvent_factory(){};

@@ -11,6 +11,7 @@
 #include <JANA/JFactoryT.h>
 #include <Paddles/PaddlesHit.h>
 #include <system/CalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
 
 class PaddlesHit_factory:public JFactoryT<PaddlesHit>{
 	public:
@@ -28,6 +29,7 @@ class PaddlesHit_factory:public JFactoryT<PaddlesHit>{
 		const TranslationTable *m_tt;
 		int isMC;
 		CalibrationHandler<TranslationTable::PADDLES_Index_t> *m_ENE_gain;
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 
 };
 
