@@ -29,12 +29,13 @@ TCanvas* IntVetoSummary::Draw(int id)const{
 	m_canvas->Divide(3,2);
 
 	/*Get the IntVeto hits*/
-	this->Get(hits);
+	//this->Get(hits);
+	// TODO: Fixme
 
 	for (int ihit=0;ihit<hits.size();ihit++){
 		layer=hits[ihit]->m_channel.layer;
 		component=hits[ihit]->m_channel.component;
-		jout<<" "<<layer<<" "<<component<<endl;
+		jout<<" "<<layer<<" "<<component<<jendl;
 		m_canvas->cd(component+1);
 		hits[ihit]->Draw(id)->DrawClonePad();
 	}

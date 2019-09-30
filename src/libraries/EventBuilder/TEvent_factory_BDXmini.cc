@@ -26,6 +26,7 @@ using namespace std;
 #include "TEvent_factory_BDXmini.h"
 
 #include <JANA/JApplication.h>
+#include <JANA/JEvent.h>
 
 TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
 	m_isMC = 0;
@@ -67,7 +68,7 @@ void TEvent_factory_BDXmini::Init() {
 	}
 	if ((m_isMC) && (m_isMC != MCType::BDXmini_V1)) {
 		jout << "Error! Can use this only with MC==200, i.e. BDXmini" << jendl;
-		return VALUE_OUT_OF_RANGE;
+		throw JException("Error! Can use this only with MC==200, i.e. BDXmini");
 	}
 
 	m_root_lock->acquire_write_lock();
@@ -125,14 +126,14 @@ void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event)
 			event->Get(&tData);
 		} catch (unsigned long e) {
 			jout << "TEvent_factory_BDXmini::evnt no triggerData bank this event" << jendl;
-			return OBJECT_NOT_AVAILABLE;
+			throw JException("TEvent_fact_BDXmini: No triggerData bank for this event");
 		}
 
 		try {
-			loop->GetSingle(bdxtData);
+			event->Get(&bdxtData);
 		} catch (unsigned long e) {
 			jout << "TEvent_factory_BDXmini::evnt no triggerDataBdxmini bank this event" << jendl;
-			return OBJECT_NOT_AVAILABLE;
+			throw JException("no triggerDataBdxmini bank this event");
 		}
 
 		m_eventHeader->setEventType(BDXminiEvent);
@@ -150,7 +151,7 @@ void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event)
 
 	} else {
 		m_eventHeader->setEventType(BDXminiEvent);
-		m_eventHeader->setEventNumber(eventnumber);
+		m_eventHeader->setEventNumber(event->GetEventNumber());
 		m_eventHeader->setEventTime(0);
 		m_eventHeader->setEventFineTime(0);
 		//	m_eventHeader->setTriggerWords(); /*A.C. we don't have any trigger simulation*/
@@ -158,7 +159,7 @@ void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event)
 	}
 
 	/*Loop over JANA objects, clear collections and fill them*/
-	loop->Get(chits);
+	event->Get(chits);
 	m_CaloHits->Clear("C");
 	for (int ii = 0; ii < chits.size(); ii++) {
 		((CalorimeterHit*) m_CaloHits->ConstructedAt(ii))->operator=(*(chits[ii]));
@@ -168,12 +169,12 @@ void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event)
 
 	//Check for high-energy clusters
 	//A.C. At the moment, we don't save these in the event collections
-	loop->Get(cclusters);
+	event->Get(cclusters);
 	for (int ii = 0; ii < cclusters.size(); ii++) {
 		if ((cclusters[ii])->E > m_thrEneTot) saveWaveforms_flagCalo = true; //flag is there is at least one cluster at high Energy
 	}
 
-	loop->Get(ivhits);
+	event->Get(ivhits);
 	m_IntVetoHits->Clear("C");
 	for (int ii = 0; ii < ivhits.size(); ii++) {
 		((IntVetoHit*) m_IntVetoHits->ConstructedAt(ii))->operator=(*(ivhits[ii]));
@@ -187,7 +188,7 @@ void TEvent_factory_BDXmini::Process(const std::shared_ptr<const JEvent>& event)
 	if (!m_isMC) {
 		m_fa250Mode1CalibPedSubHits->Clear("C");
 		if ((saveWaveforms_flagVeto && saveWaveforms_flagCalo)) {
-			loop->Get(fa250Hits);
+			event->Get(fa250Hits);
 			for (int ii = 0; ii < fa250Hits.size(); ii++) {
 				((fa250Mode1CalibPedSubHit*) m_fa250Mode1CalibPedSubHits->ConstructedAt(ii))->operator=(*(fa250Hits[ii]));
 				m_event->AddAssociatedObject(fa250Hits[ii]);

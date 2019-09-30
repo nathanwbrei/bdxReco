@@ -14,27 +14,26 @@ using namespace std;
 #include <MC/IntVetoMCHit.h>
 #include <MC/MCType.h>
 #include <IntVeto/IntVetoDigiHit.h>
+#include <JANA/JEvent.h>
 
 
 //------------------
 // init
 //------------------
-jerror_t IntVetoDigiHit_factory_MC::init(void) {
+void IntVetoDigiHit_factory_MC::Init() {
 	japp->GetParameter("MC", m_isMC);
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t IntVetoDigiHit_factory_MC::brun(JEventLoop *eventLoop, int32_t runnumber) {
-	return NOERROR;
+void IntVetoDigiHit_factory_MC::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t IntVetoDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnumber) {
+void IntVetoDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& event) {
 
 	IntVetoDigiHit *m_IntVetoDigiHit = 0;
 
@@ -45,7 +44,7 @@ jerror_t IntVetoDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnumber)
 	const IntVetoMCHit *m_IntVetoMCHit = 0;
 
 	//1b: retrieve IntVetoSiPMHit objects
-	loop->Get(m_IntVetoMCHits);
+	event->Get(m_IntVetoMCHits);
 
 	m_map.clear();
 	for (it = m_IntVetoMCHits.begin(); it != m_IntVetoMCHits.end(); it++) {
@@ -506,25 +505,11 @@ jerror_t IntVetoDigiHit_factory_MC::evnt(JEventLoop *loop, uint64_t eventnumber)
 	for (m_map_it = m_map.begin(); m_map_it != m_map.end(); m_map_it++) {
 		for (int idigi = 0; idigi < m_map_it->second.size(); idigi++) {
 			m_IntVetoDigiHit = m_map_it->second[idigi];
-			_data.push_back(m_IntVetoDigiHit);
+			mData.push_back(m_IntVetoDigiHit);
 		}
 	}
-	return NOERROR;
 }
 
-//------------------
-// erun
-//------------------
-jerror_t IntVetoDigiHit_factory_MC::erun(void) {
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t IntVetoDigiHit_factory_MC::fini(void) {
-	return NOERROR;
-}
 
 int IntVetoDigiHit_factory_MC::getCataniaV1Component(int MCchannel) {
 	int component = -1;

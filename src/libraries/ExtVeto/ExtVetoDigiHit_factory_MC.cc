@@ -14,20 +14,19 @@ using namespace std;
 #include <ExtVeto/ExtVetoDigiHit.h>
 
 #include "ExtVetoDigiHit_factory_MC.h"
+#include <JANA/JEvent.h>
 
 //------------------
 // init
 //------------------
 void ExtVetoDigiHit_factory_MC::Init() {
 	japp->GetParameter("MC", m_isMC);
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
 void ExtVetoDigiHit_factory_MC::ChangeRun(const std::shared_ptr<const JEvent>& event) {
-	return NOERROR;
 }
 
 //------------------
@@ -44,7 +43,7 @@ void ExtVetoDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& eve
 	const ExtVetoMCHit *m_ExtVetoMCHit = 0;
 
 	//1b: retrieve ExtVetoMCHits objects
-	loop->Get(m_ExtVetoMCHits);
+	event->Get(m_ExtVetoMCHits);
 
 	m_map.clear();
 	for (it = m_ExtVetoMCHits.begin(); it != m_ExtVetoMCHits.end(); it++) {
@@ -111,24 +110,21 @@ void ExtVetoDigiHit_factory_MC::Process(const std::shared_ptr<const JEvent>& eve
 	for (m_map_it = m_map.begin(); m_map_it != m_map.end(); m_map_it++) {
 		for (int ii = 0; ii < m_map_it->second.size(); ii++) {
 			m_ExtVetoDigiHit = m_map_it->second[ii];
-			_data.push_back(m_ExtVetoDigiHit);
+			mData.push_back(m_ExtVetoDigiHit);
 		}
 	}
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t ExtVetoDigiHit_factory_MC::erun(void) {
-	return NOERROR;
+void ExtVetoDigiHit_factory_MC::EndRun() {
 }
 
 //------------------
 // fini
 //------------------
-jerror_t ExtVetoDigiHit_factory_MC::fini(void) {
-	return NOERROR;
+void ExtVetoDigiHit_factory_MC::Finish() {
 }
 
 int ExtVetoDigiHit_factory_MC::getFullV1Component(int channel) {

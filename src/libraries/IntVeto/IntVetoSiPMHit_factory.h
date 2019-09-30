@@ -11,6 +11,7 @@
 #include <JANA/JFactoryT.h>
 #include "IntVetoSiPMHit.h"
 #include <system/CalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
 
 class IntVetofa250Converter;
 
@@ -27,8 +28,8 @@ class IntVetoSiPMHit_factory:public JFactoryT<IntVetoSiPMHit>{
 		void Init() override;
 		void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
 		void Process(const std::shared_ptr<const JEvent>& aEvent) override;
-		void EndRun() {}
-		void Finish() {}
+		void EndRun();
+		void Finish();
 
 		const TranslationTable *m_tt;
 		const IntVetofa250Converter *m_intVetofa250Converter;
@@ -37,6 +38,7 @@ class IntVetoSiPMHit_factory:public JFactoryT<IntVetoSiPMHit>{
 		CalibrationHandler<TranslationTable::INT_VETO_Index_t> *m_sipm_ampl;
 
 		int VERBOSE;
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 
 };
 

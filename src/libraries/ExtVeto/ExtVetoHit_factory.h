@@ -11,6 +11,7 @@
 #include <JANA/JFactoryT.h>
 #include "ExtVetoHit.h"
 #include <system/CalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
 
 class ExtVetoHit_factory:public JFactoryT<ExtVetoHit>{
 	public:
@@ -34,6 +35,7 @@ class ExtVetoHit_factory:public JFactoryT<ExtVetoHit>{
 		TranslationTable::EXT_VETO_Index_t m_channel;
 		std::map<TranslationTable::EXT_VETO_Index_t,vector <const ExtVetoDigiHit*>> m_map;
 		std::map<TranslationTable::EXT_VETO_Index_t,vector <const ExtVetoDigiHit*>>::iterator m_map_it;
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 
 };
 

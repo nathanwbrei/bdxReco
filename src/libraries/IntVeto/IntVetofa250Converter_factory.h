@@ -8,8 +8,9 @@
 #ifndef _IntVetofa250Converter_factory_
 #define _IntVetofa250Converter_factory_
 
-#include <JANA/JFactoryT.h>
 #include "IntVetofa250Converter.h"
+#include <system/BDXCalibrationService.h>
+#include <JANA/JFactoryT.h>
 
 class IntVetofa250Converter_factory:public JFactoryT<IntVetofa250Converter>{
 	public:
@@ -21,8 +22,8 @@ class IntVetofa250Converter_factory:public JFactoryT<IntVetofa250Converter>{
 		void Init() override;
 		void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
 		void Process(const std::shared_ptr<const JEvent>& aEvent) override;
-		void EndRun() {}
-		void Finish() {}
+		void EndRun();
+		void Finish();
 
 		int m_isFirstCallToBrun;
 		IntVetofa250Converter *m_intVetofa250Converter;
@@ -30,6 +31,8 @@ class IntVetofa250Converter_factory:public JFactoryT<IntVetofa250Converter>{
 		double m_minTot,m_thr;
 		int m_NSB,m_NSA,m_NPED;
 		double m_RMSTHRscale;
+
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 };
 
 #endif // _IntVetofa250Converter_factory_

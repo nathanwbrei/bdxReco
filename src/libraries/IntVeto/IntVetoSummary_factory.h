@@ -21,8 +21,8 @@ class IntVetoSummary_factory:public JFactoryT<IntVetoSummary>{
 		void Init() override;
 		void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
 		void Process(const std::shared_ptr<const JEvent>& aEvent) override;
-		void EndRun() {}
-		void Finish() {}
+		void EndRun();
+		void Finish();
 
 		std::map<int,IntVetoSummary*> m_map;
 		std::map<int,IntVetoSummary*>::iterator m_it;

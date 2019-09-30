@@ -11,6 +11,7 @@
 using namespace std;
 
 #include "ExtVetofa250Converter_factory.h"
+#include <JANA/JEvent.h>
 
 //------------------
 // init
@@ -19,12 +20,11 @@ void ExtVetofa250Converter_factory::Init()
 {
 	m_extVetofa250Converter=new ExtVetofa250Converter();
 	m_extVetofa250Converter->threshold=new CalibrationHandler<TranslationTable::EXT_VETO_Index_t>("/ExtVeto/Threshold");
-	this->mapCalibrationHandler(m_extVetofa250Converter->threshold);
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_extVetofa250Converter->threshold);
 
 	m_extVetofa250Converter->m_pedestals=new DAQCalibrationHandler("/DAQ/pedestals");
-	this->mapCalibrationHandler(m_extVetofa250Converter->m_pedestals);
-
-	return NOERROR;
+	m_calibration_service->addCalibration(m_extVetofa250Converter->m_pedestals);
 }
 
 //------------------
@@ -34,18 +34,14 @@ void ExtVetofa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent
 {
 	if (m_isFirstCallToBrun){
 		m_isFirstCallToBrun=0;
-		_data.push_back(m_extVetofa250Converter);
+		mData.push_back(m_extVetofa250Converter);
 		SetFactoryFlag(PERSISTANT);
 	}
 
 
-	this->updateCalibrationHandler(m_extVetofa250Converter->threshold,eventLoop);
-	this->updateCalibrationHandler(m_extVetofa250Converter->m_pedestals,eventLoop);
+	m_calibration_service->updateCalibration(m_extVetofa250Converter->threshold, event->GetRunNumber(), event->GetEventNumber());
+	m_calibration_service->updateCalibration(m_extVetofa250Converter->m_pedestals, event->GetRunNumber(), event->GetEventNumber());
 
-
-
-
-	return NOERROR;
 }
 
 //------------------
@@ -67,18 +63,14 @@ void ExtVetofa250Converter_factory::Process(const std::shared_ptr<const JEvent>&
 
 }
 
-jerror_t ExtVetofa250Converter_factory::erun(void)
+void ExtVetofa250Converter_factory::EndRun()
 {
-
-	this->clearCalibrationHandler(m_extVetofa250Converter->threshold);
-	this->clearCalibrationHandler(m_extVetofa250Converter->m_pedestals);
-
-	return NOERROR;
+	m_calibration_service->clearCalibration(m_extVetofa250Converter->threshold);
+	m_calibration_service->clearCalibration(m_extVetofa250Converter->m_pedestals);
 }
 
-jerror_t ExtVetofa250Converter_factory::fini(void)
+void ExtVetofa250Converter_factory::Finish()
 {
-	_data.clear();
-	return NOERROR;
+	mData.clear();
 }
 

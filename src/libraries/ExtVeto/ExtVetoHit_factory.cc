@@ -14,6 +14,7 @@ using namespace std;
 
 #include "ExtVetoHit_factory.h"
 #include <TT/TranslationTable.h>
+#include <JANA/JEvent.h>
 
 
 ExtVetoHit_factory::ExtVetoHit_factory() :
@@ -33,7 +34,8 @@ void ExtVetoHit_factory::Init() {
 	japp->GetParameter("MC", isMC);
 
 	m_ENE_gain = new CalibrationHandler<TranslationTable::EXT_VETO_Index_t>("/ExtVeto/Ene");
-	this->mapCalibrationHandler(m_ENE_gain);
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_ENE_gain);
 }
 
 //------------------
@@ -41,7 +43,7 @@ void ExtVetoHit_factory::Init() {
 //------------------
 void ExtVetoHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
 
-	this->updateCalibrationHandler(m_ENE_gain, eventLoop);
+	m_calibration_service->updateCalibration(m_ENE_gain, event->GetRunNumber(), event->GetEventNumber());
 }
 
 //------------------
@@ -66,9 +68,9 @@ void ExtVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	/*This is very important!! Select - or not - the MC case*/
 	if (isMC) {
-		loop->Get(m_ExtVetoDigiHits, "MC");
+		event->Get(m_ExtVetoDigiHits, "MC");
 	} else {
-		loop->Get(m_ExtVetoDigiHits);
+		event->Get(m_ExtVetoDigiHits);
 	}
 
 	m_map.clear();
@@ -101,10 +103,8 @@ void ExtVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 	//	if (Emax < m_THR) continue;
 		if (m_ExtVetoHit->T<0) continue;
 		m_ExtVetoHit->E = Q * m_EneCalib;
-		_data.push_back(m_ExtVetoHit); //publish it
+		mData.push_back(m_ExtVetoHit); //publish it
 	}
-
-	return NOERROR;
 }
 
 //------------------
@@ -112,7 +112,7 @@ void ExtVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 //------------------
 void ExtVetoHit_factory::EndRun() {
 
-	this->clearCalibrationHandler(m_ENE_gain);
+	m_calibration_service->clearCalibration(m_ENE_gain);
 }
 
 //------------------

@@ -9,9 +9,11 @@ TCanvas* IntVetoDigiHit::Draw(int id) const {
 	const fa250Mode1CalibPedSubHit* wave;
 
 	vector<const fa250Mode1CalibPedSubHit*> waves; //use a vector since it is re-iterating!
-	this->Get(waves);
+	//this->Get(waves);
+	// TODO: Fix me when re-adding AssociatedObjects
+
 	if (waves.size()!=1){
-		jout<<"IntVetoDigiHit::Draw no wave associated to this "<<endl;
+		jout<<"IntVetoDigiHit::Draw no wave associated to this "<<jendl;
 		wave=0;
 		Nsamples = 1;
 	}

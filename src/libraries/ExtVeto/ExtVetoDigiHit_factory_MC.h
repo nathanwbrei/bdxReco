@@ -30,8 +30,8 @@ private:
 	void Init() override;
 	void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
 	void Process(const std::shared_ptr<const JEvent>& aEvent) override;
-	void EndRun() {}
-	void Finish() {}
+	void EndRun();
+	void Finish();
 
 	/*This code is here because MC could generate more than 1 hit per sector!*/
 	std::map<TranslationTable::EXT_VETO_Index_t,vector<ExtVetoDigiHit*>> m_map;

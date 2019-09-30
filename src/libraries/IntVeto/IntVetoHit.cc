@@ -11,7 +11,8 @@ TCanvas* IntVetoHit::Draw(int id) const {
 
 	vector<const IntVetoSiPMHit*> hits;
 	const fa250Mode1CalibPedSubHit* wave=0;
-	this->Get(hits);
+	//this->Get(hits);
+	// TODO: Fix me!
 
 	Nhits = hits.size();
 	/*Clear previous histograms and create new ones*/
@@ -21,8 +22,10 @@ TCanvas* IntVetoHit::Draw(int id) const {
 	}
 	hWaves.clear();
 	for (int ih = 0; ih < Nhits; ih++) {
-		hits[ih]->GetSingle(wave);
-		jout<<"wave "<<ih<<" "<<wave<<endl;
+		//hits[ih]->GetSingle(wave);
+		// TODO: Fix me!
+
+		jout<<"wave "<<ih<<" "<<wave<<jendl;
 		Nsamples = wave->samples.size();
 		hWaves.push_back(
 				new TH1D(Form("h%i_%i_%i_%i", hits[ih]->m_channel.int_veto->sector, hits[ih]->m_channel.int_veto->layer, hits[ih]->m_channel.int_veto->component, hits[ih]->m_channel.int_veto->readout),

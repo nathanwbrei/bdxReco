@@ -28,6 +28,7 @@
 #include <DAQ/eventData.h>
 
 #include <JANA/JApplication.h>
+#include <JANA/JEvent.h>
 #include "TClonesArray.h"
 
 #include "TEvent_factory_CataniaProto2.h"
@@ -41,13 +42,13 @@ void TEvent_factory_CataniaProto2::Init() {
 	m_tag = "";
 	japp->GetParameter("MC", m_isMC);
 	if (m_isMC) {
-		jout << "CataniaProto2 event build - MC mode" << endl;
+		jout << "CataniaProto2 event build - MC mode" << jendl;
 		japp->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
 		m_tag = "MC";
 	}
 	if ((m_isMC) && (m_isMC != MCType::CATANIA_V2)) {
-		jout << "Error! Can use this only with MC==2, i.e. CataniaProto2" << endl;
-		return VALUE_OUT_OF_RANGE;
+		jout << "Error! Can use this only with MC==2, i.e. CataniaProto2" << jendl;
+		throw JException("Can use this only with MC==2, i.e. CataniaProto2");
 	}
 
 	m_root_lock = japp->GetService<JGlobalRootLock>();
@@ -101,10 +102,10 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	/*Set the Event header*/
 	if (!m_isMC) {
 		try {
-			loop->GetSingle(tData);
+			event->Get(&tData);
 		} catch (unsigned long e) {
-			jout << "TEvent_factory_CataniaProto2::evnt no eventData bank this event" << endl;
-			return OBJECT_NOT_AVAILABLE;
+			jout << "TEvent_factory_CataniaProto2::evnt no eventData bank this event" << jendl;
+			throw JException("TEvent_factory_CataniaProto2::event no eventData bank this event");
 		}
 		m_eventHeader->setEventType(CataniaProto2Event);
 		m_eventHeader->setRunNumber(tData->runN);
@@ -112,7 +113,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 		m_eventHeader->setEventTime(tData->time);
 		m_eventHeader->setTriggerWords(tData->triggerWords);
 
-		loop->Get(fahits); /*just to get the event fine time from slot #4 - reading calo*/
+		event->Get(fahits); /*just to get the event fine time from slot #4 - reading calo*/
 		for (int ii = 0; ii < fahits.size(); ii++) {
 			if (fahits[ii]->m_channel.slot != 4) continue;
 			if (fahits[ii]->m_channel.slot == 4) {
@@ -124,7 +125,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 
 	} else {
 		m_eventHeader->setEventType(CataniaProto2MC);
-		m_eventHeader->setEventNumber(eventnumber);
+		m_eventHeader->setEventNumber(event->GetEventNumber());
 		m_eventHeader->setEventTime(0);
 		m_eventHeader->setEventFineTime(0);
 		//	m_eventHeader->setTriggerWords(); /*A.C. we don't have any trigger simulation*/
@@ -134,7 +135,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	/*Loop over JANA objects, clear collections and fill them*/
 
 	/*Digi objects*/
-	loop->Get(chits_digi, m_tag.c_str());
+	event->Get(chits_digi, m_tag.c_str());
 	m_CaloDigiHits->Clear("C");
 	for (int ii = 0; ii < chits_digi.size(); ii++) {
 		((CalorimeterDigiHit*) m_CaloDigiHits->ConstructedAt(ii))->operator=(*(chits_digi[ii]));
@@ -142,7 +143,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	}
 	m_event->addCollection(m_CaloDigiHits);
 
-	loop->Get(ivhits_digi, m_tag.c_str());
+	event->Get(ivhits_digi, m_tag.c_str());
 	m_IntVetoDigiHits->Clear("C");
 	for (int ii = 0; ii < ivhits_digi.size(); ii++) {
 		((IntVetoDigiHit*) m_IntVetoDigiHits->ConstructedAt(ii))->operator=(*(ivhits_digi[ii]));
@@ -150,7 +151,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	}
 	m_event->addCollection(m_IntVetoDigiHits);
 
-	loop->Get(evhits_digi, m_tag.c_str());
+	event->Get(evhits_digi, m_tag.c_str());
 	m_ExtVetoDigiHits->Clear("C");
 	for (int ii = 0; ii < evhits_digi.size(); ii++) {
 		((ExtVetoDigiHit*) m_ExtVetoDigiHits->ConstructedAt(ii))->operator=(*(evhits_digi[ii]));
@@ -159,7 +160,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	m_event->addCollection(m_ExtVetoDigiHits);
 
 	/*Calibrated and final objects*/
-	loop->Get(cclusters);
+	event->Get(cclusters);
 	m_CaloClusters->Clear("C");
 	for (int ii = 0; ii < cclusters.size(); ii++) {
 		((CalorimeterCluster*) m_CaloClusters->ConstructedAt(ii))->operator=(*(cclusters[ii]));
@@ -167,7 +168,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	}
 	m_event->addCollection(m_CaloClusters);
 
-	loop->Get(chits);
+	event->Get(chits);
 	m_CaloHits->Clear("C");
 	for (int ii = 0; ii < chits.size(); ii++) {
 		((CalorimeterHit*) m_CaloHits->ConstructedAt(ii))->operator=(*(chits[ii]));
@@ -175,7 +176,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	}
 	m_event->addCollection(m_CaloHits);
 
-	loop->Get(ivhits);
+	event->Get(ivhits);
 	m_IntVetoHits->Clear("C");
 	for (int ii = 0; ii < ivhits.size(); ii++) {
 		((IntVetoHit*) m_IntVetoHits->ConstructedAt(ii))->operator=(*(ivhits[ii]));
@@ -183,7 +184,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	}
 	m_event->addCollection(m_IntVetoHits);
 
-	loop->Get(evhits);
+	event->Get(evhits);
 	m_ExtVetoHits->Clear("C");
 	for (int ii = 0; ii < evhits.size(); ii++) {
 		((ExtVetoHit*) m_ExtVetoHits->ConstructedAt(ii))->operator=(*(evhits[ii]));
@@ -192,7 +193,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	m_event->addCollection(m_ExtVetoHits);
 
 	if (m_isMC) {
-		loop->Get(chits_MCReal);
+		event->Get(chits_MCReal);
 		m_CaloMCRealHits->Clear("C");
 		for (int ii = 0; ii < chits_MCReal.size(); ii++) {
 			((CalorimeterMCRealHit*) m_CaloMCRealHits->ConstructedAt(ii))->operator=(*(chits_MCReal[ii]));
@@ -202,7 +203,7 @@ void TEvent_factory_CataniaProto2::Process(const std::shared_ptr<const JEvent>& 
 	}
 
 	/*publish the event*/
-	_data.push_back(m_event);
+	mData.push_back(m_event);
 }
 
 //------------------

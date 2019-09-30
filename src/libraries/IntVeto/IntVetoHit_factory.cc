@@ -12,6 +12,7 @@ using namespace std;
 #include "IntVetoDigiHit.h"
 #include "IntVetoHit.h"
 #include "IntVetoHit_factory.h"
+#include <JANA/JEvent.h>
 
 IntVetoHit_factory::IntVetoHit_factory() :
 		isMC(0) {
@@ -61,9 +62,9 @@ void IntVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 	//1b: retrieve IntVetoDigiHit objects
 	/*This is very important!! Select - or not - the MC case*/
 	if (isMC) {
-		loop->Get(m_IntVetoDigiHits, "MC");
+		event->Get(m_IntVetoDigiHits, "MC");
 	} else {
-		loop->Get(m_IntVetoDigiHits);
+		event->Get(m_IntVetoDigiHits);
 	}
 
 	m_map.clear();
@@ -91,7 +92,7 @@ void IntVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 				m_IntVetoHit->Q = Q;
 				m_IntVetoHit->T = T;
 				m_IntVetoHit->AddAssociatedObject(m_IntVetoDigiHit);
-				_data.push_back(m_IntVetoHit);
+				mData.push_back(m_IntVetoHit);
 			}
 		}
 		//work-around
@@ -112,7 +113,7 @@ void IntVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 				m_IntVetoHit->Q = Qmax;
 				m_IntVetoHit->T = Tmax;
 				m_IntVetoHit->AddAssociatedObject(m_IntVetoDigiHit);
-				_data.push_back(m_IntVetoHit);
+				mData.push_back(m_IntVetoHit);
 			}
 		} else { /*multiCounter case*/
 			nCountersTHR = 0;
@@ -152,7 +153,7 @@ void IntVetoHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 						m_IntVetoHit->AddAssociatedObject(m_IntVetoDigiHits[idigi]);
 					}
 				}
-				_data.push_back(m_IntVetoHit);
+				mData.push_back(m_IntVetoHit);
 			}
 		}
 	} //End loop on the map

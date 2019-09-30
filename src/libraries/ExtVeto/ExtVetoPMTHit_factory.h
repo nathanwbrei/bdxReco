@@ -11,6 +11,7 @@
 #include <JANA/JFactoryT.h>
 #include "ExtVetoPMTHit.h"
 #include <system/CalibrationHandler.h>
+#include <system/BDXCalibrationService.h>
 
 class TranslationTable;
 class ExtVetofa250Converter;
@@ -24,12 +25,13 @@ class ExtVetoPMTHit_factory:public JFactoryT<ExtVetoPMTHit>{
 		void Init() override;
 		void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
 		void Process(const std::shared_ptr<const JEvent>& aEvent) override;
-		void EndRun() {}
-		void Finish() {}
+		void EndRun();
+		void Finish();
 
 		const TranslationTable *m_tt;
 		const ExtVetofa250Converter *m_extVetofa250Converter;
 		CalibrationHandler<TranslationTable::EXT_VETO_Index_t> *m_PMT_gain;
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 
 		int VERBOSE;
 

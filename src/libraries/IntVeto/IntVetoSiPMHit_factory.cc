@@ -19,6 +19,8 @@ using namespace std;
 
 #include "IntVetoSiPMHit_factory.h"
 
+#include <JANA/JEvent.h>
+
 IntVetoSiPMHit_factory::IntVetoSiPMHit_factory() :
 		m_tt(0) {
 	m_sipm_gain = 0;
@@ -30,64 +32,62 @@ IntVetoSiPMHit_factory::IntVetoSiPMHit_factory() :
 // init
 //------------------
 void IntVetoSiPMHit_factory::Init() {
-	jout << "IntVetoSiPMHit_factory::init" << endl;
+	jout << "IntVetoSiPMHit_factory::init" << jendl;
 	VERBOSE = 0;
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
 	m_sipm_gain = new CalibrationHandler<TranslationTable::INT_VETO_Index_t>("/InnerVeto/sipm_gain");
-	this->mapCalibrationHandler(m_sipm_gain);
+	m_calibration_service->addCalibration(m_sipm_gain);
 
 	m_sipm_ampl = new CalibrationHandler<TranslationTable::INT_VETO_Index_t>("/InnerVeto/sipm_ampl");
-	this->mapCalibrationHandler(m_sipm_ampl);
+	m_calibration_service->addCalibration(m_sipm_ampl);
 
-	jout << "IntVetoSiPMHit_factory::init done" << endl;
-	return NOERROR;
-
+	jout << "IntVetoSiPMHit_factory::init done" << jendl;
 }
 
 //------------------
 // brun
 //------------------
 void IntVetoSiPMHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
-	jout << "IntVetoSiPMHit_factory::brun new run number: " << runnumber << endl;
+	jout << "IntVetoSiPMHit_factory::brun new run number: " << event->GetRunNumber() << jendl;
 	m_tt = 0;
-	eventLoop->GetSingle(m_tt);
+	event->Get(&m_tt);
 	if (m_tt == 0) {
-		jerr << " unable to get the TranslationTable from this run!" << endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr << " unable to get the TranslationTable from this run!" << jendl;
+		throw JException(" unable to get the TranslationTable from this run!");
 	}
 
 	m_intVetofa250Converter = 0;
-	eventLoop->GetSingle(m_intVetofa250Converter);
+	event->Get(&m_intVetofa250Converter);
 	if (m_intVetofa250Converter == 0) {
-		jerr << " unable to get the intVetofa250Converter!" << endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr << " unable to get the intVetofa250Converter!" << jendl;
+		throw JException(" unable to get the intVetofa250Converter!");
 	}
 
-	this->updateCalibrationHandler(m_sipm_gain, eventLoop);
-	this->updateCalibrationHandler(m_sipm_ampl, eventLoop);
+	m_calibration_service->updateCalibration(m_sipm_gain, event->GetRunNumber(), event->GetEventNumber());
+	m_calibration_service->updateCalibration(m_sipm_ampl, event->GetRunNumber(), event->GetEventNumber());
 
 	japp->GetParameter("INTVETO:VERBOSE", VERBOSE);
 	if (VERBOSE > 3) {
 		std::map<TranslationTable::INT_VETO_Index_t, std::vector<double> > gainCalibMap;
 		std::map<TranslationTable::INT_VETO_Index_t, std::vector<double> >::iterator gainCalibMap_it;
 		gainCalibMap = m_sipm_gain->getCalibMap();
-		jout << "Got following sipm_gain for run number: " << runnumber << endl;
-		jout << "Rows: " << gainCalibMap.size() << endl;
+		jout << "Got following sipm_gain for run number: " << event->GetRunNumber() << jendl;
+		jout << "Rows: " << gainCalibMap.size() << jendl;
 		for (gainCalibMap_it = gainCalibMap.begin(); gainCalibMap_it != gainCalibMap.end(); gainCalibMap_it++) {
 			jout << "sector: " << 1. * gainCalibMap_it->first.sector << " layer: " << 1. * gainCalibMap_it->first.layer << " component: " << 1. * gainCalibMap_it->first.component << " readout: " << 1. * gainCalibMap_it->first.readout << " gain: " << gainCalibMap_it->second.at(0)
-					<< endl;
+					<< jendl;
 		}
 
 		gainCalibMap = m_sipm_ampl->getCalibMap();
-		jout << "Got following sipm_ampl for run number: " << runnumber << endl;
-		jout << "Rows: " << gainCalibMap.size() << endl;
+		jout << "Got following sipm_ampl for run number: " << event->GetRunNumber() << jendl;
+		jout << "Rows: " << gainCalibMap.size() << jendl;
 		for (gainCalibMap_it = gainCalibMap.begin(); gainCalibMap_it != gainCalibMap.end(); gainCalibMap_it++) {
 			jout << "sector: " << 1. * gainCalibMap_it->first.sector << " layer: " << 1. * gainCalibMap_it->first.layer << " component: " << 1. * gainCalibMap_it->first.component << " readout: " << 1. * gainCalibMap_it->first.readout << " ampl: " << gainCalibMap_it->second.at(0)
-					<< endl;
+					<< jendl;
 		}
 
 	}
-	jout << "IntVetoSiPMHit_factory::brun done" << endl;
-	return NOERROR;
+	jout << "IntVetoSiPMHit_factory::brun done" << jendl;
 }
 
 //------------------
@@ -111,8 +111,8 @@ void IntVetoSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 	vector<const fa250Mode7Hit*>::const_iterator it_fa250Mode7Hit;
 
 	//1b: retrieve objects
-	loop->Get(m_fa250Mode1CalibPedSubHit);
-	loop->Get(m_fa250Mode7Hit);
+	event->Get(m_fa250Mode1CalibPedSubHit);
+	event->Get(m_fa250Mode7Hit);
 
 	/*2: Now we have the daq objects, still indexed as "crate-slot-channel"
 	 *	 Use the translation table to produce the digitized hit of the inner veto
@@ -132,7 +132,7 @@ void IntVetoSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 		if (m_channel.det_sys == TranslationTable::INT_VETO) {
 			//A.C. do not touch these
 
-			m_IntVetoSiPMHit = m_intVetofa250Converter->convertHit((fa250Hit*) *it_fa250Mode1CalibPedSubHit, m_channel, eventnumber);
+			m_IntVetoSiPMHit = m_intVetofa250Converter->convertHit((fa250Hit*) *it_fa250Mode1CalibPedSubHit, m_channel, event->GetEventNumber());
 			/*Apply phe conversion if possible*/
 			m_q_gain = m_sipm_gain->getCalib(*m_channel.int_veto)[0];
 			m_q_ped = m_sipm_gain->getCalib(*m_channel.int_veto)[1];
@@ -147,7 +147,7 @@ void IntVetoSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 				m_IntVetoSiPMHit->Aphe /=m_ampl;
 			}
 
-			_data.push_back(m_IntVetoSiPMHit);
+			mData.push_back(m_IntVetoSiPMHit);
 		}
 	}
 
@@ -157,7 +157,7 @@ void IntVetoSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 		m_channel = m_tt->getChannelInfo((*it_fa250Mode7Hit)->m_channel);
 		if (m_channel.det_sys == TranslationTable::INT_VETO) {
 			//A.C. do not touch these
-			m_IntVetoSiPMHit = m_intVetofa250Converter->convertHit((fa250Hit*) *it_fa250Mode7Hit, m_channel, eventnumber);
+			m_IntVetoSiPMHit = m_intVetofa250Converter->convertHit((fa250Hit*) *it_fa250Mode7Hit, m_channel, event->GetEventNumber());
 
 			/*Apply phe conversion if possible*/
 			m_q_gain = m_sipm_gain->getCalib(*m_channel.int_veto)[0];
@@ -168,25 +168,21 @@ void IntVetoSiPMHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 				m_IntVetoSiPMHit->Qphe /= m_q_gain;
 			}
 
-			_data.push_back(m_IntVetoSiPMHit);
+			mData.push_back(m_IntVetoSiPMHit);
 		}
 	}
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t IntVetoSiPMHit_factory::erun(void) {
-	this->clearCalibrationHandler(m_sipm_gain);
-	return NOERROR;
+void IntVetoSiPMHit_factory::EndRun() {
+	m_calibration_service->clearCalibration(m_sipm_gain);
 }
 
 //------------------
 // fini
 //------------------
-jerror_t IntVetoSiPMHit_factory::fini(void) {
-	return NOERROR;
+void IntVetoSiPMHit_factory::Finish() {
 }
 

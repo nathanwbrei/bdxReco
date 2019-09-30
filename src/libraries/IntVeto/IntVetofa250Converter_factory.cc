@@ -11,10 +11,11 @@
 using namespace std;
 
 #include "IntVetofa250Converter_factory.h"
+#include <JANA/JEvent.h>
 
 IntVetofa250Converter_factory::IntVetofa250Converter_factory():
 				m_isFirstCallToBrun(1),m_intVetofa250Converter(0){
-	jout<<"IntVetofa250Converter_factory::creator"<<endl;
+	jout<<"IntVetofa250Converter_factory::creator"<<jendl;
 
 
 	m_minTot=12;
@@ -37,11 +38,12 @@ IntVetofa250Converter_factory::IntVetofa250Converter_factory():
 //------------------
 void IntVetofa250Converter_factory::Init()
 {
-	jout<<"IntVetofa250Converter_factory::init"<<endl;
+	jout<<"IntVetofa250Converter_factory::init"<<jendl;
 	m_intVetofa250Converter=new IntVetofa250Converter();
 	m_intVetofa250Converter->m_thrCalib=new CalibrationHandler<TranslationTable::INT_VETO_Index_t>("/InnerVeto/sipm_ampl");
-	this->mapCalibrationHandler(m_intVetofa250Converter->m_thrCalib);
-	jout<<"IntVetofa250Converter_factory::init done"<<endl;
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_intVetofa250Converter->m_thrCalib);
+	jout<<"IntVetofa250Converter_factory::init done"<<jendl;
 }
 
 //------------------
@@ -49,8 +51,8 @@ void IntVetofa250Converter_factory::Init()
 //------------------
 void IntVetofa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	jout<<"IntVetofa250Converter_factory::brun"<<endl;
-	this->updateCalibrationHandler(	m_intVetofa250Converter->m_thrCalib,eventLoop);
+	jout<<"IntVetofa250Converter_factory::brun"<<jendl;
+	m_calibration_service->updateCalibration(m_intVetofa250Converter->m_thrCalib, event->GetRunNumber(), event->GetEventNumber());
 
 	japp->GetParameter("INTVETO:VERBOSE",m_intVetofa250Converter->verbose());
 
@@ -63,7 +65,7 @@ void IntVetofa250Converter_factory::ChangeRun(const std::shared_ptr<const JEvent
 	m_intVetofa250Converter->m_RMSTHRscale=m_RMSTHRscale;
 
 	if (m_isFirstCallToBrun){
-		_data.push_back(m_intVetofa250Converter);
+		mData.push_back(m_intVetofa250Converter);
 		m_isFirstCallToBrun=0;
 	}
 	SetFactoryFlag(PERSISTANT);
@@ -94,11 +96,11 @@ void IntVetofa250Converter_factory::Process(const std::shared_ptr<const JEvent>&
 void IntVetofa250Converter_factory::EndRun()
 {
 
-	this->clearCalibrationHandler(m_intVetofa250Converter->m_thrCalib);
+	m_calibration_service->clearCalibration(m_intVetofa250Converter->m_thrCalib);
 	/*if (m_intVetofa250Converter!=0){
 		delete m_intVetofa250Converter;
 	}*/
-	_data.clear();
+	mData.clear();
 }
 
 //------------------
@@ -109,6 +111,6 @@ void IntVetofa250Converter_factory::Finish()
 /*	if (m_intVetofa250Converter!=0){
 		delete m_intVetofa250Converter;
 	}*/
-	_data.clear();
+	mData.clear();
 }
 

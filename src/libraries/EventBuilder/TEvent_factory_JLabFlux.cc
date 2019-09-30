@@ -27,6 +27,7 @@ using namespace std;
 #include "TEvent_factory_JLabFlux.h"
 
 #include <JANA/JApplication.h>
+#include <JANA/JEvent.h>
 
 //------------------
 // init
@@ -36,13 +37,13 @@ void TEvent_factory_JLabFlux::Init() {
 	m_tag = "";
 	japp->GetParameter("MC", m_isMC);
 	if (m_isMC) {
-		jout << "JLabFlux event build - MC mode" << endl;
+		jout << "JLabFlux event build - MC mode" << jendl;
 		japp->GetParameter("MC:RUN_NUMBER", m_MCRunNumber);
 		m_tag = "MC";
 	}
 	if ((m_isMC) && (m_isMC != MCType::JLAB_FLUX_V1)) {
-		jout << "Error! Can use this only with MC==100, i.e. JLabFlux " << endl;
-		return VALUE_OUT_OF_RANGE;
+		jout << "Error! Can use this only with MC==100, i.e. JLabFlux " << jendl;
+		throw JException("Error! Can use this only with MC==100, i.e. JLabFlux ");
 	}
 
 	m_root_lock = japp->GetService<JGlobalRootLock>();
@@ -84,10 +85,10 @@ void TEvent_factory_JLabFlux::Process(const std::shared_ptr<const JEvent>& event
 
 	if (!m_isMC) {
 		try {
-			loop->GetSingle(tData);
+			event->Get(&tData);
 		} catch (unsigned long e) {
-			jout << "TEvent_factory_JLabFlux::evnt no eventData bank this event" << endl;
-			return OBJECT_NOT_AVAILABLE;
+			jout << "TEvent_factory_JLabFlux::evnt no eventData bank this event" << jendl;
+			throw JException("TEvent_factory_JLabFlux::evnt no eventData bank this event");
 		}
 
 		m_eventHeader->setEventType(JLabFluxEvent);
@@ -99,7 +100,7 @@ void TEvent_factory_JLabFlux::Process(const std::shared_ptr<const JEvent>& event
 		m_eventHeader->setWeight(1);
 	} else {
 		m_eventHeader->setEventType(JLabFluxEvent);
-		m_eventHeader->setEventNumber(eventnumber);
+		m_eventHeader->setEventNumber(event->GetEventNumber());
 		m_eventHeader->setEventTime(0);
 		m_eventHeader->setEventFineTime(0);
 		//	m_eventHeader->setTriggerWords(); /*A.C. we don't have any trigger simulation*/
@@ -107,7 +108,7 @@ void TEvent_factory_JLabFlux::Process(const std::shared_ptr<const JEvent>& event
 	}
 
 	/*Loop over JANA objects, clear collections and fill them*/
-	loop->Get(chits);
+	event->Get(chits);
 	m_CaloHits->Clear("C");
 	for (int ii = 0; ii < chits.size(); ii++) {
 		((CalorimeterHit*) m_CaloHits->ConstructedAt(ii))->operator=(*(chits[ii]));
@@ -115,7 +116,7 @@ void TEvent_factory_JLabFlux::Process(const std::shared_ptr<const JEvent>& event
 	}
 	m_event->addCollection(m_CaloHits);
 
-	loop->Get(ivhits);
+	event->Get(ivhits);
 	m_IntVetoHits->Clear("C");
 	for (int ii = 0; ii < ivhits.size(); ii++) {
 		((IntVetoHit*) m_IntVetoHits->ConstructedAt(ii))->operator=(*(ivhits[ii]));
@@ -158,7 +159,7 @@ void TEvent_factory_JLabFlux::Process(const std::shared_ptr<const JEvent>& event
 #endif
 
 	/*publish the event*/
-	_data.push_back(m_event);
+	mData.push_back(m_event);
 }
 
 //------------------

@@ -15,6 +15,7 @@ using namespace std;
 
 #include <IntVeto/IntVetoSiPMHit.h>
 #include <TT/TranslationTable.h>
+#include <JANA/JEvent.h>
 
 
 //------------------
@@ -30,12 +31,12 @@ void IntVetoDigiHit_factory::Init()
 void IntVetoDigiHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
 
-	jout<<"IntVetoDigiHit_factory::brun new run number: "<<runnumber<<endl;
+	jout<<"IntVetoDigiHit_factory::brun new run number: "<<event->GetRunNumber()<<jendl;
 	m_tt=0;
-	eventLoop->GetSingle(m_tt);
+	event->Get(&m_tt);
 	if (m_tt==0){
-		jerr<<" unable to get the TranslationTable from this run!"<<endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr<<" unable to get the TranslationTable from this run!"<<jendl;
+		throw JException(" unable to get the TranslationTable from this run!");
 	}
 }
 
@@ -54,7 +55,7 @@ void IntVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 	vector <const IntVetoSiPMHit*>::const_iterator it;
 	const IntVetoSiPMHit* m_IntVetoSiPMHit;
 	//1b: retrieve IntVetoSiPMHit objects
-	loop->Get(m_IntVetoSiPMHits);
+	event->Get(m_IntVetoSiPMHits);
 
 
 
@@ -75,25 +76,7 @@ void IntVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 
 		m_IntVetoDigiHit->AddAssociatedObject(m_IntVetoSiPMHit);
 
-		_data.push_back(m_IntVetoDigiHit); //publish it
+		mData.push_back(m_IntVetoDigiHit); //publish it
 	}
-
-	return NOERROR;
-}
-
-//------------------
-// erun
-//------------------
-jerror_t IntVetoDigiHit_factory::erun(void)
-{
-	return NOERROR;
-}
-
-//------------------
-// fini
-//------------------
-jerror_t IntVetoDigiHit_factory::fini(void)
-{
-	return NOERROR;
 }
 

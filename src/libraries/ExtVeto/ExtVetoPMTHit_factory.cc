@@ -19,6 +19,7 @@ using namespace std;
 #include <ExtVeto/ExtVetofa250Converter.h>
 
 #include "ExtVetoPMTHit_factory.h"
+#include <JANA/JEvent.h>
 
 //------------------
 // init
@@ -26,7 +27,8 @@ using namespace std;
 void ExtVetoPMTHit_factory::Init()
 {
 	m_PMT_gain=new CalibrationHandler<TranslationTable::EXT_VETO_Index_t>("/ExtVeto/PMT_gain");
-	this->mapCalibrationHandler(m_PMT_gain);
+	m_calibration_service = japp->GetService<BDXCalibrationService>();
+	m_calibration_service->addCalibration(m_PMT_gain);
 }
 
 //------------------
@@ -34,22 +36,22 @@ void ExtVetoPMTHit_factory::Init()
 //------------------
 void ExtVetoPMTHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	jout<<"ExtVetoDigiHit_factory::brun new run number: "<<runnumber<<endl;
+	jout<<"ExtVetoDigiHit_factory::brun new run number: "<<event->GetRunNumber()<<jendl;
 	m_tt=0;
-	eventLoop->GetSingle(m_tt);
+	event->Get(&m_tt);
 	if (m_tt==0){
-		jerr<<" unable to get the TranslationTable from this run!"<<endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr<<" unable to get the TranslationTable from this run!"<<jendl;
+		throw JException(" unable to get the TranslationTable from this run!");
 	}
 
 	m_extVetofa250Converter=0;
-	eventLoop->GetSingle(m_extVetofa250Converter);
+	event->Get(&m_extVetofa250Converter);
 	if (m_extVetofa250Converter==0){
-		jerr<<" unable to get the extVetofa250Converter!"<<endl;
-		return OBJECT_NOT_AVAILABLE;
+		jerr<<" unable to get the extVetofa250Converter!"<<jendl;
+		throw JException(" unable to get the extVetofa250Converter!");
 	}
 
-	this->updateCalibrationHandler(m_PMT_gain,eventLoop);
+	m_calibration_service->updateCalibration(m_PMT_gain, event->GetRunNumber(), event->GetEventNumber());
 
 	japp->GetParameter("EXTVETO:VERBOSE",VERBOSE);
 
@@ -57,10 +59,10 @@ void ExtVetoPMTHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event
 		std::map  < TranslationTable::EXT_VETO_Index_t, std::vector < double > > gainCalibMap;
 		std::map  < TranslationTable::EXT_VETO_Index_t, std::vector < double > >::iterator gainCalibMap_it;
 		gainCalibMap=m_PMT_gain->getCalibMap();
-		jout<<"Got following PMT_gain for run number: "<<runnumber<<endl;
-		jout<<"Rows: "<<gainCalibMap.size()<<endl;
+		jout<<"Got following PMT_gain for run number: "<<event->GetRunNumber()<<jendl;
+		jout<<"Rows: "<<gainCalibMap.size()<<jendl;
 		for (gainCalibMap_it=gainCalibMap.begin();gainCalibMap_it!=gainCalibMap.end();gainCalibMap_it++){
-			jout<<gainCalibMap_it->first.sector<<" "<<gainCalibMap_it->first.layer<<" "<<gainCalibMap_it->first.component<<" "<<gainCalibMap_it->first.readout<<" "<<gainCalibMap_it->second.at(0)<<endl;
+			jout<<gainCalibMap_it->first.sector<<" "<<gainCalibMap_it->first.layer<<" "<<gainCalibMap_it->first.component<<" "<<gainCalibMap_it->first.readout<<" "<<gainCalibMap_it->second.at(0)<<jendl;
 
 		}
 	}
@@ -84,8 +86,8 @@ void ExtVetoPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 	vector <const fa250Mode7Hit*>::const_iterator it_fa250Mode7Hit;
 
 	//1b: retrieve objects
-	loop->Get(m_fa250Mode1Hit);
-	loop->Get(m_fa250Mode7Hit);
+	event->Get(m_fa250Mode1Hit);
+	event->Get(m_fa250Mode7Hit);
 	//	jout << "sono qui" <<std::endl;
 	/*2: Now we have the daq objects, still indexed as "crate-slot-channel"
 	 *	 Use the translation table to produce the digitized hit of the inner veto
@@ -113,7 +115,7 @@ void ExtVetoPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 			}
 
 
-			_data.push_back(m_ExtVetoPMTHit);
+			mData.push_back(m_ExtVetoPMTHit);
 		}
 	}
 
@@ -138,7 +140,7 @@ void ExtVetoPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 
 
 
-			_data.push_back(m_ExtVetoPMTHit);
+			mData.push_back(m_ExtVetoPMTHit);
 		}
 	}
 }
@@ -148,7 +150,7 @@ void ExtVetoPMTHit_factory::Process(const std::shared_ptr<const JEvent>& event)
 //------------------
 void ExtVetoPMTHit_factory::EndRun()
 {
-	this->clearCalibrationHandler(m_PMT_gain);
+	m_calibration_service->clearCalibration(m_PMT_gain);
 }
 
 //------------------

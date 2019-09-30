@@ -13,6 +13,7 @@ using namespace std;
 #include "ExtVetoHit.h"
 #include "ExtVetoSummary_factory.h"
 #include <TT/TranslationTable.h>
+#include <JANA/JEvent.h>
 
 //------------------
 // init
@@ -40,7 +41,7 @@ void ExtVetoSummary_factory::Process(const std::shared_ptr<const JEvent>& event)
 	ExtVetoSummary *m_extVetoSummary;
 
 	int sector;
-	loop->Get(m_extVetoHits);
+	event->Get(m_extVetoHits);
 
 	m_map.clear();
 	/*We need to handle in a different way hits corresponding to different sectors*/
@@ -74,7 +75,7 @@ void ExtVetoSummary_factory::Process(const std::shared_ptr<const JEvent>& event)
 
 	/*Publish all the objects now - one per sector!*/
 	for (m_it=m_map.begin();m_it!=m_map.end();m_it++){
-		_data.push_back(m_it->second);
+		mData.push_back(m_it->second);
 	}
 }
 

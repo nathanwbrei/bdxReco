@@ -5,12 +5,13 @@ using namespace std;
 // bdx headers
 #include <system/JEventSourceTRIDASGenerator.h>
 #include <DAQ/JEventSourceTRIDASDAQ.h>
+#include <JANA/JApplication.h>
 
 
 //---------------------------------
 // Description
 //---------------------------------
-std::string JEventSourceTRIDASGenerator::GetDescription() {
+std::string JEventSourceTRIDASGenerator::GetDescription() const {
 	return "TRIDAS";
 }
 
@@ -44,10 +45,10 @@ JEventSource* JEventSourceTRIDASGenerator::MakeJEventSource(string source) {
 	m_verbose = mApplication->GetParameterValue<int>("SYSTEM:VERBOSE");
 
 	if (m_isMC == 0) {
-		if (m_verbose > 2) jout << "JEventSourceTRIDASGenerator::MakeJEventSource for DATA " << endl;
+		if (m_verbose > 2) jout << "JEventSourceTRIDASGenerator::MakeJEventSource for DATA " << jendl;
 		return new JEventSourceTRIDASDAQ(source.c_str(), mApplication);
 	} else if (m_isMC >= 1) {
-		jerr << "MC - TRIDAS format not yet supported!!" << endl;
+		jerr << "MC - TRIDAS format not yet supported!!" << jendl;
 		throw JException("Failed to open MC TRIDAS file - no MC support yet");
 	}
 }

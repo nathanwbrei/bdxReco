@@ -15,23 +15,21 @@ using namespace std;
 //------------------
 // init
 //------------------
-jerror_t TEvent_factory::init(void)
+void TEvent_factory::Init()
 {
-	return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t TEvent_factory::brun(JEventLoop *eventLoop, int32_t runnumber)
+void TEvent_factory::ChangeRun(const std::shared_ptr<const JEvent>& event)
 {
-	return NOERROR;
 }
 
 //------------------
 // evnt
 //------------------
-jerror_t TEvent_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
+void TEvent_factory::Process(const std::shared_ptr<const JEvent>& event)
 {
 
 	// Code to generate factory data goes here. Add it like:
@@ -44,23 +42,19 @@ jerror_t TEvent_factory::evnt(JEventLoop *loop, uint64_t eventnumber)
 	//
 	// Note that the objects you create here will be deleted later
 	// by the system and the _data vector will be cleared automatically.
-
-	return NOERROR;
 }
 
 //------------------
 // erun
 //------------------
-jerror_t TEvent_factory::erun(void)
+void TEvent_factory::EndRun()
 {
-	return NOERROR;
 }
 
 //------------------
 // fini
 //------------------
-jerror_t TEvent_factory::fini(void)
+void TEvent_factory::Finish()
 {
-	return NOERROR;
 }
 

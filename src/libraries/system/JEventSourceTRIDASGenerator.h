@@ -16,9 +16,9 @@ class JEventSourceTRIDASGenerator: public JEventSourceGenerator{
 		
 		std::string GetDescription() const override;
 
-		double CheckOpenable(std::string source);
+		double CheckOpenable(std::string source) override;
 
-		JEventSource* MakeJEventSource(std::string source);
+		JEventSource* MakeJEventSource(std::string source) override;
 };
 
 #endif // _JEventSourceGenerator_TRIDAS_

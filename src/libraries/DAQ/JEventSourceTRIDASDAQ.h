@@ -41,8 +41,10 @@ public:
 		return "JEventSourceEvioDAQ";
 	}
 
-	void GetEvent(JEvent &event);
-	jerror_t GetObjects(JEvent &event, JFactory_base *factory);
+	void GetEvent(std::shared_ptr<JEvent>) override;
+
+	bool GetObjects(const std::shared_ptr<const JEvent>& aEvent, JFactory* aFactory) override;
+
 	TRIDASDAQSourceType GetDAQSourceType(void) {
 		return source_type;
 	}

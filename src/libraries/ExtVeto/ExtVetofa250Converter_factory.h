@@ -8,8 +8,9 @@
 #ifndef _ExtVetofa250Converter_factory_
 #define _ExtVetofa250Converter_factory_
 
-#include <JANA/JFactoryT.h>
 #include "ExtVetofa250Converter.h"
+#include <system/BDXCalibrationService.h>
+#include <JANA/JFactoryT.h>
 
 class ExtVetofa250Converter_factory:public JFactoryT<ExtVetofa250Converter>{
 	public:
@@ -21,11 +22,12 @@ class ExtVetofa250Converter_factory:public JFactoryT<ExtVetofa250Converter>{
 		void Init() override;
 		void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
 		void Process(const std::shared_ptr<const JEvent>& aEvent) override;
-		void EndRun() {}
-		void Finish() {}
+		void EndRun();
+		void Finish();
 
 		int m_isFirstCallToBrun;
 		ExtVetofa250Converter *m_extVetofa250Converter;
+		std::shared_ptr<BDXCalibrationService> m_calibration_service;
 };
 
 #endif // _ExtVetofa250Converter_factory_

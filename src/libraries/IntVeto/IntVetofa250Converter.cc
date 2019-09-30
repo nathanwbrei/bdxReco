@@ -12,12 +12,12 @@ IntVetoSiPMHit* IntVetofa250Converter::convertHit(const fa250Hit *hit, const Tra
 	IntVetoSiPMHit *m_IntVetoSiPMHit = new IntVetoSiPMHit;
 	m_IntVetoSiPMHit->m_channel = m_channel;
 
-	if (strcmp(hit->className(), "fa250Mode1CalibPedSubHit") == 0) {
+	if (strcmp(hit->className().c_str(), "fa250Mode1CalibPedSubHit") == 0) {
 		this->convertMode1Hit(m_IntVetoSiPMHit, (const fa250Mode1CalibPedSubHit*) hit, eventN);
-	} else if (strcmp(hit->className(), "fa250Mode7Hit") == 0) {
+	} else if (strcmp(hit->className().c_str(), "fa250Mode7Hit") == 0) {
 		this->convertMode7Hit(m_IntVetoSiPMHit, (const fa250Mode7Hit*) hit, eventN);
 	} else {
-		jerr << "IntVetofa250Converter::convertHit unsupported class name: " << hit->className() << std::endl;
+		jerr << "IntVetofa250Converter::convertHit unsupported class name: " << hit->className() << jendl;
 		return 0;
 	}
 	return m_IntVetoSiPMHit;
@@ -140,7 +140,7 @@ jerror_t IntVetofa250Converter::convertMode1Hit(IntVetoSiPMHit* output, const fa
 	/*Verify the ToT for each pulse*/
 	for (int itime = 0; itime < m_crossingTimes.size(); itime++) {
 		if (m_crossingTimesDelta[itime] < 0) {
-			jerr << "IntVetofa20Converter::convertMode1Hit error, negative ToT?" << std::endl;
+			jerr << "IntVetofa20Converter::convertMode1Hit error, negative ToT?" << jendl;
 		} else if ((m_crossingTimesDelta[itime] > (m_minTot / input->m_dT)) || (m_crossingTimes[itime].second) == (size) || (m_crossingTimes.at(itime).first) == (0)) {
 			m_singleCrossingIndexes.push_back(itime);
 		}

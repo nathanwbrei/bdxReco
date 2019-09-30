@@ -13,6 +13,7 @@ using namespace std;
 #include "IntVetoHit.h"
 #include "IntVetoSummary_factory.h"
 #include <TT/TranslationTable.h>
+#include <JANA/JEvent.h>
 
 //------------------
 // init
@@ -43,7 +44,7 @@ void IntVetoSummary_factory::Process(const std::shared_ptr<const JEvent>& event)
 	int component;
 	int layer;
 
-	loop->Get(m_intVetoHits);
+	event->Get(m_intVetoHits);
 
 	m_map.clear();
 	/*We need to handle in a different way hits corresponding to different sectors*/
@@ -80,10 +81,8 @@ void IntVetoSummary_factory::Process(const std::shared_ptr<const JEvent>& event)
 
 	/*Publish all the objects now - one per sector!*/
 	for (m_it=m_map.begin();m_it!=m_map.end();m_it++){
-		_data.push_back(m_it->second);
+		mData.push_back(m_it->second);
 	}
-
-	return NOERROR;
 }
 
 //------------------

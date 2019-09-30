@@ -9,6 +9,7 @@ using namespace std;
 // JANA headers
 #include <JANA/JEvent.h>
 #include <JANA/JApplication.h>
+#include <JANA/JFactoryT.h>
 
 //DAQ
 #include <DAQ/fa250WaveboardV1Hit.h>
@@ -48,9 +49,8 @@ JEventSourceTRIDASDAQ::~JEventSourceTRIDASDAQ() {
 }
 
 // GetEvent
-jerror_t JEventSourceTRIDASDAQ::GetEvent(JEvent &event) {
+void JEventSourceTRIDASDAQ::GetEvent(std::shared_ptr<JEvent> event) {
 
-	event.SetRef(NULL);
 	if (this->source_type == kFileSource) {
 		//The counter on events is at the end of current time slice. Try to move to next time slice
 		//if (currEventTimeSlice == nEventsTimeSlice) {
@@ -59,9 +59,9 @@ jerror_t JEventSourceTRIDASDAQ::GetEvent(JEvent &event) {
 			delete ptTimeSlice;
 			//It the iterator on time slices is at the end, the source is completely read.
 			if (it_ptReader == ptReader->end()) {
-				jout << "Source done" << endl;
+				jout << "Source done" << jendl;
 				fflush(stdout);
-				return NO_MORE_EVENTS_IN_SOURCE;
+				throw RETURN_STATUS::kNO_MORE_EVENTS;
 			} else {
 				nEventsTimeSlice = (*it_ptReader).nEvents();
 				ptTimeSlice = new TimeSlice<sample::uncompressed>(*it_ptReader);
@@ -72,57 +72,49 @@ jerror_t JEventSourceTRIDASDAQ::GetEvent(JEvent &event) {
 
 		ptEvent = new Event<sample::uncompressed>(*it_ptTimeSlice);
 
-		event.SetJEventSource(this);
-		event.SetRef((void*) ptEvent);
-		event.SetEventNumber(ptEvent->id());
-		event.SetEventTS(ptTimeSlice->id());
+		event->Insert(ptEvent); //event->SetRef((void*) ptEvent);
+		event->Insert(ptTimeSlice); // event->SetEventTS(ptTimeSlice->id());
+		event->SetJEventSource(this);
+		event->SetEventNumber(ptEvent->id());
 
 		curRunNumber = ptReader->runNumber();
 		fflush(stdout);
 		if (overwriteRunNumber != -1) {
-			event.SetRunNumber(overwriteRunNumber);
+			event->SetRunNumber(overwriteRunNumber);
 		} else {
-			event.SetRunNumber(curRunNumber);
+			event->SetRunNumber(curRunNumber);
 		}
 		it_ptTimeSlice++;
 		//	currEventTimeSlice++;
-		return NOERROR;
+		return;
 
 	} else {
-		return EVENT_SOURCE_NOT_OPEN;
-	}
-}
-
-// FreeEvent
-void JEventSourceTRIDASDAQ::FreeEvent(JEvent &event) {
-	if (event.GetRef() != NULL) {
-		delete (Event<sample::uncompressed>*) event.GetRef();
+		throw RETURN_STATUS::kERROR;
+		// EVENT_SOURCE_NOT_OPEN;
 	}
 }
 
 // GetObjects
-jerror_t JEventSourceTRIDASDAQ::GetObjects(JEvent & event, JFactory_base * factory) {
+bool JEventSourceTRIDASDAQ::GetObjects(const std::shared_ptr<const JEvent>& event, JFactory* factory) {
 /// This gets called through the virtual method of the
 /// JEventSource base class. It creates the objects of the type
 /// which factory is based.
 
 /// Example: DCsegment needs DCHit. If DCHit doesn't exist already, then
 /// it will be read here.
-// We must have a factory to hold the data
-	if (!factory) throw RESOURCE_UNAVAILABLE;
+    // We must have a factory to hold the data
+	if (!factory) return false;
 
-// Get name of data class we're trying to extract
-	string dataClassName = factory->GetDataClassName();
-//As suggested by David, do a check on the factory type to decide what to do
-	JFactory<fa250WaveboardV1Hit> *fac_fa250WaveboardV1Hit = dynamic_cast<JFactory<fa250WaveboardV1Hit>*>(factory);
-	JFactory<eventData> *fac_eventData = dynamic_cast<JFactory<eventData>*>(factory);
+    //As suggested by David, do a check on the factory type to decide what to do
+	JFactoryT<fa250WaveboardV1Hit> *fac_fa250WaveboardV1Hit = dynamic_cast<JFactoryT<fa250WaveboardV1Hit>*>(factory);
+	JFactoryT<eventData> *fac_eventData = dynamic_cast<JFactoryT<eventData>*>(factory);
 
 	if (fac_eventData != NULL) {
 		vector<eventData*> data;
 		eventData *this_eventData = new eventData();
 		this_eventData->eventType = DAQ;
 
-		Event<sample::uncompressed> *ptEvent_pointer = (Event<sample::uncompressed>*) event.GetRef();
+		Event<sample::uncompressed> *ptEvent_pointer = (Event<sample::uncompressed>*) event->GetRef();
 
 		//take the first hit time (4 ns from 1 Jan. 2000) -- all hits in the event are within the same second!
 		fine_time minTime = getDFHFullTime((*(ptEvent_pointer->begin())).frameHeader(0));
@@ -130,9 +122,9 @@ jerror_t JEventSourceTRIDASDAQ::GetObjects(JEvent & event, JFactory_base * facto
 		this_eventData->time = std::chrono::duration_cast<std::chrono::seconds>(minTime).count(); //seconds from 1 Jan. 2000
 		this_eventData->time += 946684800; //unix time of 1 Jan 2000 first second
 
-		this_eventData->runN = event.GetRunNumber();
-		this_eventData->eventN = event.GetEventNumber();
-		this_eventData->eventTS = event.GetEventTS();
+		this_eventData->runN = event->GetRunNumber();
+		this_eventData->eventN = event->GetEventNumber();
+		this_eventData->eventTS = event->GetEventTS();
 
 		this_eventData->triggerWords.push_back(Event<sample::uncompressed>::max_triggers_number); //currently 5
 		for (int ii = 0; ii < Event<sample::uncompressed>::max_triggers_number; ii++) {
@@ -149,11 +141,11 @@ jerror_t JEventSourceTRIDASDAQ::GetObjects(JEvent & event, JFactory_base * facto
 
 		data.push_back(this_eventData);
 		fac_eventData->Set(data);
-		return NOERROR;
+		return true;
 	}
 	if (fac_fa250WaveboardV1Hit != NULL) {
 		vector<fa250WaveboardV1Hit*> data;
-		Event<sample::uncompressed> *ptEvent_pointer = (Event<sample::uncompressed>*) event.GetRef();
+		Event<sample::uncompressed> *ptEvent_pointer = (Event<sample::uncompressed>*) event->GetRef();
 		fine_time minTime = getDFHFullTime((*(ptEvent_pointer->begin())).frameHeader(0));  //take the first hit time
 
 		//First, find the min. hit time
@@ -199,9 +191,8 @@ jerror_t JEventSourceTRIDASDAQ::GetObjects(JEvent & event, JFactory_base * facto
 		}
 
 		fac_fa250WaveboardV1Hit->Set(data);
-		return NOERROR;
 
 	}
-	return OBJECT_NOT_AVAILABLE;
+	return false;
 }
 

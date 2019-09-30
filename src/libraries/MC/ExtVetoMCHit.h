@@ -24,7 +24,8 @@ public:
 		summary.add(channel, "channel", "%i");
 		summary.add(system, "system", "%i");
 		summary.add(totEdep, "totEdep", "%f");
-		summary.add(id, "id", "%4d");
+		//summary.add(id, "id", "%4d");
+		// TODO: What to do about id?
 	}
 
 	//dgtz banks

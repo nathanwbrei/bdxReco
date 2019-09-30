@@ -13,6 +13,7 @@ using namespace std;
 #include <ExtVeto/ExtVetoPMTHit.h>
 
 #include <TT/TranslationTable.h>
+#include <JANA/JEvent.h>
 
 
 //------------------
@@ -24,18 +25,18 @@ void ExtVetoDigiHit_factory::Init() {}
 // brun
 //------------------
 void ExtVetoDigiHit_factory::ChangeRun(const std::shared_ptr<const JEvent>& event) {
-	jout << "ExtVetoDigiHit_factory::brun new run number: " << runnumber << endl;
+	jout << "ExtVetoDigiHit_factory::brun new run number: " << event->GetRunNumber() << jendl;
 	m_tt = 0;
-	eventLoop->GetSingle(m_tt);
+	event->Get(&m_tt);
 	if (m_tt == 0) {
-		jerr << " unable to get the TranslationTable from this run!" << endl;
+		jerr << " unable to get the TranslationTable from this run!" << jendl;
 	}
 }
 
 //------------------
 // evnt
 //------------------
-void ExtVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& aEvent) {
+void ExtVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& event) {
 
 	ExtVetoDigiHit *m_ExtVetoDigiHit = 0;
 
@@ -46,7 +47,7 @@ void ExtVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& aEvent
 	const ExtVetoPMTHit* m_ExtVetoPMTHit;
 
 	//1b: retrieve ExtVetoPMTHit objects
-	loop->Get(m_ExtVetoPMTHits);
+	event->Get(m_ExtVetoPMTHits);
 
 	for (it = m_ExtVetoPMTHits.begin(); it != m_ExtVetoPMTHits.end(); it++) {
 		m_ExtVetoPMTHit = *it;
@@ -56,7 +57,7 @@ void ExtVetoDigiHit_factory::Process(const std::shared_ptr<const JEvent>& aEvent
 		m_ExtVetoDigiHit->Q = m_ExtVetoPMTHit->Q;
 		m_ExtVetoDigiHit->T = m_ExtVetoPMTHit->T;
 		m_ExtVetoDigiHit->pedMean = m_ExtVetoPMTHit->pedMean;
-		_data.push_back(m_ExtVetoDigiHit);
+		mData.push_back(m_ExtVetoDigiHit);
 	}
 }
 

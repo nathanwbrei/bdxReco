@@ -7,12 +7,12 @@ ExtVetoPMTHit* ExtVetofa250Converter::convertHit(const fa250Hit *hit, const Tran
 	ExtVetoPMTHit *m_ExtVetoPMTHit = new ExtVetoPMTHit;
 	m_ExtVetoPMTHit->m_channel = m_channel;
 
-	if (strcmp(hit->className(), "fa250Mode1Hit") == 0) {
+	if (strcmp(hit->className().c_str(), "fa250Mode1Hit") == 0) {
 		this->convertMode1Hit(m_ExtVetoPMTHit, (const fa250Mode1Hit*) hit);
-	} else if (strcmp(hit->className(), "fa250Mode7Hit") == 0) {
+	} else if (strcmp(hit->className().c_str(), "fa250Mode7Hit") == 0) {
 		this->convertMode7Hit(m_ExtVetoPMTHit, (const fa250Mode7Hit*) hit);
 	} else {
-		jerr << "ExtVetofa250Converter::convertHit unsupported class name: " << hit->className() << std::endl;
+		jerr << "ExtVetofa250Converter::convertHit unsupported class name: " << hit->className() << jendl;
 		return 0;
 	}
 	return m_ExtVetoPMTHit;
