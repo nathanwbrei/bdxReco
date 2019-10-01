@@ -13,15 +13,12 @@
 
 class CalorimeterMCRealHit_factory: public JFactoryT<CalorimeterMCRealHit> {
 public:
-	CalorimeterMCRealHit_factory() {
+	CalorimeterMCRealHit_factory() : isMC(0) {
 	}
-	;
-	~CalorimeterMCRealHit_factory() {
-	}
-	;
+	~CalorimeterMCRealHit_factory() override = default;
 
 private:
-	void Init() override;
+	void Init() override {};
 	void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
 	void Process(const std::shared_ptr<const JEvent>& aEvent) override;
 	void EndRun() {}

@@ -25,7 +25,7 @@ public:
 
 private:
 	void Init() override;
-	void ChangeRun(const std::shared_ptr<const JEvent>& event) override;
+	void ChangeRun(const std::shared_ptr<const JEvent>& event) override {}
 	void Process(const std::shared_ptr<const JEvent>& aEvent) override;
 	void EndRun() {}
 	void Finish() {}

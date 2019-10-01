@@ -68,6 +68,15 @@ else()
     MESSAGE(WARNING "Using defaulted CLHEP")
 endif()
 
+add_library(tridas STATIC
+        src/external/TRIDAS/chrono_io.hpp
+        src/external/TRIDAS/f_dataformat_bdx.hpp
+        src/external/TRIDAS/pt_file_analyser.cpp
+        src/external/TRIDAS/ptfile_reader.cc
+        src/external/TRIDAS/ptfile_reader.hpp
+        src/external/TRIDAS/s_dataformat_bdx.hpp
+        src/external/TRIDAS/tridas_dataformat.hpp
+        )
 
 add_library(evioReader STATIC
         src/external/evioReader/common_std.h
@@ -320,7 +329,7 @@ add_library(bdxreco STATIC
         src/libraries/Paddles/PaddlesPMTHit_factory.h
 
         src/libraries/EventBuilder/CataniaEvent.h
-        #src/libraries/EventBuilder/CataniaEvent_Dict.cc
+        src/libraries/EventBuilder/CataniaEvent_Dict.cc
         src/libraries/EventBuilder/CataniaEvent_factory.cc
         src/libraries/EventBuilder/CataniaEvent_factory.h
         src/libraries/EventBuilder/JFactoryGenerator_EventBuilder.h
@@ -420,17 +429,21 @@ add_library(bdxreco STATIC
         src/libraries/system/JROOTOutput.cc
         src/libraries/system/JROOTOutput.h
         src/libraries/system/string_utilities.h
-
-        src/libraries/system/CalibrationService.cc src/libraries/system/CalibrationService.h src/libraries/system/BDXCalibrationService.h)
+        src/libraries/system/BDXCalibrationService.h
+        )
 
 find_package(ROOT)
 include_directories(${ROOT_INCLUDE_DIRS})
 target_link_libraries(bdxreco jana2)
 target_link_libraries(bdxreco evioReader)
+target_link_libraries(bdxreco tridas)
 target_link_libraries(bdxreco ${ROOT_LIBRARIES})
 
 
-add_executable(bdxreco_cli src/programs/bdxReco/bdxReco.cc)
+add_executable(bdxreco_cli
+        src/programs/bdxReco/bdxReco.cc
+        #src/programs/bdxReco/main.cc
+        )
 
 target_link_libraries(bdxreco_cli bdxreco)
 target_link_libraries(bdxreco Threads::Threads)
