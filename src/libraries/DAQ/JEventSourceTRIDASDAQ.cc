@@ -70,13 +70,44 @@ void JEventSourceTRIDASDAQ::GetEvent(std::shared_ptr<JEvent> event) {
 			}
 		}
 
+
+		// Insert the ptEvent
 		ptEvent = new Event<sample::uncompressed>(*it_ptTimeSlice);
-
-		event->Insert(ptEvent); //event->SetRef((void*) ptEvent);
-		event->Insert(ptTimeSlice); // event->SetEventTS(ptTimeSlice->id());
-		event->SetJEventSource(this);
+		event->Insert(ptEvent);
 		event->SetEventNumber(ptEvent->id());
+		event->SetJEventSource(this);
 
+
+		// Insert the eventData
+		eventData *this_eventData = new eventData();
+		this_eventData->eventType = DAQ;
+
+		//take the first hit time (4 ns from 1 Jan. 2000) -- all hits in the event are within the same second!
+		fine_time minTime = getDFHFullTime((*(ptEvent->begin())).frameHeader(0));
+
+		this_eventData->time = std::chrono::duration_cast<std::chrono::seconds>(minTime).count(); //seconds from 1 Jan. 2000
+		this_eventData->time += 946684800; //unix time of 1 Jan 2000 first second
+
+		this_eventData->runN = event->GetRunNumber();
+		this_eventData->eventN = event->GetEventNumber();
+		this_eventData->eventTS = ptTimeSlice->id();
+
+		this_eventData->triggerWords.push_back(Event<sample::uncompressed>::max_triggers_number); //currently 5
+		for (int ii = 0; ii < Event<sample::uncompressed>::max_triggers_number; ii++) {
+			this_eventData->triggerWords.push_back(ptEvent->nseeds(ii));
+		}
+
+		this_eventData->triggerWords.push_back(Event<sample::uncompressed>::max_plugins_number); //currently 8
+		for (int ii = 0; ii < Event<sample::uncompressed>::max_plugins_number; ii++) {
+			this_eventData->triggerWords.push_back(ptEvent->plugin_nseeds(ii));
+		}
+		for (int ii = 0; ii < Event<sample::uncompressed>::max_plugins_number; ii++) {
+			this_eventData->triggerWords.push_back(ptEvent->plugin_trigtype(ii));
+		}
+		event->Insert(this_eventData);
+
+
+		/// Figure out run number
 		curRunNumber = ptReader->runNumber();
 		fflush(stdout);
 		if (overwriteRunNumber != -1) {
@@ -86,6 +117,7 @@ void JEventSourceTRIDASDAQ::GetEvent(std::shared_ptr<JEvent> event) {
 		}
 		it_ptTimeSlice++;
 		//	currEventTimeSlice++;
+
 		return;
 
 	} else {
@@ -94,7 +126,7 @@ void JEventSourceTRIDASDAQ::GetEvent(std::shared_ptr<JEvent> event) {
 	}
 }
 
-// GetObjects
+
 bool JEventSourceTRIDASDAQ::GetObjects(const std::shared_ptr<const JEvent>& event, JFactory* factory) {
 /// This gets called through the virtual method of the
 /// JEventSource base class. It creates the objects of the type
@@ -107,49 +139,14 @@ bool JEventSourceTRIDASDAQ::GetObjects(const std::shared_ptr<const JEvent>& even
 
     //As suggested by David, do a check on the factory type to decide what to do
 	JFactoryT<fa250WaveboardV1Hit> *fac_fa250WaveboardV1Hit = dynamic_cast<JFactoryT<fa250WaveboardV1Hit>*>(factory);
-	JFactoryT<eventData> *fac_eventData = dynamic_cast<JFactoryT<eventData>*>(factory);
 
-	if (fac_eventData != NULL) {
-		vector<eventData*> data;
-		eventData *this_eventData = new eventData();
-		this_eventData->eventType = DAQ;
-
-		Event<sample::uncompressed> *ptEvent_pointer = (Event<sample::uncompressed>*) event->GetRef();
-
-		//take the first hit time (4 ns from 1 Jan. 2000) -- all hits in the event are within the same second!
-		fine_time minTime = getDFHFullTime((*(ptEvent_pointer->begin())).frameHeader(0));
-
-		this_eventData->time = std::chrono::duration_cast<std::chrono::seconds>(minTime).count(); //seconds from 1 Jan. 2000
-		this_eventData->time += 946684800; //unix time of 1 Jan 2000 first second
-
-		this_eventData->runN = event->GetRunNumber();
-		this_eventData->eventN = event->GetEventNumber();
-		this_eventData->eventTS = event->GetEventTS();
-
-		this_eventData->triggerWords.push_back(Event<sample::uncompressed>::max_triggers_number); //currently 5
-		for (int ii = 0; ii < Event<sample::uncompressed>::max_triggers_number; ii++) {
-			this_eventData->triggerWords.push_back(ptEvent_pointer->nseeds(ii));
-		}
-
-		this_eventData->triggerWords.push_back(Event<sample::uncompressed>::max_plugins_number); //currently 8
-		for (int ii = 0; ii < Event<sample::uncompressed>::max_plugins_number; ii++) {
-			this_eventData->triggerWords.push_back(ptEvent_pointer->plugin_nseeds(ii));
-		}
-		for (int ii = 0; ii < Event<sample::uncompressed>::max_plugins_number; ii++) {
-			this_eventData->triggerWords.push_back(ptEvent_pointer->plugin_trigtype(ii));
-		}
-
-		data.push_back(this_eventData);
-		fac_eventData->Set(data);
-		return true;
-	}
 	if (fac_fa250WaveboardV1Hit != NULL) {
 		vector<fa250WaveboardV1Hit*> data;
-		Event<sample::uncompressed> *ptEvent_pointer = (Event<sample::uncompressed>*) event->GetRef();
+		auto* ptEvent_pointer = event->GetSingle<Event<sample::uncompressed>>();
 		fine_time minTime = getDFHFullTime((*(ptEvent_pointer->begin())).frameHeader(0));  //take the first hit time
 
 		//First, find the min. hit time
-		for (Event<sample::uncompressed>::iterator it = ptEvent_pointer->begin(); it != ptEvent_pointer->end(); ++it) {
+		for (auto it = ptEvent_pointer->begin(); it != ptEvent_pointer->end(); ++it) {
 
 			Hit<sample::uncompressed> hit = (*it);	//This is the HIT
 			auto abs_time = getDFHFullTime(hit.frameHeader(0));  //absolute time in 4 ns
@@ -157,7 +154,7 @@ bool JEventSourceTRIDASDAQ::GetObjects(const std::shared_ptr<const JEvent>& even
 		}
 
 		//Then get hits
-		for (Event<sample::uncompressed>::iterator it = ptEvent_pointer->begin(); it != ptEvent_pointer->end(); ++it) {
+		for (auto it = ptEvent_pointer->begin(); it != ptEvent_pointer->end(); ++it) {
 			Hit<sample::uncompressed> hit = (*it);	//This is the HIT
 			fa250WaveboardV1Hit *fahit = new fa250WaveboardV1Hit();
 
