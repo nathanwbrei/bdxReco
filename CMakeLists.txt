@@ -139,7 +139,6 @@ add_library(jana1 STATIC
         src/external/jana_0.7.7p1/src/JANA/JGeometryXML.h
         src/external/jana_0.7.7p1/src/JANA/JObject.cc
         src/external/jana_0.7.7p1/src/JANA/JObject.h
-#        src/external/jana_0.7.7p1/src/JANA/JObject_Dict.cc
         src/external/jana_0.7.7p1/src/JANA/JObject_LinkDef.h
         src/external/jana_0.7.7p1/src/JANA/JParameter.cc
         src/external/jana_0.7.7p1/src/JANA/JParameter.h
@@ -162,7 +161,51 @@ target_include_directories(jana1 PUBLIC src/external/jana_0.7.7p1/src/)
 target_link_libraries(jana1 ${CMAKE_DL_LIBS})
 target_link_libraries(jana1 Threads::Threads)
 
+
+# Everything except JANA1 gets JANA2 includes
 add_subdirectory(/Users/nbrei/src/jana2 /Users/nbrei/src/jana2/cmake-build-debug)
+include_directories(/Users/nbrei/src/jana2/src/lib)
+
+
+#find_package(ROOT 6.0.0 REQUIRED COMPONENTS RIO Tree Hist)
+find_package(ROOT 6 REQUIRED)
+include(${ROOT_USE_FILE})
+include_directories(${ROOT_INCLUDE_DIRS})
+
+
+#ROOT_GENERATE_DICTIONARY(G__epicsData src/libraries/EPICS/epicsData.h LINKDEF src/libraries/EPICS/epicsData_LinkDef.h)
+#ROOT_GENERATE_DICTIONARY(G__ src/libraries/EPICS/epicsData.h LINKDEF src/libraries/EPICS/epicsData_LinkDef.h)
+
+# Need to generate ROOT dictionaries for these headers, which do not have a linkdef. These all go into one build artifact.
+root_generate_dictionary(G__bdx
+        src/libraries/DAQ/fa250Hit.h
+        src/libraries/DAQ/fa250Mode1Hit.h
+        src/libraries/DAQ/fa250ConvertedHit.h
+        src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.h
+        src/libraries/DAQ/fa250Mode1CalibPedSubHit.h
+        src/libraries/Calorimeter/CalorimeterCluster.h
+        src/libraries/IntVeto/IntVetoHit.h
+        src/libraries/ExtVeto/ExtVetoHit.h
+        src/libraries/EPICS/epicsData.h
+        src/libraries/EventBuilder/CataniaEvent.h
+        src/libraries/BDXmini/triggerDataBDXmini.h
+        )
+
+# Need to generate ROOT dictionaries for these headers, which each have their own linkdef
+# Each of these dictionaries becomes a separate build artifact.
+# TODO: This seems 'wrong'. ROOT CMake assumes we provide a single project-wide linkdef, but in reality we provide
+#       linkdefs specific to each JObject.
+
+root_generate_dictionary(G__bdx_calorimeterhit src/libraries/Calorimeter/CalorimeterHit.h LINKDEF src/libraries/Calorimeter/CalorimeterHit_LinkDef.h)
+root_generate_dictionary(G__bdx_calorimeterdigihit src/libraries/Calorimeter/CalorimeterDigiHit.h LINKDEF src/libraries/Calorimeter/CalorimeterDigiHit_LinkDef.h)
+root_generate_dictionary(G__bdx_calorimetermcrealhit src/libraries/Calorimeter/CalorimeterMCRealHit.h LINKDEF src/libraries/Calorimeter/CalorimeterMCRealHit_LinkDef.h)
+root_generate_dictionary(G__bdx_calorimetersipmhit src/libraries/Calorimeter/CalorimeterSiPMHit.h LINKDEF src/libraries/Calorimeter/CalorimeterSiPMHit_LinkDef.h)
+root_generate_dictionary(G__bdx_teventheader src/libraries/EventBuilder/TEventHeader.h LINKDEF src/libraries/EventBuilder/TEventHeader_LinkDef.h)
+root_generate_dictionary(G__bdx_tevent src/libraries/EventBuilder/TEvent.h LINKDEF src/libraries/EventBuilder/TEvent_LinkDef.h)
+root_generate_dictionary(G__bdx_extvetodigihit src/libraries/ExtVeto/ExtVetoDigiHit.h LINKDEF src/libraries/ExtVeto/ExtVetoDigiHit_LinkDef.h)
+root_generate_dictionary(G__bdx_intvetodigihit src/libraries/IntVeto/IntVetoDigiHit.h LINKDEF src/libraries/IntVeto/IntVetoDigiHit_LinkDef.h)
+root_generate_dictionary(G__bdx_translationtable src/libraries/TT/TranslationTable.h LINKDEF src/libraries/TT/TranslationTable_LinkDef.h)
+root_generate_dictionary(G__bdx_bdxobject src/libraries/system/BDXObject.h LINKDEF src/libraries/system/BDXObject_LinkDef.h)
 
 
 add_library(bdxreco STATIC
@@ -170,17 +213,14 @@ add_library(bdxreco STATIC
         src/libraries/BDXmini/JFactoryGenerator_BDXmini.h
         src/libraries/BDXmini/triggerDataBDXmini.cc
         src/libraries/BDXmini/triggerDataBDXmini.h
-#        src/libraries/BDXmini/triggerDataBDXmini_Dict.cc
         src/libraries/BDXmini/triggerDataBDXmini_factory.cc
         src/libraries/BDXmini/triggerDataBDXmini_factory.h
 
         src/libraries/Calorimeter/CalorimeterCluster.cc
         src/libraries/Calorimeter/CalorimeterCluster.h
-#        src/libraries/Calorimeter/CalorimeterCluster_Dict.cc
         src/libraries/Calorimeter/CalorimeterCluster_factory.cc
         src/libraries/Calorimeter/CalorimeterCluster_factory.h
         src/libraries/Calorimeter/CalorimeterDigiHit.h
-#        src/libraries/Calorimeter/CalorimeterDigiHit_Dict.cc
         src/libraries/Calorimeter/CalorimeterDigiHit_factory.cc
         src/libraries/Calorimeter/CalorimeterDigiHit_factory.h
         src/libraries/Calorimeter/CalorimeterDigiHit_factory_MC.cc
@@ -192,17 +232,14 @@ add_library(bdxreco STATIC
         src/libraries/Calorimeter/Calorimeterfa250Converter_factory.h
         src/libraries/Calorimeter/CalorimeterHit.cc
         src/libraries/Calorimeter/CalorimeterHit.h
-#        src/libraries/Calorimeter/CalorimeterHit_Dict.cc
         src/libraries/Calorimeter/CalorimeterHit_factory.cc
         src/libraries/Calorimeter/CalorimeterHit_factory.h
         src/libraries/Calorimeter/CalorimeterHit_LinkDef.h
         src/libraries/Calorimeter/CalorimeterMCRealHit.h
-#        src/libraries/Calorimeter/CalorimeterMCRealHit_Dict.cc
         src/libraries/Calorimeter/CalorimeterMCRealHit_factory.cc
         src/libraries/Calorimeter/CalorimeterMCRealHit_factory.h
         src/libraries/Calorimeter/CalorimeterMCRealHit_LinkDef.h
         src/libraries/Calorimeter/CalorimeterSiPMHit.h
-#        src/libraries/Calorimeter/CalorimeterSiPMHit_Dict.cc
         src/libraries/Calorimeter/CalorimeterSiPMHit_factory.cc
         src/libraries/Calorimeter/CalorimeterSiPMHit_factory.h
         src/libraries/Calorimeter/CalorimeterSiPMHit_LinkDef.h
@@ -213,12 +250,9 @@ add_library(bdxreco STATIC
         src/libraries/DAQ/epicsRawData.h
         src/libraries/DAQ/eventData.h
         src/libraries/DAQ/fa250ConvertedHit.h
-#        src/libraries/DAQ/fa250ConvertedHit_Dict.cc
         src/libraries/DAQ/fa250Converter.h
         src/libraries/DAQ/fa250Hit.h
-#        src/libraries/DAQ/fa250Hit_Dict.cc
         src/libraries/DAQ/fa250Mode1CalibPedSubHit.cc
-#        src/libraries/DAQ/fa250Mode1CalibPedSubHit_Dict.cc
         src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.cc
         src/libraries/DAQ/fa250Mode1CalibPedSubHit_factory.h
         src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT.cc
@@ -226,7 +260,6 @@ add_library(bdxreco STATIC
         src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.cc
         src/libraries/DAQ/fa250Mode1CalibPedSubHitFFT_factory.h
         src/libraries/DAQ/fa250Mode1Hit.cc
-#        src/libraries/DAQ/fa250Mode1Hit_Dict.cc
         src/libraries/DAQ/fa250Mode7Hit.h
         src/libraries/DAQ/fa250WaveboardV1Hit.cc
         src/libraries/DAQ/fa250WaveboardV1Hit.h
@@ -238,7 +271,6 @@ add_library(bdxreco STATIC
 
         src/libraries/EPICS/epicsData.cc
         src/libraries/EPICS/epicsData.h
-#        src/libraries/EPICS/epicsData_Dict.cc
         src/libraries/EPICS/epicsData_factory.cc
         src/libraries/EPICS/epicsData_factory.h
         src/libraries/EPICS/epicsData_LinkDef.h
@@ -262,15 +294,12 @@ add_library(bdxreco STATIC
         src/libraries/Paddles/PaddlesPMTHit_factory.h
 
         src/libraries/EventBuilder/CataniaEvent.h
-#        src/libraries/EventBuilder/CataniaEvent_Dict.cc
         src/libraries/EventBuilder/CataniaEvent_factory.cc
         src/libraries/EventBuilder/CataniaEvent_factory.h
         src/libraries/EventBuilder/JFactoryGenerator_EventBuilder.h
         src/libraries/EventBuilder/MCEvent.h
-#        src/libraries/EventBuilder/MCEvent_Dict.cc
         src/libraries/EventBuilder/TEvent.cc
         src/libraries/EventBuilder/TEvent.h
-#        src/libraries/EventBuilder/TEvent_Dict.cc
         src/libraries/EventBuilder/TEvent_factory.cc
         src/libraries/EventBuilder/TEvent_factory.h
         src/libraries/EventBuilder/TEvent_factory_BDXmini.cc
@@ -284,11 +313,9 @@ add_library(bdxreco STATIC
         src/libraries/EventBuilder/TEvent_LinkDef.h
         src/libraries/EventBuilder/TEventHeader.cc
         src/libraries/EventBuilder/TEventHeader.h
-#        src/libraries/EventBuilder/TEventHeader_Dict.cc
         src/libraries/EventBuilder/TEventHeader_LinkDef.h
 
         src/libraries/ExtVeto/ExtVetoDigiHit.h
-#        src/libraries/ExtVeto/ExtVetoDigiHit_Dict.cc
         src/libraries/ExtVeto/ExtVetoDigiHit_factory.cc
         src/libraries/ExtVeto/ExtVetoDigiHit_factory.h
         src/libraries/ExtVeto/ExtVetoDigiHit_factory_MC.cc
@@ -299,7 +326,6 @@ add_library(bdxreco STATIC
         src/libraries/ExtVeto/ExtVetofa250Converter_factory.cc
         src/libraries/ExtVeto/ExtVetofa250Converter_factory.h
         src/libraries/ExtVeto/ExtVetoHit.h
-#        src/libraries/ExtVeto/ExtVetoHit_Dict.cc
         src/libraries/ExtVeto/ExtVetoHit_factory.cc
         src/libraries/ExtVeto/ExtVetoHit_factory.h
         src/libraries/ExtVeto/ExtVetoPMTHit.h
@@ -312,7 +338,6 @@ add_library(bdxreco STATIC
 
         src/libraries/IntVeto/IntVetoDigiHit.cc
         src/libraries/IntVeto/IntVetoDigiHit.h
-#        src/libraries/IntVeto/IntVetoDigiHit_Dict.cc
         src/libraries/IntVeto/IntVetoDigiHit_factory.cc
         src/libraries/IntVeto/IntVetoDigiHit_factory.h
         src/libraries/IntVeto/IntVetoDigiHit_factory_MC.cc
@@ -324,7 +349,6 @@ add_library(bdxreco STATIC
         src/libraries/IntVeto/IntVetofa250Converter_factory.h
         src/libraries/IntVeto/IntVetoHit.cc
         src/libraries/IntVeto/IntVetoHit.h
-#        src/libraries/IntVeto/IntVetoHit_Dict.cc
         src/libraries/IntVeto/IntVetoHit_factory.cc
         src/libraries/IntVeto/IntVetoHit_factory.h
         src/libraries/IntVeto/IntVetoHit_LinkDef.h
@@ -340,7 +364,6 @@ add_library(bdxreco STATIC
         src/libraries/TT/JFactoryGenerator_TT.h
         src/libraries/TT/TranslationTable.cc
         src/libraries/TT/TranslationTable.h
-#        src/libraries/TT/TranslationTable_Dict.cc
         src/libraries/TT/TranslationTable_factory.cc
         src/libraries/TT/TranslationTable_factory.h
         src/libraries/TT/TranslationTable_LinkDef.h
@@ -349,7 +372,6 @@ add_library(bdxreco STATIC
         src/libraries/system/BDXEventProcessor.h
         src/libraries/system/BDXObject.cc
         src/libraries/system/BDXObject.h
-#        src/libraries/system/BDXObject_Dict.cc
         src/libraries/system/BDXObject_LinkDef.h
         src/libraries/system/CalibrationHandler.h
         src/libraries/system/JEventSourceEVIOGenerator.cc
@@ -362,11 +384,22 @@ add_library(bdxreco STATIC
         src/libraries/system/JROOTOutput.h
         src/libraries/system/string_utilities.h
         src/libraries/system/BDXCalibrationService.h
+
+        # Generated ROOT dictionaries
+        G__bdx.cxx
+        G__bdx_calorimeterhit.cxx
+        G__bdx_calorimeterdigihit.cxx
+        G__bdx_calorimetermcrealhit.cxx
+        G__bdx_calorimetersipmhit.cxx
+        G__bdx_teventheader.cxx
+        G__bdx_tevent.cxx
+        G__bdx_extvetodigihit.cxx
+        G__bdx_intvetodigihit.cxx
+        G__bdx_translationtable.cxx
+        G__bdx_bdxobject.cxx
         )
 
-find_package(ROOT)
-include_directories(${ROOT_INCLUDE_DIRS})
-target_include_directories(bdxreco PUBLIC /Users/nbrei/src/jana2/src/lib)
+
 target_link_libraries(bdxreco jana2)
 target_link_libraries(bdxreco evioReader)
 target_link_libraries(bdxreco tridas)
