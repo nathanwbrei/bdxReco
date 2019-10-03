@@ -19,6 +19,8 @@ using namespace std;
 
 Calorimeterfa250Converter_factory::Calorimeterfa250Converter_factory():m_calorimeterfa250Converter(0){
 
+	m_NSB=20;
+	m_NSA=28;
 	m_NPED=20;
 	m_NSAMPLES=2000;
 	m_thr=0;

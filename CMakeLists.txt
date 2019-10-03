@@ -17,11 +17,11 @@ include_directories(/usr/local/include/)
 
 set(SITE /site/12gev_phys/2.3/Linux_RedHat7.6-x86_64-gcc4.8.5)
 
-set(ENV{CCDB_HOME} /Users/nbrei/src/ccdb)
-set(ENV{CLHEP_BASE_DIR} /usr/local/Cellar/clhep/2.4.1.2)
-set(ENV{EVIO} /Users/nbrei/src/evio)
-set(ENV{XERCESCROOT} /usr/local/Cellar/xerces-c/3.2.2)
-set(ENV{BDXRECO_ROOT} /Users/nbrei/src/bdxReco)
+#set(ENV{CCDB_HOME} /Users/nbrei/src/ccdb)
+#set(ENV{CLHEP_BASE_DIR} /usr/local/Cellar/clhep/2.4.1.2)
+#set(ENV{EVIO} /Users/nbrei/src/evio)
+#set(ENV{XERCESCROOT} /usr/local/Cellar/xerces-c/3.2.2)
+#set(ENV{BDXRECO_ROOT} /Users/nbrei/src/bdxReco)
 
 if (DEFINED ENV{XERCESCROOT})
     include_directories($ENV{XERCESCROOT}/include)
@@ -35,11 +35,11 @@ endif()
 
 if (DEFINED ENV{CCDB_HOME})
     include_directories($ENV{CCDB_HOME}/include)
-    link_libraries($ENV{CCDB_HOME}/lib/libccdb.dylib)
+    link_libraries($ENV{CCDB_HOME}/lib/libccdb.so)
     MESSAGE(STATUS "Using CCDB_HOME = " $ENV{CCDB_HOME})
 else()
     include_directories(${SITE}/ccdb/ccdb-1.06.02/include)
-    link_libraries(${SITE}/ccdb/ccdb-1.06.02/lib/libccdb.dylib)
+    link_libraries(${SITE}/ccdb/ccdb-1.06.02/lib/libccdb.so)
     MESSAGE(WARNING "Using defaulted CCDB_HOME")
 endif()
 
@@ -163,8 +163,8 @@ target_link_libraries(jana1 Threads::Threads)
 
 
 # Everything except JANA1 gets JANA2 includes
-add_subdirectory(/Users/nbrei/src/jana2 /Users/nbrei/src/jana2/cmake-build-debug)
-include_directories(/Users/nbrei/src/jana2/src/lib)
+add_subdirectory(/home/nbrei/src/jana2 /home/nbrei/src/jana2/cmake-build-debug)
+include_directories(/home/nbrei/src/jana2/src/lib)
 
 
 #find_package(ROOT 6.0.0 REQUIRED COMPONENTS RIO Tree Hist)
