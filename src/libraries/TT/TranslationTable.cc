@@ -41,19 +41,24 @@ TranslationTable::TranslationTable(JApplication* app, unsigned int run_number) {
 	// They may also specify that they want to skip checking the CCDB via
 	// the "TT:NO_CCDB" parameter. This would only be useful if they want to
 	// force the use of a local file named "tt.xml".
+
+	// TODO: This is horrible
+
 	NO_CCDB = false;
 	XML_FILENAME = "tt.xml";
 	VERBOSE = 0;
 	SYSTEMS_TO_PARSE = "";
-	app->GetParameter("TT:NO_CCDB", NO_CCDB);
-	JParameter *p = app->GetParameter("TT:XML_FILENAME", XML_FILENAME);
-	if (p->GetDefault<std::string>() != p->GetValue<std::string>()){
+
+	app->SetDefaultParameter("TT:XML_FILENAME", XML_FILENAME);
+	app->SetDefaultParameter("TT:NO_CCDB", NO_CCDB);
+
+	if (XML_FILENAME != "tt.xml") {
 		NO_CCDB = true;
 	}
-	//app->GetParameterValue("TT:VERBOSE"); // TODO: Do something with the parameter
-	app->GetParameter("TT:ROCID_MAP_FILENAME", ROCID_MAP_FILENAME);
 
-	app->GetParameter("TT:SYSTEMS_TO_PARSE", SYSTEMS_TO_PARSE);
+	app->SetDefaultParameter("TT:VERBOSE", VERBOSE);
+	app->SetDefaultParameter("TT:SYSTEMS_TO_PARSE", SYSTEMS_TO_PARSE);
+	app->GetParameter("TT:ROCID_MAP_FILENAME", ROCID_MAP_FILENAME);
 
 	// Initialize dedicated JStreamLog used for debugging messages
 	ttout.SetTag("--- TT ---: ");

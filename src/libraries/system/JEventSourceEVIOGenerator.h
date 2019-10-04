@@ -17,9 +17,9 @@ public:
 
     std::string GetDescription() const override { return "Evio"; }
 
-    double CheckOpenable(string source) override;
+    double CheckOpenable(std::string source) override;
 
-    JEventSource* MakeJEventSource(string source) override;
+    JEventSource* MakeJEventSource(std::string source) override;
 
 };
 
