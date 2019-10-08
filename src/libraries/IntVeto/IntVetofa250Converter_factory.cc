@@ -15,7 +15,7 @@ using namespace std;
 
 IntVetofa250Converter_factory::IntVetofa250Converter_factory():
 				m_isFirstCallToBrun(1),m_intVetofa250Converter(0){
-	jout<<"IntVetofa250Converter_factory::creator"<<jendl;
+	//jout<<"IntVetofa250Converter_factory::creator"<<jendl;
 
 
 	m_minTot=12;

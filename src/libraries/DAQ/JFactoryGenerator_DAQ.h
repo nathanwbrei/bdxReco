@@ -33,10 +33,11 @@ public:
 
 	void GenerateFactories(JFactorySet* factorySet) {
 		factorySet->Add(new JFactoryT<fa250WaveboardV1Hit>());
-		factorySet->Add(new JFactoryT<fa250Mode1Hit>());
-		factorySet->Add(new JFactoryT<fa250Mode7Hit>());
-		factorySet->Add(new JFactoryT<eventData>());
-		factorySet->Add(new JFactoryT<epicsRawData>());
+// "Dummy factories" corresponding to items acquired via JEventSource::GetObjects no longer get a FactoryGenerator
+//		factorySet->Add(new JFactoryT<fa250Mode1Hit>());
+//		factorySet->Add(new JFactoryT<fa250Mode7Hit>());
+//		factorySet->Add(new JFactoryT<eventData>());
+//		factorySet->Add(new JFactoryT<epicsRawData>());
 		factorySet->Add(new fa250Mode1CalibPedSubHit_factory());
 		factorySet->Add(new fa250Mode1CalibPedSubHitFFT_factory());
 	}

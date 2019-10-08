@@ -176,15 +176,15 @@ void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 	if (m_isMC == 0) {
 		try {
 			event->Get(&tData);
-		} catch (unsigned long e) {
+		} catch (JException e) {
 			LOG_DEBUG(bout) << "No eventData bank this event " << jendl;
-			throw JException("No eventData bank this event");
+			return;
 		}
 		/*This is the EPICS part. The call here will force getting data from the epicsDataProcessed_factory, that takes care of persistency*/
 		try {
 			event->Get(&eData);
-		} catch (unsigned long e) {
-			throw JException("No epics data this event");
+		} catch (JException e) {
+			return;
 		}
 
 		if (tData->eventType != eventSource::DAQ) {

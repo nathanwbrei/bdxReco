@@ -45,8 +45,9 @@ int main(int narg, char *argv[])
 	app.GetJParameterManager()->ReadConfigFile("config/bdx.config.BDXmini");
 	app.SetParameterValue<std::string>("SYSTEM:OUTPUT", "root,out.root");
 	app.SetParameterValue<std::string>("SYSTEM:VERBOSE", "1");
-	app.SetParameterValue<std::string>("XML_FILENAME", "../tt.BDXmini.xml");
+	app.SetParameterValue<std::string>("TT:XML_FILENAME", "/home/nbrei/src/bdxReco/tt.BDXmini.xml");
 	app.SetParameterValue("nthreads", 1);
+	app.SetParameterValue("jana:extended_report", 0);
 	app.Add("/home/nbrei/BDX_001098.evio.000");
 
 	app.ProvideService(std::make_shared<JCalibrationManager>());
