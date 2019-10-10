@@ -10,7 +10,7 @@
 
 #include "ExtVetofa250Converter.h"
 #include <system/BDXCalibrationService.h>
-#include <JANA/JFactoryT.h>
+#include <JANA/JEvent.h>
 
 class ExtVetofa250Converter_factory:public JFactoryT<ExtVetofa250Converter>{
 	public:

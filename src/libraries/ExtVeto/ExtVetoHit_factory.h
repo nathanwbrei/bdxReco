@@ -8,7 +8,7 @@
 #ifndef _ExtVetoHit_factory_
 #define _ExtVetoHit_factory_
 
-#include <JANA/JFactoryT.h>
+#include <JANA/JEvent.h>
 #include "ExtVetoHit.h"
 #include <system/CalibrationHandler.h>
 #include <system/BDXCalibrationService.h>

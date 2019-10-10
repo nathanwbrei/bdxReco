@@ -164,6 +164,7 @@ void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 
 	if (event->GetRunNumber() != m_last_run_number) {
 		// We have to handle run begin/end manually because JANA2 no longer takes care of this for us
+		m_last_run_number = event->GetRunNumber();
 		EndRun();
 		BeginRun(event);
 	}
@@ -177,7 +178,7 @@ void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 		try {
 			event->Get(&tData);
 		} catch (JException e) {
-			LOG_DEBUG(bout) << "No eventData bank this event " << jendl;
+			LOG_INFO(bout) << "No eventData bank this event " << jendl;
 			return;
 		}
 		/*This is the EPICS part. The call here will force getting data from the epicsDataProcessed_factory, that takes care of persistency*/
@@ -215,6 +216,7 @@ void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 			eventN = event->GetEventNumber();
 
 			runN = tData->runN;
+			LOG_DEBUG(bout) << "BDXEventProcessor: Filling ROOT tree " << event->GetEventNumber() << LOG_END;
 			m_eventHeader->Fill();
 			//Time
 			if (eventT < startTime) startTime = eventT;
@@ -229,10 +231,11 @@ void BDXEventProcessor::EndRun() {
 
     m_root_lock->acquire_write_lock();
 	deltaTime = stopTime - startTime;
-	LOG_DEBUG(bout) << "BDXEventProcessor::erun " << jendl;
-	LOG_DEBUG(bout) << "Run start: " << startTime << " stop: " << stopTime << " diff: " << deltaTime << jendl;
+	LOG_INFO(bout) << "BDXEventProcessor::erun " << jendl;
+	LOG_INFO(bout) << "Run start: " << startTime << " stop: " << stopTime << " diff: " << deltaTime << jendl;
 	m_runInfo->Fill();
 
+	LOG_INFO(bout) << "Persisting ROOT file" << LOG_END;
 	if (m_output && (isET == 1)) {
 		m_output->CloseOutput();
 	}
@@ -249,7 +252,7 @@ void BDXEventProcessor::Finish() {
 	// If another EventProcessor is in the list ahead of this one, then
 	// it will have finished before this is called. e.g. closed the
 	// ROOT file!
-	LOG_DEBUG(bout) << "BDXEventProcessor::Finish called" << jendl;
+	LOG_INFO(bout) << "BDXEventProcessor::Finish called" << jendl;
 	fflush(stdout);
 	m_root_lock->acquire_write_lock();
 	if (m_output) {

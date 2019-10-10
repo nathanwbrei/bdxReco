@@ -556,10 +556,6 @@ bool JEventSourceEvioDAQ::GetObjects(const std::shared_ptr<const JEvent>& event,
 		if ((this_eventData->eventType == eventSource::DAQ) || (this_eventData->eventType == eventSource::EPICS)) {
 			data.push_back(this_eventData);
 			fac_eventData->Set(data);
-			jerr << event->GetEventNumber() << ": Found DAQ or EPICS, creating eventData"<< jendl;
-		}
-		else {
-			jerr << event->GetEventNumber() << ": NOT DAQ or EPICS, NOT creating eventData"<< jendl;
 		}
 		return true;
 	}

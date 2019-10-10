@@ -46,7 +46,7 @@ int main(int narg, char *argv[])
 	app.SetParameterValue<std::string>("SYSTEM:OUTPUT", "root,out.root");
 	app.SetParameterValue<std::string>("SYSTEM:VERBOSE", "1");
 	app.SetParameterValue<std::string>("TT:XML_FILENAME", "/home/nbrei/src/bdxReco/tt.BDXmini.xml");
-	app.SetParameterValue("nthreads", 1);
+	app.SetParameterValue("nthreads", 2);
 	app.SetParameterValue("jana:extended_report", 0);
 	app.Add("/home/nbrei/BDX_001098.evio.000");
 
