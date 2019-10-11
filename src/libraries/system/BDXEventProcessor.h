@@ -41,12 +41,11 @@ public:
 
 private:
     void Init() override;
+	void BeginRun(const std::shared_ptr<const JEvent>& event) override;
 	void Process(const std::shared_ptr<const JEvent>& aEvent) override;
+	void EndRun() override;
 	void Finish() override;
 
-	// JANA2 does not support callbacks for begin/end run, so we hack around this for now
-	void BeginRun(const std::shared_ptr<const JEvent>& event);
-	void EndRun();
 	uint64_t m_last_run_number = std::numeric_limits<uint64_t>::max();
 
 

@@ -117,34 +117,33 @@ void BDXEventProcessor::Init() {
 void BDXEventProcessor::BeginRun(const std::shared_ptr<const JEvent>& event) {
 
 	auto runnumber = event->GetRunNumber();
-	LOG_DEBUG(bout) << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << jendl;
+	LOG_INFO(bout) << "BDXEventProcessor::brun " << runnumber << "(isFirstCallToBrun: " << isFirstCallToBrun << " m_output: " << m_output << ")" << jendl;
 
 	// lock all root operations
 	m_root_lock->acquire_write_lock();
 
 	if (isFirstCallToBrun) {
 		if (m_output != 0) {
-			LOG_DEBUG(bout) << "got m_output, className is: " << m_output->className() << jendl;
-			if (strcmp(m_output->className().c_str(), "JROOTOutput") == 0) {
-				JROOTOutput* m_ROOTOutput = (JROOTOutput*) m_output;
-				if (isET == 1) {
-					outFile = string(Form("out.%i.online.root", runnumber));
-					LOG_DEBUG(bout) << "Running on ET with root thus changing file name to: " << outFile << jendl;
-				}
-				m_ROOTOutput->OpenOutput(outFile);
+			LOG_INFO(bout) << "got m_output, className is: " << m_output->className() << jendl;
+            JROOTOutput* m_ROOTOutput = (JROOTOutput*) m_output;
 
-				/*DST TTree created as file-resident TTree, only if output exists*/
-				if (m_DObuildDST) {
-					m_eventDST = new TTree("EventDST", "EventDST");
-					m_eventDST->Branch("Event", &m_event);
-					if (m_isMC == 0) m_eventDST->AddFriend(m_eventHeader);
-					m_ROOTOutput->AddObject(m_eventDST);
-				}
+            if (isET == 1) {
+                outFile = string(Form("out.%i.online.root", runnumber));
+                LOG_INFO(bout) << "Running on ET with root thus changing file name to: " << outFile << jendl;
+            }
+            m_ROOTOutput->OpenOutput(outFile);
 
-				/*If an output exists, add the eventHeader and runInfo*/
-				(m_ROOTOutput)->AddObject(m_eventHeader);
-				(m_ROOTOutput)->AddObject(m_runInfo);
-			}
+            /*DST TTree created as file-resident TTree, only if output exists*/
+            if (m_DObuildDST) {
+                m_eventDST = new TTree("EventDST", "EventDST");
+                m_eventDST->Branch("Event", &m_event);
+                if (m_isMC == 0) m_eventDST->AddFriend(m_eventHeader);
+                m_ROOTOutput->AddObject(m_eventDST);
+            }
+
+            /*If an output exists, add the eventHeader and runInfo*/
+            (m_ROOTOutput)->AddObject(m_eventHeader);
+            (m_ROOTOutput)->AddObject(m_runInfo);
 		}
 	}
 
@@ -164,8 +163,12 @@ void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 
 	if (event->GetRunNumber() != m_last_run_number) {
 		// We have to handle run begin/end manually because JANA2 no longer takes care of this for us
+
+		if (m_last_run_number != std::numeric_limits<uint64_t>::max()) {
+		    // If we already had a valid run number, call EndRun(). Otherwise, don't.
+			EndRun();
+		}
 		m_last_run_number = event->GetRunNumber();
-		EndRun();
 		BeginRun(event);
 	}
 
