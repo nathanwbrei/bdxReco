@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 # Enable -fPIC for all targets
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
+add_definitions(-DHAVE_CCDB)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)

@@ -81,7 +81,7 @@ public:
         /*Verify the key is in the map*/
         m_calibrations_it = m_calibrations.find(name);
         if (m_calibrations_it == m_calibrations.end()) {
-            berr << "BDXEventProcessor::updateCalibration error, calibration handler associated with table " << name << " was not registered!" << jendl;
+            LOG << "BDXEventProcessor::updateCalibration error, calibration handler associated with table " << name << " was not registered!" << LOG_END;
             return;
         }
 
@@ -91,7 +91,7 @@ public:
         /*Another check*/
         calibrations_it = find(calibrations.begin(), calibrations.end(), cal);
         if (calibrations_it == calibrations.end()) {
-            berr << "UpdateCalibration, key: " << name << " was found but not this specific calibrationHandler!" << jendl;
+            LOG << "UpdateCalibration, key: " << name << " was found but not this specific calibrationHandler!" << LOG_END;
             return;
         }
         /*Verify if all the calibrators already have been set for this run*/
@@ -110,10 +110,10 @@ public:
                 calibratedOne = std::distance(calibrations.begin(), calibrations_it); //save the index of this calibrated object
         }
         if (flagAll) { /*flagAll is true if ALL off them have been loaded*/
-            bout << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " ALREADY DONE " << jendl;
+            LOG << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " ALREADY DONE " << LOG_END;
             return;
         } else if (calibratedOne != -1) { /*It means there is at least an already-calibrated object!*/
-            bout << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " Load from data: " << calibratedOne << jendl;
+            LOG << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " Load from data: " << calibratedOne << LOG_END;
             for (int ical = 0; ical < calibrations.size(); ical++) {
                 if (ical == calibratedOne) continue;
                 else if (calibrations[ical]->hasLoadedCurrentRun()) continue;
@@ -125,13 +125,13 @@ public:
             /*Get the data*/
             vector<vector<double> > m_data;
             m_calibration_manager->GetCalib(run_number, event_number, name, m_data);
-            bout << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " Load from DB " << jendl;
+            LOG << "Going to fill CalibrationHandlers for table: " << name << " there are: " << calibrations.size() << " Load from DB " << LOG_END;
             for (calibrations_it = calibrations.begin(); calibrations_it != calibrations.end(); calibrations_it++) {
                 (*calibrations_it)->fillCalib(m_data);
                 (*calibrations_it)->setLoadedCurrentRun(true);
             }
         }
-        bout << "Done table" << name << jendl;
+        LOG << "Done table" << name << LOG_END;
         m_root_lock->release_lock();
 
     }
@@ -144,7 +144,7 @@ public:
         /*Verify the key is in the map*/
         m_calibrations_it = m_calibrations.find(name);
         if (m_calibrations_it == m_calibrations.end()) {
-            berr << "BDXEventProcessor::clearCalibration error, calibration handler associated with table " << name << " was not registered!" << jendl;
+            LOG << "BDXEventProcessor::clearCalibration error, calibration handler associated with table " << name << " was not registered!" << LOG_END;
             return;
         }
 
@@ -154,7 +154,7 @@ public:
         /*Another check*/
         calibrations_it = find(calibrations.begin(), calibrations.end(), cal);
         if (calibrations_it == calibrations.end()) {
-            berr << "BDXEventProcessor::clearCalibration, key: " << name << " was found but not this specific calibrationHandler!" << jendl;
+            LOG << "BDXEventProcessor::clearCalibration, key: " << name << " was found but not this specific calibrationHandler!" << LOG_END;
             return;
         }
         for (calibrations_it = calibrations.begin(); calibrations_it != calibrations.end(); calibrations_it++) {

@@ -31,6 +31,7 @@
 // C++ headers
 #include <iostream>
 #include <JANA/Services/JCalibrationManager.h>
+#include <JANA/Calibrations/JCalibrationGeneratorCCDB.h>
 
 
 int main(int narg, char *argv[])
@@ -51,7 +52,9 @@ int main(int narg, char *argv[])
 	app.SetParameterValue("system:build_dst","CataniaProto2");
 	app.Add("/home/nbrei/BDX_001098.evio.000");
 
-	app.ProvideService(std::make_shared<JCalibrationManager>());
+	auto calib_manager = std::make_shared<JCalibrationManager>();
+	calib_manager->AddCalibrationGenerator(new JCalibrationGeneratorCCDB); // TODO: Not quite happy with this
+	app.ProvideService(calib_manager);
 	app.ProvideService(std::make_shared<BDXCalibrationService>());
 
 	//if(narg==1){
