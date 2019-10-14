@@ -16,9 +16,8 @@
 
 class PaddlesDigiHit_factory_MC:public JFactoryT<PaddlesDigiHit>{
 	public:
-		PaddlesDigiHit_factory_MC(){};
-		~PaddlesDigiHit_factory_MC(){};
-		const char* Tag(void){return "MC";}
+		PaddlesDigiHit_factory_MC() : JFactoryT<PaddlesDigiHit>("PaddlesDigiHit", "MC"){}
+		~PaddlesDigiHit_factory_MC() {}
 
 	private:
 		void Init() override;

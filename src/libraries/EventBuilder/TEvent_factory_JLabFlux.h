@@ -14,15 +14,8 @@
 
 class TEvent_factory_JLabFlux: public JFactoryT<TEvent> {
 public:
-	TEvent_factory_JLabFlux() {
-	}
-	;
-	~TEvent_factory_JLabFlux() {
-	}
-	;
-	const char* Tag(void) {
-		return "JLabFlux";
-	}
+	TEvent_factory_JLabFlux(): JFactoryT<TEvent>("TEvent", "JLabFlux") {}
+	~TEvent_factory_JLabFlux() {}
 
 private:
 	void Init() override;

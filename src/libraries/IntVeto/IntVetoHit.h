@@ -16,7 +16,7 @@
 class TH1D;
 class TCanvas;
 
-class IntVetoHit:public BDXObject{
+class IntVetoHit: public BDXObject{
 private:
 	mutable vector<TH1D*> hWaves; //!  //Exclude from root dictionary
 

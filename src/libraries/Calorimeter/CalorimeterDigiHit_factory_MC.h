@@ -15,9 +15,8 @@ class CalorimeterMCHit;
 
 class CalorimeterDigiHit_factory_MC:public JFactoryT<CalorimeterDigiHit>{
 public:
-	CalorimeterDigiHit_factory_MC(){};
+	CalorimeterDigiHit_factory_MC() : JFactoryT<CalorimeterDigiHit>("CalorimeterDigiHit", "MC"){};
 	~CalorimeterDigiHit_factory_MC(){};
-	const char* Tag(void){return "MC";}
 
 	static void SetIndex(TranslationTable::CALO_Index_t &index,const CalorimeterMCHit *mchit,int MC);
 

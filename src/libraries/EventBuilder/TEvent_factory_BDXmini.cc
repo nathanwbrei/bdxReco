@@ -28,7 +28,7 @@ using namespace std;
 #include <JANA/JApplication.h>
 #include <JANA/JEvent.h>
 
-TEvent_factory_BDXmini::TEvent_factory_BDXmini() {
+TEvent_factory_BDXmini::TEvent_factory_BDXmini() : JFactoryT<TEvent>("TEvent", "BDXmini") {
 	m_isMC = 0;
 	m_MCRunNumber = 0;
 	m_IntVetoHits = 0;

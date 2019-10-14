@@ -14,7 +14,7 @@
 
 #include "TObject.h"
 
-class CalorimeterDigiHit : public JObject, public TObject {
+class CalorimeterDigiHit : public TObject, public JObject {
 public:
 
 	JOBJECT_PUBLIC(CalorimeterDigiHit);

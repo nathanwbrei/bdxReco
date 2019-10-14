@@ -196,7 +196,7 @@ void BDXEventProcessor::Process(const std::shared_ptr<const JEvent>& event) {
 		}
 	}
 	if (m_DObuildDST) {
-		event->Get(events, m_buildDST.c_str());
+		event->Get(events, m_buildDST);
 		if (events.size() != 1) {
 			return; // RESOURCE_UNAVAILABLE;
 		}

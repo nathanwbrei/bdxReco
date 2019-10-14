@@ -18,9 +18,8 @@ class TClonesArray;
 
 class TEvent_factory_CataniaProto2:public JFactoryT<TEvent>{
 	public:
-		TEvent_factory_CataniaProto2(){};
+		TEvent_factory_CataniaProto2() : JFactoryT<TEvent>("TEvent", "CataniaProto2"){};
 		~TEvent_factory_CataniaProto2(){};
-		const char* Tag(void){return "CataniaProto2";}
 
 	private:
 		void Init() override;

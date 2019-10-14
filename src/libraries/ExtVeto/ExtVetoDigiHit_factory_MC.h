@@ -17,9 +17,9 @@ class ExtVetoDigiHit;
 
 class ExtVetoDigiHit_factory_MC:public JFactoryT<ExtVetoDigiHit>{
 public:
-	ExtVetoDigiHit_factory_MC(){};
+	ExtVetoDigiHit_factory_MC() : JFactoryT<ExtVetoDigiHit>("ExtVetoDigiHit", "MC"){};
 	~ExtVetoDigiHit_factory_MC(){};
-	const char* Tag(void){return "MC";}
+
 	int getCataniaV1Component(int MCchannel);
 	int getCataniaV2Component(int MCchannel);
 	int getFullV1Component(int MCchannel);

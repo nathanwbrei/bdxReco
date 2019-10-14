@@ -15,12 +15,7 @@
 class TEvent_factory_BDXmini: public JFactoryT<TEvent> {
 public:
 	TEvent_factory_BDXmini();
-	~TEvent_factory_BDXmini() {
-	}
-	;
-	const char* Tag(void) {
-		return "BDXmini";
-	}
+	~TEvent_factory_BDXmini() {}
 
 private:
 	void Init() override;

@@ -18,9 +18,8 @@ class IntVetoMCHit;
 
 class IntVetoDigiHit_factory_MC:public JFactoryT<IntVetoDigiHit>{
 	public:
-		IntVetoDigiHit_factory_MC(){};
+		IntVetoDigiHit_factory_MC() : JFactoryT<IntVetoDigiHit>("IntVetoDigiHit","MC"){};
 		~IntVetoDigiHit_factory_MC(){};
-		const char* Tag(void){return "MC";}
 
 		int getCataniaV1Component(int MCchannel);
 		int getCataniaV2Component(int MCchannel);

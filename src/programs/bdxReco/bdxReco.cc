@@ -48,9 +48,11 @@ int main(int narg, char *argv[])
 	app.SetParameterValue<std::string>("TT:XML_FILENAME", "/home/nbrei/src/bdxReco/tt.BDXmini.xml");
 	app.SetParameterValue("nthreads", 2);
 	app.SetParameterValue("jana:extended_report", 0);
+	app.SetParameterValue("system:build_dst","CataniaProto2");
 	app.Add("/home/nbrei/BDX_001098.evio.000");
 
 	app.ProvideService(std::make_shared<JCalibrationManager>());
+	app.ProvideService(std::make_shared<BDXCalibrationService>());
 
 	//if(narg==1){
 	//	app.Usage();
